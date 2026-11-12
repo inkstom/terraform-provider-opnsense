@@ -11,6 +11,11 @@ func Resources(ctx context.Context) []func() resource.Resource {
 		newAssignmentResource,
 		newVipResource,
 		newVlanResource,
+		newLoopbackResource,
+		newGifResource,
+		newGreResource,
+		newVxlanResource,
+		newNeighborResource,
 	}
 }
 
@@ -19,6 +24,11 @@ func DataSources(ctx context.Context) []func() datasource.DataSource {
 		newAssignmentDataSource,
 		newVipDataSource,
 		newVlanDataSource,
+		newLoopbackDataSource,
+		newGifDataSource,
+		newGreDataSource,
+		newVxlanDataSource,
+		newNeighborDataSource,
 		newOverviewInterfaceDataSource,
 		newOverviewAllDataSource,
 	}

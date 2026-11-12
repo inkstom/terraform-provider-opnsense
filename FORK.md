@@ -25,6 +25,11 @@ This is a fork of [browningluke/terraform-provider-opnsense](https://github.com/
 | `opnsense_monit_service` | `monit/settings/*Service` | 25.x |
 | `opnsense_monit_test` | `monit/settings/*Test` | 25.x |
 | `opnsense_monit_alert` | `monit/settings/*Alert` | 25.x |
+| `opnsense_interfaces_loopback` | `interfaces/loopback_settings/*` | 25.x |
+| `opnsense_interfaces_gif` | `interfaces/gif_settings/*` | 25.x |
+| `opnsense_interfaces_gre` | `interfaces/gre_settings/*` | 25.x |
+| `opnsense_interfaces_vxlan` | `interfaces/vxlan_settings/*` | 25.x |
+| `opnsense_interfaces_neighbor` | `interfaces/neighbor_settings/*` | 25.x |
 
 End-to-end example: [`examples/complete/wireguard-site/main.tf`](examples/complete/wireguard-site/main.tf).
 

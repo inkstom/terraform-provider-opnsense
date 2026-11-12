@@ -128,15 +128,15 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Firewall/One-to-One NAT`        | ✅        | ✅           |
 | `Interfaces/Assignment`          | 🚧       | 🚧          |
 | `Interfaces/Bridge`              | ❌        | ❌           |
-| `Interfaces/Gif`                 | ❌        | ❌           |
-| `Interfaces/Gre`                 | ❌        | ❌           |
+| `Interfaces/Gif`                 | ✅        | ✅           |
+| `Interfaces/Gre`                 | ✅        | ✅           |
 | `Interfaces/Lagg`                | ❌        | ❌           |
-| `Interfaces/Loopback`            | ❌        | ❌           |
-| `Interfaces/Neighbor`            | ❌        | ❌           |
+| `Interfaces/Loopback`            | ✅        | ✅           |
+| `Interfaces/Neighbor`            | ✅        | ✅           |
 | `Interfaces/Overview`            |          | ✅           |
 | `Interfaces/Vip`                 | ✅        | ✅           |
 | `Interfaces/Vlan`                | ✅        | ✅           |
-| `Interfaces/Vxlan`               | ❌        | ❌           |
+| `Interfaces/Vxlan`               | ✅        | ✅           |
 | `Ipsec/Settings`                 | ❌        | ❌           |
 | `Ipsec/Connections/Local`        | ✅        | ❌           |
 | `Ipsec/Connections/Remote`       | ✅        | ❌           |
