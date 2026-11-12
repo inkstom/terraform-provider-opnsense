@@ -50,7 +50,7 @@ resource "opnsense_captiveportal_zone" "guest" {
 - `idle_timeout` (Number) Disconnect idle clients after this many minutes; 0 disables. Defaults to `0`.
 - `roaming` (Boolean) Keep a session when the client's address changes (OPNsense 26.7 or later). Unset keeps the firewall's value.
 - `server_name` (String) Host name for the portal (should match `certificate`). Defaults to `""`.
-- `template` (String) UUID of an uploaded portal template; empty uses the default page. Defaults to `""`.
+- `template` (String) UUID of a portal template (`opnsense_captiveportal_template.id`); empty uses the default page. Defaults to `""`.
 
 ### Read-Only
 

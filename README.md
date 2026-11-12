@@ -100,7 +100,7 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Auth/Priv`                      | ✅        | ✅           |
 | `Auth/User`                      | ✅        | ✅           |
 | `Captiveportal/Settings`         | ❌        | ❌           |
-| `Captiveportal/Service/Template` | ❌        | ❌           |
+| `Captiveportal/Service/Template` | ✅        | ✅           |
 | `Captiveportal/Settings/Zone`    | ✅        | ✅           |
 | `Core/Hasync`                    | ✅        | ✅           |
 | `Core/Snapshots`                 | ❌        | ❌           |
