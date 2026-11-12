@@ -147,7 +147,7 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Ipsec/Pools`                    | ✅        | ✅           |
 | `Ipsec/Psk`                      | ✅        | ❌           |
 | `Ipsec/Vti`                      | ✅        | ❌           |
-| `Kea/CtrlAgent`                  | ❌        | ❌           |
+| `Kea/CtrlAgent`                  | ✅        | ✅           |
 | `Kea/Dhcpv4/Peer`                | ✅        | ✅           |
 | `Kea/Dhcpv4/Reservation`         | ✅        | ✅           |
 | `Kea/Dhcpv4/Subnet`              | ✅        | ✅           |
