@@ -12,6 +12,9 @@ This is a fork of [browningluke/terraform-provider-opnsense](https://github.com/
 | `opnsense_wireguard_key_pair` (resource) | `wireguard/server/keyPair` | any |
 | `opnsense_wireguard_psk` (resource) | `wireguard/client/psk` | any |
 | `opnsense_wireguard_server`: `+carp_depend_on`, `+debug`, `+device` | | any |
+| `opnsense_dnsmasq_range` | `dnsmasq/settings/*_range` | 25.x |
+| `opnsense_dnsmasq_option` | `dnsmasq/settings/*_option` | 25.x |
+| `opnsense_dnsmasq_settings` (singleton, import with `dnsmasq_settings`) | `dnsmasq/settings/get,set` | 25.x |
 
 End-to-end example: [`examples/complete/wireguard-site/main.tf`](examples/complete/wireguard-site/main.tf).
 

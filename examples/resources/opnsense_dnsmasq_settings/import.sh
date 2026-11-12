@@ -1,0 +1,1 @@
+terraform import opnsense_dnsmasq_settings.this dnsmasq_settings
