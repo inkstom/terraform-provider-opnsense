@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 )
 
 // Small schema helpers for the loopback, gif, gre, vxlan and neighbor resources.
@@ -18,6 +19,12 @@ func optStr(desc, def string) schema.StringAttribute {
 		Computed:            true,
 		Default:             stringdefault.StaticString(def),
 	}
+}
+
+func optStrValidated(desc, def string, v ...validator.String) schema.StringAttribute {
+	a := optStr(desc, def)
+	a.Validators = v
+	return a
 }
 
 func optBool(desc string, def bool) schema.BoolAttribute {

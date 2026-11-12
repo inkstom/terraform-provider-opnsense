@@ -40,6 +40,7 @@ This is a fork of [browningluke/terraform-provider-opnsense](https://github.com/
 | `opnsense_firewall_npt` | `firewall/npt/*` | 24.7 |
 | `opnsense_core_hasync` (singleton; import with ID `core_hasync`) | `core/hasync/*` | 24.7 |
 | `opnsense_captiveportal_zone` (`roaming`/`cors_*` need 26.7) | `captiveportal/settings/*Zone` | 24.7 |
+| `opnsense_interfaces_bridge` | `interfaces/bridge_settings/*` | 24.7 |
 
 End-to-end example: [`examples/complete/wireguard-site/main.tf`](examples/complete/wireguard-site/main.tf).
 
