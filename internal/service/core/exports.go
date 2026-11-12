@@ -10,11 +10,13 @@ import (
 func Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		newTunableResource,
+		newHasyncResource,
 	}
 }
 
 func DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		newTunableDataSource,
+		newHasyncDataSource,
 	}
 }
