@@ -68,6 +68,8 @@ resource "opnsense_wireguard_server" "example0" {
 
 ### Optional
 
+- `carp_depend_on` (String) CARP virtual IP (by its `id`/UUID) this instance depends on; the tunnel only comes up on the CARP master. Defaults to `""`.
+- `debug` (Boolean) Enable debug logging for this instance. Defaults to `false`.
 - `disable_routes` (Boolean) Disables installation of routes. Usually you only enable this to do own routing decisions via a local gateway and gateway rules. Defaults to `false`.
 - `dns` (Set of String) The interface specific DNS servers. Defaults to `[]`.
 - `enabled` (Boolean) Enable this server. Defaults to `true`.
@@ -79,6 +81,7 @@ resource "opnsense_wireguard_server" "example0" {
 
 ### Read-Only
 
+- `device` (String) Device name of the tunnel (`wgX`). Use as `device` in `opnsense_interfaces_assignment` to assign the instance as an interface.
 - `id` (String) UUID of the server.
 - `instance` (String) The instance number to give the wg interface a unique name (wgX).
 

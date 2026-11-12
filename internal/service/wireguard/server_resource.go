@@ -126,6 +126,7 @@ func (r *serverResource) Create(ctx context.Context, req resource.CreateRequest,
 
 	// Update resource with generated attributes
 	data.Instance = wgServerModel.Instance
+	data.Device = wgServerModel.Device
 
 	// Write logs using the tflog package
 	tflog.Trace(ctx, "created a resource")

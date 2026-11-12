@@ -3,6 +3,7 @@ package wireguard
 import (
 	"context"
 
+	"github.com/browningluke/opnsense-go/pkg/api"
 	"github.com/browningluke/opnsense-go/pkg/wireguard"
 	"github.com/browningluke/terraform-provider-opnsense/internal/tools"
 	"github.com/browningluke/terraform-provider-opnsense/internal/validators"
@@ -32,9 +33,12 @@ type serverResourceModel struct {
 	Peers         types.Set    `tfsdk:"peers"`
 	DisableRoutes types.Bool   `tfsdk:"disable_routes"`
 	Gateway       types.String `tfsdk:"gateway"`
+	CarpDependOn  types.String `tfsdk:"carp_depend_on"`
+	Debug         types.Bool   `tfsdk:"debug"`
 
 	Id       types.String `tfsdk:"id"`
 	Instance types.String `tfsdk:"instance"`
+	Device   types.String `tfsdk:"device"`
 }
 
 func serverResourceSchema() schema.Schema {
@@ -107,6 +111,25 @@ func serverResourceSchema() schema.Schema {
 				Default:             stringdefault.StaticString(""),
 				Validators: []validator.String{
 					validators.RequiredWhenBool(path.MatchRoot("disable_routes"), true),
+				},
+			},
+			"carp_depend_on": schema.StringAttribute{
+				MarkdownDescription: "CARP virtual IP (by its `id`/UUID) this instance depends on; the tunnel only comes up on the CARP master. Defaults to `\"\"`.",
+				Optional:            true,
+				Computed:            true,
+				Default:             stringdefault.StaticString(""),
+			},
+			"debug": schema.BoolAttribute{
+				MarkdownDescription: "Enable debug logging for this instance. Defaults to `false`.",
+				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(false),
+			},
+			"device": schema.StringAttribute{
+				Computed:            true,
+				MarkdownDescription: "Device name of the tunnel (`wgX`). Use as `device` in `opnsense_interfaces_assignment` to assign the instance as an interface.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"instance": schema.StringAttribute{
@@ -189,6 +212,18 @@ func serverDataSourceSchema() dschema.Schema {
 				MarkdownDescription: "The instance number to give the wg interface a unique name (wgX).",
 				Computed:            true,
 			},
+			"carp_depend_on": dschema.StringAttribute{
+				MarkdownDescription: "CARP virtual IP this instance depends on.",
+				Computed:            true,
+			},
+			"debug": dschema.BoolAttribute{
+				MarkdownDescription: "Whether debug logging is enabled.",
+				Computed:            true,
+			},
+			"device": dschema.StringAttribute{
+				MarkdownDescription: "Device name of the tunnel (`wgX`).",
+				Computed:            true,
+			},
 		},
 	}
 }
@@ -218,6 +253,8 @@ func convertServerSchemaToStruct(d *serverResourceModel) (*wireguard.Server, err
 		Peers:         peersList,
 		DisableRoutes: tools.BoolToString(d.DisableRoutes.ValueBool()),
 		Gateway:       d.Gateway.ValueString(),
+		CarpDependOn:  api.SelectedMap(d.CarpDependOn.ValueString()),
+		Debug:         tools.BoolToString(d.Debug.ValueBool()),
 		Instance:      "", // Instance must be set, but always to an empty string (plugin requirement)
 	}, nil
 }
@@ -235,7 +272,13 @@ func convertServerStructToSchema(d *wireguard.Server) (*serverResourceModel, err
 		Peers:         types.SetNull(types.StringType),
 		DisableRoutes: types.BoolValue(tools.StringToBool(d.DisableRoutes)),
 		Gateway:       types.StringValue(d.Gateway),
+		CarpDependOn:  types.StringValue(d.CarpDependOn.String()),
+		Debug:         types.BoolValue(tools.StringToBool(d.Debug)),
 		Instance:      types.StringValue(d.Instance),
+		Device:        types.StringNull(),
+	}
+	if d.Instance != "" {
+		model.Device = types.StringValue("wg" + d.Instance)
 	}
 
 	// Parse 'DNS'

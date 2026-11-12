@@ -64,11 +64,11 @@ jobs:
               "unbound": ["unbound"],
               "ipsec": ["ipsec"],
               "other": ["cron", "diagnostics", "dnsmasq", "interfaces", "kea",
-                        "openvpn", "quagga", "routes", "trust", "wireguard"],
+                        "openvpn", "quagga", "routes", "routing", "trust", "wireguard"],
           }
           # Non-service packages, tested with "other" on full-suite runs.
           EXTRA_OTHER = ["./internal/provider/...", "./internal/tools/...",
-                         "./internal/validators/..."]
+                         "./internal/validators/...", "./internal/acctest/mockopnsense/..."]
 
           assigned = {p for pkgs in SHARDS.values() for p in pkgs}
           on_disk = {d for d in os.listdir("internal/service")

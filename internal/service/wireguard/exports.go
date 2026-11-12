@@ -10,6 +10,8 @@ import (
 func Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		newClientResource,
+		newKeyPairResource,
+		newPskResource,
 		newServerResource,
 		newSettingsResource,
 	}

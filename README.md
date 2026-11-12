@@ -126,6 +126,7 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Firewall/NPTv6`                 | ❌        | ❌           |
 | `Firewall/Source NAT`            | ✅        | ✅           |
 | `Firewall/One-to-One NAT`        | ✅        | ✅           |
+| `Interfaces/Assignment`          | 🚧       | 🚧          |
 | `Interfaces/Bridge`              | ❌        | ❌           |
 | `Interfaces/Gif`                 | ❌        | ❌           |
 | `Interfaces/Gre`                 | ❌        | ❌           |
@@ -163,7 +164,8 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Openvpn/Instances/Static Key`   | ✅        | ✅           |
 | `Openvpn/Instances/Generate Key` | ✅ (ephemeral) |        |
 | `Routes/Route`                   | ✅        | ✅           |
-| `Routing/Gateway`                | ❌        | ❌           |
+| `Routing/Gateway`                | 🚧       | 🚧          |
+| `Routing/Gateway Group`          | 🚧       | 🚧          |
 | `Syslog/Settings`                | ❌        | ❌           |
 | `Syslog/Settings/Destination`    | ❌        | ❌           |
 | `Trafficshaper/Pipe`             | ❌        | ❌           |
@@ -181,8 +183,8 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Wireguard/Settings`             | ❌        | ❌           |
 | `Wireguard/Client`               | 🚧       | 🚧          |
 | `Wireguard/Server`               | 🚧       | 🚧          |
-| `Wireguard/Generate Key Pair`    | ❌        | ❌           |
-| `Wireguard/Generate PSK`         | ❌        | ❌           |
+| `Wireguard/Generate Key Pair`    | 🚧       |             |
+| `Wireguard/Generate PSK`         | 🚧       |             |
 
 ### Plugin API
 
