@@ -47,6 +47,7 @@ This is a fork of [browningluke/terraform-provider-opnsense](https://github.com/
 | `opnsense_dnsmasq_domain` | `dnsmasq/settings/*_domain` | 25.7 |
 | `opnsense_dnsmasq_boot` | `dnsmasq/settings/*_boot` | 25.7 |
 | `opnsense_kea_ctrl_agent` (singleton; import with ID `kea_ctrl_agent`) | `kea/ctrl_agent/get,set` | 24.7 |
+| `opnsense_ipsec_settings` (singleton, general section; import with ID `ipsec_settings`) | `ipsec/settings/get,set` | 24.7 |
 
 End-to-end example: [`examples/complete/wireguard-site/main.tf`](examples/complete/wireguard-site/main.tf).
 
