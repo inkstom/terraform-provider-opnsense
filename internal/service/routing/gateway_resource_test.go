@@ -61,7 +61,7 @@ func TestAccRoutingGatewayResource(t *testing.T) {
 func TestAccRoutingGatewayGroupResource(t *testing.T) {
 	gateways := testAccGatewayConfig("TFACC_GGW1", "203.0.113.11", "") + testAccGatewayConfig("TFACC_GGW2", "203.0.113.12", "")
 	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccPreCheck(t) },
+		PreCheck:                 func() { acctest.MinVersionPreCheck(t, "26.7") },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{

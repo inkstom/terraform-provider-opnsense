@@ -69,7 +69,7 @@ func assignmentResourceSchema() schema.Schema {
 	}
 
 	return schema.Schema{
-		MarkdownDescription: "Assigns a network device (NIC, VLAN, WireGuard `wgX`, bridge, LAGG, ...) to a logical interface (`optN`) and configures it (Interfaces > Assignments). " +
+		MarkdownDescription: "Assigns a network device (NIC, VLAN, WireGuard `wgX`, bridge, LAGG, ...) to a logical interface (`optN`) and configures it (Interfaces > Assignments). Requires OPNsense 26.7.7 or later. " +
 			"Requires OPNsense 26.7.7 or later.\n\n" +
 			"~> **Warning:** every change runs a full interface apply on the firewall. Changing the interface you reach the API through can cut off Terraform mid-apply. " +
 			"Deleting an assignment also deletes firewall/NAT rules that reference only that interface.\n\n" +

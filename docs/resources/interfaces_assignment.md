@@ -2,14 +2,14 @@
 page_title: "opnsense_interfaces_assignment Resource - terraform-provider-opnsense"
 subcategory: Interfaces
 description: |-
-  Assigns a network device (NIC, VLAN, WireGuard wgX, bridge, LAGG, ...) to a logical interface (optN) and configures it (Interfaces > Assignments). Requires OPNsense 26.7.7 or later.
+  Assigns a network device (NIC, VLAN, WireGuard wgX, bridge, LAGG, ...) to a logical interface (optN) and configures it (Interfaces > Assignments). Requires OPNsense 26.7.7 or later. Requires OPNsense 26.7.7 or later.
   ~> Warning: every change runs a full interface apply on the firewall. Changing the interface you reach the API through can cut off Terraform mid-apply. Deleting an assignment also deletes firewall/NAT rules that reference only that interface.
   Only static, DHCP and track/SLAAC-style addressing are modelled; settings not exposed here are left untouched on update.
 ---
 
 # opnsense_interfaces_assignment (Resource)
 
-Assigns a network device (NIC, VLAN, WireGuard `wgX`, bridge, LAGG, ...) to a logical interface (`optN`) and configures it (Interfaces > Assignments). Requires OPNsense 26.7.7 or later.
+Assigns a network device (NIC, VLAN, WireGuard `wgX`, bridge, LAGG, ...) to a logical interface (`optN`) and configures it (Interfaces > Assignments). Requires OPNsense 26.7.7 or later. Requires OPNsense 26.7.7 or later.
 
 ~> **Warning:** every change runs a full interface apply on the firewall. Changing the interface you reach the API through can cut off Terraform mid-apply. Deleting an assignment also deletes firewall/NAT rules that reference only that interface.
 
