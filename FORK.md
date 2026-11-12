@@ -37,6 +37,7 @@ This is a fork of [browningluke/terraform-provider-opnsense](https://github.com/
 | `opnsense_ipsec_pool` | `ipsec/pools/*` | 24.7 |
 | `opnsense_ipsec_key_pair` | `ipsec/key_pairs/*` | 24.7 |
 | `opnsense_ipsec_manual_spd` | `ipsec/manual_spd/*` | 24.7 |
+| `opnsense_firewall_npt` | `firewall/npt/*` | 24.7 |
 
 End-to-end example: [`examples/complete/wireguard-site/main.tf`](examples/complete/wireguard-site/main.tf).
 
