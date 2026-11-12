@@ -37,7 +37,7 @@ resource "opnsense_auth_group" "helpdesk" {
 
 - `description` (String) Group description. Defaults to `""`.
 - `members` (Set of String) User IDs (`uid`) of the members, e.g. `["0"]` for root. Leave unset to leave membership unmanaged here, for example when users join through `opnsense_auth_user.group_memberships`.
-- `privileges` (Set of String) Privilege IDs granted to the group, e.g. `page-all` or `page-diagnostics-arptable`. Defaults to `[]`.
+- `privileges` (Set of String) Privilege IDs granted to the group, e.g. `page-diagnostics-arptable`. The same data as `opnsense_auth_privilege`: manage each privilege in one place only. Leave unset to leave it unmanaged here.
 - `source_networks` (Set of String) Networks (CIDR) members may log in from. Empty allows any. Defaults to `[]`.
 
 ### Read-Only

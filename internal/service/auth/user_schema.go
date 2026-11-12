@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -73,11 +72,10 @@ func userResourceSchema() schema.Schema {
 			"landing_page":    optString("Page shown after login, e.g. `/ui/core/dashboard`."),
 			"language":        optString("UI language code, e.g. `en_US`; empty uses the system default."),
 			"privileges": schema.SetAttribute{
-				MarkdownDescription: "Privilege IDs granted directly to the user. Prefer granting through groups. Defaults to `[]`.",
-				ElementType:         types.StringType,
-				Optional:            true,
-				Computed:            true,
-				Default:             setdefault.StaticValue(tools.EmptySetValue(types.StringType)),
+				MarkdownDescription: "Privilege IDs granted to the user, e.g. `page-diagnostics-arptable`. " +
+					"The same data as `opnsense_auth_privilege`: manage each privilege in one place only. Leave unset to leave it unmanaged here.",
+				ElementType: types.StringType,
+				Optional:    true,
 			},
 			"group_memberships": schema.SetAttribute{
 				MarkdownDescription: "Group IDs (`gid`) the user belongs to, e.g. `[\"1999\"]` for `admins`. " +
@@ -181,7 +179,13 @@ func mergeUserWriteOnly(prior, read *userResourceModel) {
 		return
 	}
 	read.Password = prior.Password
-	if !prior.Name.IsNull() && prior.GroupMemberships.IsNull() {
+	if prior.Name.IsNull() {
+		return
+	}
+	if prior.GroupMemberships.IsNull() {
 		read.GroupMemberships = types.SetNull(types.StringType)
+	}
+	if prior.Privileges.IsNull() {
+		read.Privileges = types.SetNull(types.StringType)
 	}
 }

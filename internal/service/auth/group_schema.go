@@ -40,11 +40,10 @@ func groupResourceSchema() schema.Schema {
 				Default:             stringdefault.StaticString(""),
 			},
 			"privileges": schema.SetAttribute{
-				MarkdownDescription: "Privilege IDs granted to the group, e.g. `page-all` or `page-diagnostics-arptable`. Defaults to `[]`.",
-				ElementType:         types.StringType,
-				Optional:            true,
-				Computed:            true,
-				Default:             setdefault.StaticValue(tools.EmptySetValue(types.StringType)),
+				MarkdownDescription: "Privilege IDs granted to the group, e.g. `page-diagnostics-arptable`. " +
+					"The same data as `opnsense_auth_privilege`: manage each privilege in one place only. Leave unset to leave it unmanaged here.",
+				ElementType: types.StringType,
+				Optional:    true,
 			},
 			"members": schema.SetAttribute{
 				MarkdownDescription: "User IDs (`uid`) of the members, e.g. `[\"0\"]` for root. Leave unset to leave membership " +
@@ -113,11 +112,17 @@ func convertGroupStructToSchema(d *auth.Group) (*groupResourceModel, error) {
 	}, nil
 }
 
-// mergeGroupWriteOnly leaves members null when they are not managed here
-// (prior has a name but no members). On import, prior has no name yet and the
+// mergeGroupWriteOnly leaves members and privileges null when they are not
+// managed here (prior has a name but the attribute is null). On import, prior has no name yet and the
 // live members are kept.
 func mergeGroupWriteOnly(prior, read *groupResourceModel) {
-	if prior != nil && !prior.Name.IsNull() && prior.Members.IsNull() {
+	if prior == nil || prior.Name.IsNull() {
+		return
+	}
+	if prior.Members.IsNull() {
 		read.Members = types.SetNull(types.StringType)
+	}
+	if prior.Privileges.IsNull() {
+		read.Privileges = types.SetNull(types.StringType)
 	}
 }

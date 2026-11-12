@@ -151,16 +151,21 @@ func (r *groupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		return
 	}
 
-	// Unmanaged membership: send what OPNsense has now, so this update does
-	// not undo memberships managed elsewhere.
-	if data.Members.IsNull() {
+	// Unmanaged attributes (null in config): send what OPNsense has now, so
+	// this update does not undo changes managed elsewhere.
+	if data.Members.IsNull() || data.Privileges.IsNull() {
 		current, err := r.client.Auth().GetGroup(ctx, data.Id.ValueString())
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error",
 				fmt.Sprintf("Unable to read group before update, got error: %s", err))
 			return
 		}
-		obj.Member = current.Member
+		if data.Members.IsNull() {
+			obj.Member = current.Member
+		}
+		if data.Privileges.IsNull() {
+			obj.Privilege = current.Privilege
+		}
 	}
 
 	if err := r.client.Auth().UpdateGroup(ctx, data.Id.ValueString(), obj); err != nil {

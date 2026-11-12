@@ -97,7 +97,7 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | Module/Controller/Resource       | Resource | Data Source |
 |----------------------------------|----------|-------------|
 | `Auth/Group`                     | ✅        | ✅           |
-| `Auth/Priv`                      | ❌        | ❌           |
+| `Auth/Priv`                      | ✅        | ✅           |
 | `Auth/User`                      | ✅        | ✅           |
 | `Captiveportal/Settings`         | ❌        | ❌           |
 | `Captiveportal/Service/Template` | ❌        | ❌           |

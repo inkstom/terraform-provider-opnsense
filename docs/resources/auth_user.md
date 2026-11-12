@@ -58,7 +58,7 @@ resource "opnsense_auth_user" "backup" {
 - `landing_page` (String) Page shown after login, e.g. `/ui/core/dashboard`. Defaults to `""`.
 - `language` (String) UI language code, e.g. `en_US`; empty uses the system default. Defaults to `""`.
 - `password` (String, Sensitive) Login password. Omit to have OPNsense set a random password.
-- `privileges` (Set of String) Privilege IDs granted directly to the user. Prefer granting through groups. Defaults to `[]`.
+- `privileges` (Set of String) Privilege IDs granted to the user, e.g. `page-diagnostics-arptable`. The same data as `opnsense_auth_privilege`: manage each privilege in one place only. Leave unset to leave it unmanaged here.
 - `shell` (String) Login shell: `""` (none), `/bin/csh`, `/bin/sh` or `/bin/tcsh`. Defaults to `""`.
 
 ### Read-Only

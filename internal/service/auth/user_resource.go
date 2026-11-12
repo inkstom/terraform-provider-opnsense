@@ -151,16 +151,21 @@ func (r *userResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		return
 	}
 
-	// Unmanaged membership: send what OPNsense has now, so this update does
-	// not undo memberships managed elsewhere.
-	if data.GroupMemberships.IsNull() {
+	// Unmanaged attributes (null in config): send what OPNsense has now, so
+	// this update does not undo changes managed elsewhere.
+	if data.GroupMemberships.IsNull() || data.Privileges.IsNull() {
 		current, err := r.client.Auth().GetUser(ctx, data.Id.ValueString())
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error",
 				fmt.Sprintf("Unable to read user before update, got error: %s", err))
 			return
 		}
-		obj.GroupMemberships = current.GroupMemberships
+		if data.GroupMemberships.IsNull() {
+			obj.GroupMemberships = current.GroupMemberships
+		}
+		if data.Privileges.IsNull() {
+			obj.Privilege = current.Privilege
+		}
 	}
 
 	// An omitted password means "leave it alone" on update; only Create asks
