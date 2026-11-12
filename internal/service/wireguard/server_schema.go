@@ -6,9 +6,7 @@ import (
 	"github.com/browningluke/opnsense-go/pkg/api"
 	"github.com/browningluke/opnsense-go/pkg/wireguard"
 	"github.com/browningluke/terraform-provider-opnsense/internal/tools"
-	"github.com/browningluke/terraform-provider-opnsense/internal/validators"
 	dschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
@@ -16,7 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -105,13 +102,10 @@ func serverResourceSchema() schema.Schema {
 				Default:             booldefault.StaticBool(false),
 			},
 			"gateway": schema.StringAttribute{
-				MarkdownDescription: "The gateway IP here when using Disable Routes feature. You also have to add this as a gateway in OPNsense. Must be set when `disable_routes` is `true`. Defaults to `\"\"`.",
+				MarkdownDescription: "The gateway IP here when using Disable Routes feature. You also have to add this as a gateway in OPNsense. Usually set when `disable_routes` is `true`, but OPNsense doesn't require it (routes can come from elsewhere, e.g. static routes or a routing daemon). Defaults to `\"\"`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString(""),
-				Validators: []validator.String{
-					validators.RequiredWhenBool(path.MatchRoot("disable_routes"), true),
-				},
 			},
 			"carp_depend_on": schema.StringAttribute{
 				MarkdownDescription: "CARP virtual IP (by its `id`/UUID) this instance depends on; the tunnel only comes up on the CARP master. Defaults to `\"\"`.",

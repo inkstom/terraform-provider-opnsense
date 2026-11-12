@@ -84,7 +84,7 @@ resource "opnsense_firewall_nat" "example_three" {
 
 ### Optional
 
-- `description` (String) Optional description here for your reference (not parsed). Must be between 1 and 255 characters. Must be a character in set `[a-zA-Z0-9 .]`.
+- `description` (String) Optional description here for your reference (not parsed). Must be a single line of 1 to 255 characters.
 - `destination` (Attributes) (see [below for nested schema](#nestedatt--destination))
 - `disable_nat` (Boolean) Enabling this option will disable NAT for traffic matching this rule and stop processing Outbound NAT rules. Defaults to `false`.
 - `enabled` (Boolean) Enable this firewall NAT rule. Defaults to `true`.
