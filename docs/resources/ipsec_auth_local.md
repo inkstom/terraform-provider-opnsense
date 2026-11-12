@@ -59,10 +59,10 @@ resource "opnsense_ipsec_auth_remote" "example" {
 
 ### Optional
 
-- `auth_id` (String) Authentication ID for the AuthLocal Resource.
+- `auth_id` (String) Authentication ID for the AuthLocal Resource. Defaults to `""`.
 - `certificates` (Set of String) List of certificates for the AuthLocal Resource.
 - `description` (String) Optional description for the AuthLocal Resource.
-- `eap_id` (String) EAP ID for the AuthLocal Resource.
+- `eap_id` (String) EAP ID for the AuthLocal Resource. Defaults to `""`.
 - `enabled` (String) Enable or disable the AuthLocal Resource.
 - `public_keys` (Set of String) List of public keys for the AuthLocal Resource.
 - `round` (String) Authentication round for the AuthLocal Resource.

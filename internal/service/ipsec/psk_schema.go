@@ -38,6 +38,7 @@ func pskResourceSchema() schema.Schema {
 			"pre_shared_key": schema.StringAttribute{
 				MarkdownDescription: "The pre-shared key used for authentication.",
 				Required:            true,
+				Sensitive:           true,
 			},
 			"type": schema.StringAttribute{
 				MarkdownDescription: "Type of the pre-shared key. Valid values are 'PSK' (traditional pre-shared key) or 'EAP' (for EAP-MSCHAPv2 authentication).",
@@ -82,6 +83,7 @@ func pskDataSourceSchema() dschema.Schema {
 			"pre_shared_key": dschema.StringAttribute{
 				MarkdownDescription: "The pre-shared key used for authentication.",
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"type": dschema.StringAttribute{
 				MarkdownDescription: "Type of the pre-shared key, e.g., 'psk'.",

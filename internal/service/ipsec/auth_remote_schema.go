@@ -56,12 +56,16 @@ func authRemoteResourceSchema() schema.Schema {
 				Required:            true,
 			},
 			"auth_id": schema.StringAttribute{
-				MarkdownDescription: "Authentication ID for the AuthRemote Resource.",
+				MarkdownDescription: "Authentication ID for the AuthRemote Resource. Defaults to `\"\"`.",
 				Optional:            true,
+				Computed:            true,
+				Default:             stringdefault.StaticString(""),
 			},
 			"eap_id": schema.StringAttribute{
-				MarkdownDescription: "EAP ID for the AuthRemote Resource.",
+				MarkdownDescription: "EAP ID for the AuthRemote Resource. Defaults to `\"\"`.",
 				Optional:            true,
+				Computed:            true,
+				Default:             stringdefault.StaticString(""),
 			},
 			"certificates": schema.SetAttribute{
 				ElementType:         types.StringType,

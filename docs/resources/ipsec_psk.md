@@ -29,7 +29,7 @@ resource "opnsense_ipsec_psk" "example" {
 
 - `identity_local` (String) Local identity for the PSK.
 - `identity_remote` (String) Remote identity for the PSK.
-- `pre_shared_key` (String) The pre-shared key used for authentication.
+- `pre_shared_key` (String, Sensitive) The pre-shared key used for authentication.
 
 ### Optional
 
