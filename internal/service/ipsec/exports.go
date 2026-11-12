@@ -18,6 +18,7 @@ func Resources(ctx context.Context) []func() resource.Resource {
 		newPoolResource,
 		newKeyPairResource,
 		newManualSpdResource,
+		newSettingsResource,
 	}
 }
 
@@ -26,5 +27,6 @@ func DataSources(ctx context.Context) []func() datasource.DataSource {
 		newPoolDataSource,
 		newKeyPairDataSource,
 		newManualSpdDataSource,
+		newSettingsDataSource,
 	}
 }

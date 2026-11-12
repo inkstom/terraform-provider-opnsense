@@ -137,7 +137,7 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Interfaces/Vip`                 | ✅        | ✅           |
 | `Interfaces/Vlan`                | ✅        | ✅           |
 | `Interfaces/Vxlan`               | ✅        | ✅           |
-| `Ipsec/Settings`                 | ❌        | ❌           |
+| `Ipsec/Settings`                 | ✅        | ✅           |
 | `Ipsec/Connections/Local`        | ✅        | ❌           |
 | `Ipsec/Connections/Remote`       | ✅        | ❌           |
 | `Ipsec/Connections/Child`        | ✅        | ❌           |
