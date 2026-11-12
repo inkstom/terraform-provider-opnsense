@@ -22,6 +22,9 @@ This is a fork of [browningluke/terraform-provider-opnsense](https://github.com/
 | `opnsense_dhcrelay_destination` | `dhcrelay/settings/*_dest` | 25.x |
 | `opnsense_dhcrelay_relay` | `dhcrelay/settings/*_relay` | 25.x |
 | `opnsense_syslog_destination` (`levels` is multi-select; `+suppress`) | `syslog/settings/*Destination` | 25.x |
+| `opnsense_monit_service` | `monit/settings/*Service` | 25.x |
+| `opnsense_monit_test` | `monit/settings/*Test` | 25.x |
+| `opnsense_monit_alert` | `monit/settings/*Alert` | 25.x |
 
 End-to-end example: [`examples/complete/wireguard-site/main.tf`](examples/complete/wireguard-site/main.tf).
 
