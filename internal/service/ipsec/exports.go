@@ -15,9 +15,16 @@ func Resources(ctx context.Context) []func() resource.Resource {
 		newConnectionResource,
 		newPskResource,
 		newVtiResource,
+		newPoolResource,
+		newKeyPairResource,
+		newManualSpdResource,
 	}
 }
 
 func DataSources(ctx context.Context) []func() datasource.DataSource {
-	return []func() datasource.DataSource{}
+	return []func() datasource.DataSource{
+		newPoolDataSource,
+		newKeyPairDataSource,
+		newManualSpdDataSource,
+	}
 }
