@@ -25,5 +25,8 @@ func DataSources(ctx context.Context) []func() datasource.DataSource {
 		newTagDataSource,
 		newDomainDataSource,
 		newBootDataSource,
+		newRangeDataSource,
+		newOptionDataSource,
+		newSettingsDataSource,
 	}
 }

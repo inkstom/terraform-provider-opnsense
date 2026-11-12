@@ -25,6 +25,10 @@ resource "opnsense_dnsmasq_range" "test" {
   end_address   = "10.0.2.150"
   lease_time    = 4000
   description   = "tfacc dynamic range"
+}
+
+data "opnsense_dnsmasq_range" "test" {
+  id = opnsense_dnsmasq_range.test.id
 }`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("opnsense_dnsmasq_range.test", "id"),
@@ -33,6 +37,13 @@ resource "opnsense_dnsmasq_range" "test" {
 					resource.TestCheckResourceAttr("opnsense_dnsmasq_range.test", "domain_type", "range"),
 					resource.TestCheckResourceAttr("opnsense_dnsmasq_range.test", "mode", ""),
 					resource.TestCheckNoResourceAttr("opnsense_dnsmasq_range.test", "prefix_length"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_range.test", "interface", "opnsense_dnsmasq_range.test", "interface"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_range.test", "start_address", "opnsense_dnsmasq_range.test", "start_address"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_range.test", "end_address", "opnsense_dnsmasq_range.test", "end_address"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_range.test", "lease_time", "opnsense_dnsmasq_range.test", "lease_time"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_range.test", "description", "opnsense_dnsmasq_range.test", "description"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_range.test", "domain_type", "opnsense_dnsmasq_range.test", "domain_type"),
+					resource.TestCheckNoResourceAttr("data.opnsense_dnsmasq_range.test", "prefix_length"),
 				),
 			},
 			{
@@ -74,12 +85,22 @@ resource "opnsense_dnsmasq_option" "test" {
   interface   = "wan"
   value       = "10.0.2.15"
   description = "tfacc dns option"
+}
+
+data "opnsense_dnsmasq_option" "test" {
+  id = opnsense_dnsmasq_option.test.id
 }`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("opnsense_dnsmasq_option.test", "id"),
 					resource.TestCheckResourceAttr("opnsense_dnsmasq_option.test", "type", "set"),
 					resource.TestCheckResourceAttr("opnsense_dnsmasq_option.test", "option", "6"),
 					resource.TestCheckResourceAttr("opnsense_dnsmasq_option.test", "force", "false"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_option.test", "option", "opnsense_dnsmasq_option.test", "option"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_option.test", "interface", "opnsense_dnsmasq_option.test", "interface"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_option.test", "value", "opnsense_dnsmasq_option.test", "value"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_option.test", "type", "opnsense_dnsmasq_option.test", "type"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_option.test", "force", "opnsense_dnsmasq_option.test", "force"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_option.test", "description", "opnsense_dnsmasq_option.test", "description"),
 				),
 			},
 			{
@@ -128,7 +149,11 @@ func TestAccDnsmasqSettingsResource(t *testing.T) {
 			},
 			{
 				Config: fmt.Sprintf(dnsmasqSettingsBase, `dhcp_log_dhcp = true
-  cache_size    = 500`),
+  cache_size    = 500`) + `
+
+data "opnsense_dnsmasq_settings" "this" {
+  depends_on = [opnsense_dnsmasq_settings.this]
+}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("opnsense_dnsmasq_settings.this", "id", "dnsmasq_settings"),
 					resource.TestCheckResourceAttr("opnsense_dnsmasq_settings.this", "enabled", "true"),
@@ -137,6 +162,13 @@ func TestAccDnsmasqSettingsResource(t *testing.T) {
 					resource.TestCheckResourceAttr("opnsense_dnsmasq_settings.this", "cache_size", "500"),
 					resource.TestCheckResourceAttr("opnsense_dnsmasq_settings.this", "dhcp_host_ping", "true"),
 					resource.TestCheckResourceAttr("opnsense_dnsmasq_settings.this", "no_ident", "true"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_settings.this", "id", "opnsense_dnsmasq_settings.this", "id"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_settings.this", "enabled", "opnsense_dnsmasq_settings.this", "enabled"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_settings.this", "port", "opnsense_dnsmasq_settings.this", "port"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_settings.this", "cache_size", "opnsense_dnsmasq_settings.this", "cache_size"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_settings.this", "dhcp_log_dhcp", "opnsense_dnsmasq_settings.this", "dhcp_log_dhcp"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_settings.this", "interfaces.#", "opnsense_dnsmasq_settings.this", "interfaces.#"),
+					resource.TestCheckResourceAttrPair("data.opnsense_dnsmasq_settings.this", "no_ident", "opnsense_dnsmasq_settings.this", "no_ident"),
 				),
 			},
 			{
