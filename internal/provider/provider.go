@@ -22,6 +22,7 @@ import (
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/routes"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/routing"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/syslog"
+	"github.com/browningluke/terraform-provider-opnsense/internal/service/trafficshaper"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/trust"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/unbound"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/wireguard"
@@ -302,6 +303,7 @@ func (p *opnsenseProvider) Resources(ctx context.Context) []func() resource.Reso
 		interfaces.Resources(ctx),
 		ipsec.Resources(ctx),
 		cron.Resources(ctx),
+		trafficshaper.Resources(ctx),
 		monit.Resources(ctx),
 		syslog.Resources(ctx),
 		dhcrelay.Resources(ctx),
@@ -332,6 +334,7 @@ func (p *opnsenseProvider) DataSources(ctx context.Context) []func() datasource.
 		interfaces.DataSources(ctx),
 		ipsec.DataSources(ctx),
 		cron.DataSources(ctx),
+		trafficshaper.DataSources(ctx),
 		monit.DataSources(ctx),
 		syslog.DataSources(ctx),
 		dhcrelay.DataSources(ctx),

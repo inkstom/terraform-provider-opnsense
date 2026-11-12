@@ -31,6 +31,9 @@ This is a fork of [browningluke/terraform-provider-opnsense](https://github.com/
 | `opnsense_interfaces_vxlan` | `interfaces/vxlan_settings/*` | 25.x |
 | `opnsense_interfaces_neighbor` | `interfaces/neighbor_settings/*` | 25.x |
 | `opnsense_firewall_group` | `firewall/group/*` | 24.7 |
+| `opnsense_trafficshaper_pipe` | `trafficshaper/settings/*Pipe` | 24.7 |
+| `opnsense_trafficshaper_queue` | `trafficshaper/settings/*Queue` | 24.7 |
+| `opnsense_trafficshaper_rule` | `trafficshaper/settings/*Rule` | 24.7 |
 
 End-to-end example: [`examples/complete/wireguard-site/main.tf`](examples/complete/wireguard-site/main.tf).
 
