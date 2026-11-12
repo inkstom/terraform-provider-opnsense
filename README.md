@@ -102,7 +102,7 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Captiveportal/Settings`         | ❌        | ❌           |
 | `Captiveportal/Service/Template` | ❌        | ❌           |
 | `Captiveportal/Settings/Zone`    | ❌        | ❌           |
-| `Core/Hasync`                    | ❌        | ❌           |
+| `Core/Hasync`                    | ✅        | ✅           |
 | `Core/Snapshots`                 | ❌        | ❌           |
 | `Core/Tunables`                  | ✅        | ✅           |
 | `Cron/Job`                       | ❌        | ❌           |
