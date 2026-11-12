@@ -21,7 +21,7 @@ resource "opnsense_interfaces_vlan" "assign" {
 
 func TestAccInterfacesAssignmentResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccPreCheck(t) },
+		PreCheck:                 func() { acctest.MinVersionPreCheck(t, "26.7.7") },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{

@@ -2,12 +2,12 @@
 page_title: "opnsense_routing_gateway_group Resource - terraform-provider-opnsense"
 subcategory: Gateways
 description: |-
-  Gateway groups combine gateways into tiers for failover and load balancing (System > Gateways > Group). Requires OPNsense 26.7 or later. A group cannot be deleted while it is referenced, e.g. by a firewall rule.
+  Gateway groups combine gateways into tiers for failover and load balancing (System > Gateways > Group). Requires OPNsense 26.7 or later. Requires OPNsense 26.7 or later. A group cannot be deleted while it is referenced, e.g. by a firewall rule.
 ---
 
 # opnsense_routing_gateway_group (Resource)
 
-Gateway groups combine gateways into tiers for failover and load balancing (System > Gateways > Group). Requires OPNsense 26.7 or later. A group cannot be deleted while it is referenced, e.g. by a firewall rule.
+Gateway groups combine gateways into tiers for failover and load balancing (System > Gateways > Group). Requires OPNsense 26.7 or later. Requires OPNsense 26.7 or later. A group cannot be deleted while it is referenced, e.g. by a firewall rule.
 
 ## Example Usage
 
