@@ -16,6 +16,7 @@ import (
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/interfaces"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/ipsec"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/kea"
+	"github.com/browningluke/terraform-provider-opnsense/internal/service/monit"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/openvpn"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/quagga"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/routes"
@@ -301,6 +302,7 @@ func (p *opnsenseProvider) Resources(ctx context.Context) []func() resource.Reso
 		interfaces.Resources(ctx),
 		ipsec.Resources(ctx),
 		cron.Resources(ctx),
+		monit.Resources(ctx),
 		syslog.Resources(ctx),
 		dhcrelay.Resources(ctx),
 		core.Resources(ctx),
@@ -330,6 +332,7 @@ func (p *opnsenseProvider) DataSources(ctx context.Context) []func() datasource.
 		interfaces.DataSources(ctx),
 		ipsec.DataSources(ctx),
 		cron.DataSources(ctx),
+		monit.DataSources(ctx),
 		syslog.DataSources(ctx),
 		dhcrelay.DataSources(ctx),
 		core.DataSources(ctx),
