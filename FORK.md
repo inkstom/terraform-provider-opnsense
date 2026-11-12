@@ -34,6 +34,9 @@ This is a fork of [browningluke/terraform-provider-opnsense](https://github.com/
 | `opnsense_trafficshaper_pipe` | `trafficshaper/settings/*Pipe` | 24.7 |
 | `opnsense_trafficshaper_queue` | `trafficshaper/settings/*Queue` | 24.7 |
 | `opnsense_trafficshaper_rule` | `trafficshaper/settings/*Rule` | 24.7 |
+| `opnsense_ipsec_pool` | `ipsec/pools/*` | 24.7 |
+| `opnsense_ipsec_key_pair` | `ipsec/key_pairs/*` | 24.7 |
+| `opnsense_ipsec_manual_spd` | `ipsec/manual_spd/*` | 24.7 |
 
 End-to-end example: [`examples/complete/wireguard-site/main.tf`](examples/complete/wireguard-site/main.tf).
 

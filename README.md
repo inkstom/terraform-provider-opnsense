@@ -142,9 +142,9 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Ipsec/Connections/Remote`       | ✅        | ❌           |
 | `Ipsec/Connections/Child`        | ✅        | ❌           |
 | `Ipsec/Connections/Connection`   | ✅        | ❌           |
-| `Ipsec/KeyPairs`                 | ❌        | ❌           |
-| `Ipsec/ManualSpd`                | ❌        | ❌           |
-| `Ipsec/Pools`                    | ❌        | ❌           |
+| `Ipsec/KeyPairs`                 | ✅        | ✅           |
+| `Ipsec/ManualSpd`                | ✅        | ✅           |
+| `Ipsec/Pools`                    | ✅        | ✅           |
 | `Ipsec/Psk`                      | ✅        | ❌           |
 | `Ipsec/Vti`                      | ✅        | ❌           |
 | `Kea/CtrlAgent`                  | ❌        | ❌           |
