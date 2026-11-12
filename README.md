@@ -168,9 +168,9 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Routing/Gateway Group`          | 🚧       | 🚧          |
 | `Syslog/Settings`                | ❌        | ❌           |
 | `Syslog/Settings/Destination`    | ✅        | ✅           |
-| `Trafficshaper/Pipe`             | ❌        | ❌           |
-| `Trafficshaper/Queue`            | ❌        | ❌           |
-| `Trafficshaper/Rule`             | ❌        | ❌           |
+| `Trafficshaper/Pipe`             | ✅        | ✅           |
+| `Trafficshaper/Queue`            | ✅        | ✅           |
+| `Trafficshaper/Rule`             | ✅        | ✅           |
 | `Trust/Settings`                 | ❌        | ❌           |
 | `Trust/CA`                       | ❌        | ❌           |
 | `Trust/Cert`                     | ❌        | ❌           |
