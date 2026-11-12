@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/browningluke/opnsense-go/pkg/api"
+	"github.com/browningluke/terraform-provider-opnsense/internal/service/auth"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/cron"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/diagnostics"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/dnsmasq"
@@ -297,6 +298,7 @@ func (p *opnsenseProvider) Resources(ctx context.Context) []func() resource.Reso
 		interfaces.Resources(ctx),
 		ipsec.Resources(ctx),
 		cron.Resources(ctx),
+		auth.Resources(ctx),
 		kea.Resources(ctx),
 		openvpn.Resources(ctx),
 		quagga.Resources(ctx),
@@ -322,6 +324,7 @@ func (p *opnsenseProvider) DataSources(ctx context.Context) []func() datasource.
 		interfaces.DataSources(ctx),
 		ipsec.DataSources(ctx),
 		cron.DataSources(ctx),
+		auth.DataSources(ctx),
 		kea.DataSources(ctx),
 		openvpn.DataSources(ctx),
 		quagga.DataSources(ctx),
