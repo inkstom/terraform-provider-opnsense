@@ -104,7 +104,7 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Captiveportal/Settings/Zone`    | ❌        | ❌           |
 | `Core/Hasync`                    | ❌        | ❌           |
 | `Core/Snapshots`                 | ❌        | ❌           |
-| `Core/Tunables`                  | ❌        | ❌           |
+| `Core/Tunables`                  | ✅        | ✅           |
 | `Cron/Job`                       | ❌        | ❌           |
 | `Dhcrelay/Settings`              | ❌        | ❌           |
 | `Dhcrelay/Settings/Dest`         | ❌        | ❌           |
