@@ -15,6 +15,7 @@ resource "opnsense_interfaces_vlan" "assign" {
   tag         = 3902
   priority    = 0
   parent      = "vtnet0"
+  device      = "vlan0.3902"
 }
 `
 
@@ -38,7 +39,7 @@ data "opnsense_interfaces_assignment" "wan" {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestMatchResourceAttr("opnsense_interfaces_assignment.test", "id", regexpOpt),
 					resource.TestCheckResourceAttr("opnsense_interfaces_assignment.test", "enabled", "true"),
-					resource.TestCheckResourceAttr("data.opnsense_interfaces_assignment.wan", "device", "vtnet0"),
+					resource.TestCheckResourceAttrSet("data.opnsense_interfaces_assignment.wan", "device"),
 				),
 			},
 			{

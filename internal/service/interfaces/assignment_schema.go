@@ -78,7 +78,7 @@ func assignmentResourceSchema() schema.Schema {
 
 		Attributes: map[string]schema.Attribute{
 			"device": schema.StringAttribute{
-				MarkdownDescription: "Device to assign, e.g. `igc2`, `vlan0.10` (see `opnsense_interfaces_vlan.device`), `wg0` (see `opnsense_wireguard_server.device`). A device can only be assigned once.",
+				MarkdownDescription: "Device to assign, e.g. `igc2`, `vlan0.10` (reference `opnsense_interfaces_vlan.device` only when you set that name explicitly; auto-generated names are not exposed), `wg0` (see `opnsense_wireguard_server.device`). A device can only be assigned once.",
 				Required:            true,
 			},
 			"description": schema.StringAttribute{

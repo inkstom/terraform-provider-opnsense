@@ -22,6 +22,7 @@ resource "opnsense_interfaces_vlan" "iot" {
   description = "IoT VLAN"
   tag         = 30
   parent      = "igc1"
+  device      = "vlan0.30" # set explicitly so it can be referenced below
 }
 
 # Assign the VLAN as an interface with a static address
@@ -58,7 +59,7 @@ resource "opnsense_firewall_filter" "iot_dns" {
 
 ### Required
 
-- `device` (String) Device to assign, e.g. `igc2`, `vlan0.10` (see `opnsense_interfaces_vlan.device`), `wg0` (see `opnsense_wireguard_server.device`). A device can only be assigned once.
+- `device` (String) Device to assign, e.g. `igc2`, `vlan0.10` (reference `opnsense_interfaces_vlan.device` only when you set that name explicitly; auto-generated names are not exposed), `wg0` (see `opnsense_wireguard_server.device`). A device can only be assigned once.
 
 ### Optional
 

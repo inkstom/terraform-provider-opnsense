@@ -2,6 +2,7 @@ resource "opnsense_interfaces_vlan" "iot" {
   description = "IoT VLAN"
   tag         = 30
   parent      = "igc1"
+  device      = "vlan0.30" # set explicitly so it can be referenced below
 }
 
 # Assign the VLAN as an interface with a static address
