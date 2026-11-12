@@ -113,12 +113,12 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Diagnostics/Lvtemplate`         | ❌        | ❌           |
 | `Diagnostics/Lvtemplate/Item`    | ❌        | ❌           |
 | `Dnsmasq/Settings`               | ✅        | ❌           |
-| `Dnsmasq/Settings/Boot`          | ❌        | ❌           |
-| `Dnsmasq/Settings/Domain`        | ❌        | ❌           |
+| `Dnsmasq/Settings/Boot`          | ✅        | ✅           |
+| `Dnsmasq/Settings/Domain`        | ✅        | ✅           |
 | `Dnsmasq/Settings/Host`          | ✅        | ✅           |
 | `Dnsmasq/Settings/Option`        | ✅        | ❌           |
 | `Dnsmasq/Settings/Range`         | ✅        | ❌           |
-| `Dnsmasq/Settings/Tag`           | ❌        | ❌           |
+| `Dnsmasq/Settings/Tag`           | ✅        | ✅           |
 | `Firewall/Alias`                 | ✅        | ✅           |
 | `Firewall/Category`              | 🚧       | 🚧          |
 | `Firewall/Filter`                | ✅        | ✅           |

@@ -1,0 +1,73 @@
+package dnsmasq
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/browningluke/opnsense-go/pkg/api"
+	"github.com/browningluke/opnsense-go/pkg/opnsense"
+	"github.com/hashicorp/terraform-plugin-framework/datasource"
+)
+
+var _ datasource.DataSource = &bootDataSource{}
+var _ datasource.DataSourceWithConfigure = &bootDataSource{}
+
+func newBootDataSource() datasource.DataSource {
+	return &bootDataSource{}
+}
+
+type bootDataSource struct {
+	client opnsense.Client
+}
+
+func (d *bootDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_dnsmasq_boot"
+}
+
+func (d *bootDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+	resp.Schema = bootDataSourceSchema()
+}
+
+func (d *bootDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+	if req.ProviderData == nil {
+		return
+	}
+
+	apiClient, ok := req.ProviderData.(*api.Client)
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Unexpected Resource Configure Type",
+			fmt.Sprintf("Expected *opnsense.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+		)
+		return
+	}
+
+	d.client = opnsense.NewClient(apiClient)
+}
+
+func (d *bootDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data *bootResourceModel
+
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	obj, err := d.client.Dnsmasq().GetBoot(ctx, data.Id.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error",
+			fmt.Sprintf("Unable to read dnsmasq boot entry, got error: %s", err))
+		return
+	}
+
+	model, err := convertBootStructToSchema(obj)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error",
+			fmt.Sprintf("Unable to read dnsmasq boot entry, got error: %s", err))
+		return
+	}
+
+	model.Id = data.Id
+	mergeBootWriteOnly(nil, model)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &model)...)
+}
