@@ -30,6 +30,8 @@ func TestAccSyslogDestinationResource(t *testing.T) {
 				ResourceName:      "opnsense_syslog_destination.test",
 				ImportState:       true,
 				ImportStateVerify: true,
+				// suppress is unmanaged when unset; import reads whatever the box has.
+				ImportStateVerifyIgnore: []string{"suppress"},
 			},
 			{
 				Config: testAccSyslogDestinationConfig("tcp4", "1514", `[]`, `[]`, true),
@@ -38,7 +40,7 @@ func TestAccSyslogDestinationResource(t *testing.T) {
 					resource.TestCheckResourceAttr("opnsense_syslog_destination.test", "port", "1514"),
 					resource.TestCheckResourceAttr("opnsense_syslog_destination.test", "levels.#", "0"),
 					resource.TestCheckResourceAttr("opnsense_syslog_destination.test", "rfc5424", "true"),
-					resource.TestCheckResourceAttr("opnsense_syslog_destination.test", "suppress", "true"),
+					resource.TestCheckNoResourceAttr("opnsense_syslog_destination.test", "suppress"),
 				),
 			},
 		},
@@ -55,7 +57,6 @@ resource "opnsense_syslog_destination" "test" {
   levels      = %[3]s
   programs    = %[4]s
   rfc5424     = %[5]t
-  suppress    = %[5]t
   description = "tf acc"
 }
 

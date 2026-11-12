@@ -85,10 +85,8 @@ func destinationResourceSchema() schema.Schema {
 				Default:             booldefault.StaticBool(false),
 			},
 			"suppress": schema.BoolAttribute{
-				MarkdownDescription: "Suppress repeated messages. Defaults to `false`.",
+				MarkdownDescription: "Suppress repeated messages. Needs OPNsense 26.7 or later; leave unset on older versions, which don't have the setting.",
 				Optional:            true,
-				Computed:            true,
-				Default:             booldefault.StaticBool(false),
 			},
 			"description": schema.StringAttribute{
 				MarkdownDescription: "Description. Defaults to `\"\"`.",
@@ -146,7 +144,7 @@ func convertDestinationSchemaToStruct(d *destinationResourceModel) (*syslog.Dest
 		Program:     api.SelectedMapList(tools.SetToStringSlice(d.Programs)),
 		Certificate: api.SelectedMap(d.Certificate.ValueString()),
 		Rfc5424:     tools.BoolToString(d.Rfc5424.ValueBool()),
-		Suppress:    tools.BoolToString(d.Suppress.ValueBool()),
+		Suppress:    boolOrEmpty(d.Suppress),
 		Description: d.Description.ValueString(),
 	}, nil
 }
@@ -162,9 +160,32 @@ func convertDestinationStructToSchema(d *syslog.Destination) (*destinationResour
 		Programs:    tools.StringSliceToSet(d.Program),
 		Certificate: types.StringValue(d.Certificate.String()),
 		Rfc5424:     types.BoolValue(tools.StringToBool(d.Rfc5424)),
-		Suppress:    types.BoolValue(tools.StringToBool(d.Suppress)),
+		Suppress:    emptyOrBool(d.Suppress),
 		Description: types.StringValue(d.Description),
 	}, nil
 }
 
-func mergeDestinationWriteOnly(prior, read *destinationResourceModel) {}
+// boolOrEmpty sends "" (omitted by the client) for an unset optional bool, so
+// OPNsense versions without the field are not sent it.
+func boolOrEmpty(v types.Bool) string {
+	if v.IsNull() || v.IsUnknown() {
+		return ""
+	}
+	return tools.BoolToString(v.ValueBool())
+}
+
+// emptyOrBool maps a field the OPNsense version doesn't have ("") to null.
+func emptyOrBool(s string) types.Bool {
+	if s == "" {
+		return types.BoolNull()
+	}
+	return types.BoolValue(tools.StringToBool(s))
+}
+
+// mergeDestinationWriteOnly keeps suppress unmanaged (null) when it is not
+// configured, even on versions that report it.
+func mergeDestinationWriteOnly(prior, read *destinationResourceModel) {
+	if prior != nil && !prior.Hostname.IsNull() && prior.Suppress.IsNull() {
+		read.Suppress = types.BoolNull()
+	}
+}

@@ -42,7 +42,7 @@ resource "opnsense_syslog_destination" "siem" {
 - `port` (String) Syslog server port. Defaults to `514`.
 - `programs` (Set of String) Applications to send, e.g. `filterlog`, `unbound`, `sshd`. Empty sends all. Defaults to `[]`.
 - `rfc5424` (Boolean) Send RFC 5424 formatted messages instead of BSD (RFC 3164). Defaults to `false`.
-- `suppress` (Boolean) Suppress repeated messages. Defaults to `false`.
+- `suppress` (Boolean) Suppress repeated messages. Needs OPNsense 26.7 or later; leave unset on older versions, which don't have the setting.
 
 ### Read-Only
 
