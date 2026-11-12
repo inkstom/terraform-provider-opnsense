@@ -1,0 +1,32 @@
+name: Post-merge Tests (OPNsense 26.7)
+
+# The main suites run on OPNsense 26.1. Some resources (gateway groups,
+# interface assignments) need 26.7 and skip there, so run the whole suite
+# on 26.7 as well after every merge.
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+      - 'examples/**'
+      - 'scripts/**'
+      - 'templates/**'
+      - 'README.md'
+      - '.github/**'
+  pull_request:
+    paths:
+      - '.github/workflows/terraform-test-26.7.yml'
+      - '.github/workflows/build-opnsense-image-reusable.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    uses: ./.github/workflows/terraform-test-reusable.yml
+    with:
+      packages: './...'
+      opnsense-version: '26.7'
+      opnsense-sha1: '85adfabb6b1e23beec8673e4bbe83e869666f954'
