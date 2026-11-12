@@ -167,7 +167,7 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Routing/Gateway`                | 🚧       | 🚧          |
 | `Routing/Gateway Group`          | 🚧       | 🚧          |
 | `Syslog/Settings`                | ❌        | ❌           |
-| `Syslog/Settings/Destination`    | ❌        | ❌           |
+| `Syslog/Settings/Destination`    | ✅        | ✅           |
 | `Trafficshaper/Pipe`             | ❌        | ❌           |
 | `Trafficshaper/Queue`            | ❌        | ❌           |
 | `Trafficshaper/Rule`             | ❌        | ❌           |
