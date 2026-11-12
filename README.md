@@ -91,6 +91,7 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 - ✅ = Fully implemented
 - 🚧 = Missing acceptance tests
 - ❌ = Not implemented
+- ➖ = Not applicable (no settings of its own, or read-only)
 
 ### Core API
 
@@ -99,17 +100,17 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Auth/Group`                     | ✅        | ✅           |
 | `Auth/Priv`                      | ✅        | ✅           |
 | `Auth/User`                      | ✅        | ✅           |
-| `Captiveportal/Settings`         | ❌        | ❌           |
+| `Captiveportal/Settings`         | ➖        | ➖           |
 | `Captiveportal/Service/Template` | ✅        | ✅           |
 | `Captiveportal/Settings/Zone`    | ✅        | ✅           |
 | `Core/Hasync`                    | ✅        | ✅           |
 | `Core/Snapshots`                 | ❌        | ❌           |
 | `Core/Tunables`                  | ✅        | ✅           |
 | `Cron/Job`                       | ✅        | ✅           |
-| `Dhcrelay/Settings`              | ❌        | ❌           |
+| `Dhcrelay/Settings`              | ➖        | ➖           |
 | `Dhcrelay/Settings/Dest`         | ✅        | ✅           |
 | `Dhcrelay/Settings/Relay`        | ✅        | ✅           |
-| `Diagnostics/Interface`          | ❌        | 🚧          |
+| `Diagnostics/Interface`          | ➖        | ✅          |
 | `Diagnostics/Lvtemplate`         | ❌        | ❌           |
 | `Diagnostics/Lvtemplate/Item`    | ❌        | ❌           |
 | `Dnsmasq/Settings`               | ✅        | ✅           |
@@ -120,13 +121,13 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Dnsmasq/Settings/Range`         | ✅        | ✅           |
 | `Dnsmasq/Settings/Tag`           | ✅        | ✅           |
 | `Firewall/Alias`                 | ✅        | ✅           |
-| `Firewall/Category`              | 🚧       | 🚧          |
+| `Firewall/Category`              | ✅       | ✅          |
 | `Firewall/Filter`                | ✅        | ✅           |
 | `Firewall/Group`                 | ✅        | ✅           |
 | `Firewall/NPTv6`                 | ✅        | ✅           |
 | `Firewall/Source NAT`            | ✅        | ✅           |
 | `Firewall/One-to-One NAT`        | ✅        | ✅           |
-| `Interfaces/Assignment`          | 🚧       | 🚧          |
+| `Interfaces/Assignment`          | ✅       | ✅          |
 | `Interfaces/Bridge`              | ✅        | ✅           |
 | `Interfaces/Gif`                 | ✅        | ✅           |
 | `Interfaces/Gre`                 | ✅        | ✅           |
@@ -164,8 +165,8 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Openvpn/Instances/Static Key`   | ✅        | ✅           |
 | `Openvpn/Instances/Generate Key` | ✅ (ephemeral) |        |
 | `Routes/Route`                   | ✅        | ✅           |
-| `Routing/Gateway`                | 🚧       | 🚧          |
-| `Routing/Gateway Group`          | 🚧       | 🚧          |
+| `Routing/Gateway`                | ✅       | ✅          |
+| `Routing/Gateway Group`          | ✅       | ✅          |
 | `Syslog/Settings`                | ✅        | ✅           |
 | `Syslog/Settings/Destination`    | ✅        | ✅           |
 | `Trafficshaper/Pipe`             | ✅        | ✅           |
@@ -181,10 +182,10 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Unbound/Settings/Host Override` | ✅        | ✅           |
 | `Unbound/Settings/ACL`           | ✅        | ✅           |
 | `Wireguard/Settings`             | ✅        | ✅           |
-| `Wireguard/Client`               | 🚧       | 🚧          |
-| `Wireguard/Server`               | 🚧       | 🚧          |
-| `Wireguard/Generate Key Pair`    | 🚧       |             |
-| `Wireguard/Generate PSK`         | 🚧       |             |
+| `Wireguard/Client`               | ✅       | ✅          |
+| `Wireguard/Server`               | ✅       | ✅          |
+| `Wireguard/Generate Key Pair`    | ✅       |             |
+| `Wireguard/Generate PSK`         | ✅       |             |
 
 ### Plugin API
 
