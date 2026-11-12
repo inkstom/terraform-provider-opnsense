@@ -59,10 +59,10 @@ resource "opnsense_ipsec_auth_remote" "example" {
 
 ### Optional
 
-- `auth_id` (String) Authentication ID for the AuthRemote Resource.
+- `auth_id` (String) Authentication ID for the AuthRemote Resource. Defaults to `""`.
 - `certificates` (Set of String) List of certificates for the AuthRemote Resource.
 - `description` (String) Optional description for the AuthRemote Resource.
-- `eap_id` (String) EAP ID for the AuthRemote Resource.
+- `eap_id` (String) EAP ID for the AuthRemote Resource. Defaults to `""`.
 - `enabled` (String) Enable or disable the AuthRemote Resource.
 - `public_keys` (Set of String) List of public keys for the AuthRemote Resource.
 - `round` (String) Authentication round for the AuthRemote Resource.
