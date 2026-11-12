@@ -107,8 +107,8 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Core/Tunables`                  | ✅        | ✅           |
 | `Cron/Job`                       | ❌        | ❌           |
 | `Dhcrelay/Settings`              | ❌        | ❌           |
-| `Dhcrelay/Settings/Dest`         | ❌        | ❌           |
-| `Dhcrelay/Settings/Relay`        | ❌        | ❌           |
+| `Dhcrelay/Settings/Dest`         | ✅        | ✅           |
+| `Dhcrelay/Settings/Relay`        | ✅        | ✅           |
 | `Diagnostics/Interface`          | ❌        | 🚧          |
 | `Diagnostics/Lvtemplate`         | ❌        | ❌           |
 | `Diagnostics/Lvtemplate/Item`    | ❌        | ❌           |
