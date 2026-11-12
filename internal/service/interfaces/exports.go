@@ -16,6 +16,7 @@ func Resources(ctx context.Context) []func() resource.Resource {
 		newGreResource,
 		newVxlanResource,
 		newNeighborResource,
+		newBridgeResource,
 	}
 }
 
@@ -29,6 +30,7 @@ func DataSources(ctx context.Context) []func() datasource.DataSource {
 		newGreDataSource,
 		newVxlanDataSource,
 		newNeighborDataSource,
+		newBridgeDataSource,
 		newOverviewInterfaceDataSource,
 		newOverviewAllDataSource,
 	}
