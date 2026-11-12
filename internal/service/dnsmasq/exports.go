@@ -13,11 +13,17 @@ func Resources(ctx context.Context) []func() resource.Resource {
 		NewRangeResource,
 		NewOptionResource,
 		NewSettingsResource,
+		newTagResource,
+		newDomainResource,
+		newBootResource,
 	}
 }
 
 func DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		newClientDataSource,
+		newTagDataSource,
+		newDomainDataSource,
+		newBootDataSource,
 	}
 }
