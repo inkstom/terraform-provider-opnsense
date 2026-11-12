@@ -123,7 +123,7 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Firewall/Category`              | 🚧       | 🚧          |
 | `Firewall/Filter`                | ✅        | ✅           |
 | `Firewall/Group`                 | ✅        | ✅           |
-| `Firewall/NPTv6`                 | ❌        | ❌           |
+| `Firewall/NPTv6`                 | ✅        | ✅           |
 | `Firewall/Source NAT`            | ✅        | ✅           |
 | `Firewall/One-to-One NAT`        | ✅        | ✅           |
 | `Interfaces/Assignment`          | 🚧       | 🚧          |
