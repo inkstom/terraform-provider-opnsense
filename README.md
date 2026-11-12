@@ -105,19 +105,19 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Core/Hasync`                    | ✅        | ✅           |
 | `Core/Snapshots`                 | ❌        | ❌           |
 | `Core/Tunables`                  | ✅        | ✅           |
-| `Cron/Job`                       | ❌        | ❌           |
+| `Cron/Job`                       | ✅        | ✅           |
 | `Dhcrelay/Settings`              | ❌        | ❌           |
 | `Dhcrelay/Settings/Dest`         | ✅        | ✅           |
 | `Dhcrelay/Settings/Relay`        | ✅        | ✅           |
 | `Diagnostics/Interface`          | ❌        | 🚧          |
 | `Diagnostics/Lvtemplate`         | ❌        | ❌           |
 | `Diagnostics/Lvtemplate/Item`    | ❌        | ❌           |
-| `Dnsmasq/Settings`               | ❌        | ❌           |
+| `Dnsmasq/Settings`               | ✅        | ❌           |
 | `Dnsmasq/Settings/Boot`          | ❌        | ❌           |
 | `Dnsmasq/Settings/Domain`        | ❌        | ❌           |
 | `Dnsmasq/Settings/Host`          | ✅        | ✅           |
-| `Dnsmasq/Settings/Option`        | ❌        | ❌           |
-| `Dnsmasq/Settings/Range`         | ❌        | ❌           |
+| `Dnsmasq/Settings/Option`        | ✅        | ❌           |
+| `Dnsmasq/Settings/Range`         | ✅        | ❌           |
 | `Dnsmasq/Settings/Tag`           | ❌        | ❌           |
 | `Firewall/Alias`                 | ✅        | ✅           |
 | `Firewall/Category`              | 🚧       | 🚧          |
@@ -171,16 +171,16 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 | `Trafficshaper/Pipe`             | ✅        | ✅           |
 | `Trafficshaper/Queue`            | ✅        | ✅           |
 | `Trafficshaper/Rule`             | ✅        | ✅           |
-| `Trust/Settings`                 | ❌        | ❌           |
-| `Trust/CA`                       | ❌        | ❌           |
-| `Trust/Cert`                     | ❌        | ❌           |
+| `Trust/Settings`                 | ✅        | ✅           |
+| `Trust/CA`                       | ✅        | ✅           |
+| `Trust/Cert`                     | ✅        | ✅           |
 | `Unbound/Settings`               | ✅        | ✅           |
 | `Unbound/Settings/Domain Override` | ✅      | ✅           |
 | `Unbound/Settings/Forward`       | ✅        | ✅           |
 | `Unbound/Settings/Host Alias`    | ✅        | ✅           |
 | `Unbound/Settings/Host Override` | ✅        | ✅           |
-| `Unbound/Settings/ACL`           | ❌        | ❌           |
-| `Wireguard/Settings`             | ❌        | ❌           |
+| `Unbound/Settings/ACL`           | ✅        | ✅           |
+| `Wireguard/Settings`             | ✅        | ✅           |
 | `Wireguard/Client`               | 🚧       | 🚧          |
 | `Wireguard/Server`               | 🚧       | 🚧          |
 | `Wireguard/Generate Key Pair`    | 🚧       |             |
