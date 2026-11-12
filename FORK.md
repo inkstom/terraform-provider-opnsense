@@ -19,6 +19,8 @@ This is a fork of [browningluke/terraform-provider-opnsense](https://github.com/
 | `opnsense_auth_user` | `auth/user/*` | 25.x |
 | `opnsense_auth_privilege` (authoritative per privilege) | `auth/priv/get_item,set_item` | 25.x |
 | `opnsense_core_tunable` | `core/tunables/*` | 25.x |
+| `opnsense_dhcrelay_destination` | `dhcrelay/settings/*_dest` | 25.x |
+| `opnsense_dhcrelay_relay` | `dhcrelay/settings/*_relay` | 25.x |
 
 End-to-end example: [`examples/complete/wireguard-site/main.tf`](examples/complete/wireguard-site/main.tf).
 
