@@ -22,6 +22,8 @@ func Resources(ctx context.Context) []func() resource.Resource {
 		newDhcpv6ReservationResource,
 		newDhcpv6SubnetResource,
 		newDhcpv6PdPoolResource,
+		// Control agent
+		newCtrlAgentResource,
 	}
 }
 
@@ -40,5 +42,7 @@ func DataSources(ctx context.Context) []func() datasource.DataSource {
 		newDhcpv6ReservationDataSource,
 		newDhcpv6SubnetDataSource,
 		newDhcpv6PdPoolDataSource,
+		// Control agent
+		newCtrlAgentDataSource,
 	}
 }
