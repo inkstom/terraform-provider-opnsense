@@ -7,6 +7,14 @@ on:
         description: 'Go packages to test (e.g. ./... or ./internal/service/firewall/...)'
         type: string
         default: './...'
+      opnsense-version:
+        description: 'OPNsense release to test against (see build-opnsense-image-reusable.yml)'
+        type: string
+        default: '26.1'
+      opnsense-sha1:
+        description: 'SHA1 of the bsd.ac image for that release'
+        type: string
+        default: '2266a644b1669be1a8d916a0a79fc91ba4be4733'
 
 permissions:
   contents: read
@@ -38,6 +46,9 @@ jobs:
 
   opnsense-image:
     uses: ./.github/workflows/build-opnsense-image-reusable.yml
+    with:
+      opnsense-version: ${{ inputs.opnsense-version }}
+      opnsense-sha1: ${{ inputs.opnsense-sha1 }}
 
   plan:
     runs-on: ubuntu-latest

@@ -1,15 +1,28 @@
 name: Build OPNsense Image (reusable)
 
 on:
-  workflow_call: {}
+  workflow_call:
+    inputs:
+      opnsense-version:
+        description: 'OPNsense release of the bsd.ac QEMU image (e.g. 26.1, 26.7); patches within it are applied'
+        type: string
+        default: '26.1'
+      opnsense-sha1:
+        description: 'SHA1 of that image, from its .checksum.txt on files.bsd.ac'
+        type: string
+        default: '2266a644b1669be1a8d916a0a79fc91ba4be4733'
+      artifact-name:
+        description: 'Name of the uploaded image artifact'
+        type: string
+        default: 'opnsense-image'
 
 permissions:
   contents: read
 
 env:
-  OPNSENSE_VERSION: "26.1"
-  OPNSENSE_URL: "https://files.bsd.ac/opnsense-qemu/opnsense-26.1.qcow2"
-  OPNSENSE_SHA1: 2266a644b1669be1a8d916a0a79fc91ba4be4733
+  OPNSENSE_VERSION: ${{ inputs.opnsense-version }}
+  OPNSENSE_URL: "https://files.bsd.ac/opnsense-qemu/opnsense-${{ inputs.opnsense-version }}.qcow2"
+  OPNSENSE_SHA1: ${{ inputs.opnsense-sha1 }}
   OPNSENSE_SSH_PORT: 8022
   OPNSENSE_WEB_PORT: 8443
 
@@ -67,7 +80,7 @@ jobs:
           echo "qemu-pid=${QEMU_PID}" >> "$GITHUB_OUTPUT"
           sleep 180 # Wait for the VM to boot
           [ -d "/proc/${QEMU_PID}" ] || (echo "QEMU process not found" && exit 1)
-      - name: Upgrade OPNsense to latest 26.1.x patches
+      - name: Upgrade OPNsense to the latest patch level of its release
         if: steps.cache.outputs.cache-hit != 'true'
         # The bsd.ac image ships OPNsense 26.1 base. Multiple DNAT bugs
         # were fixed in 26.1.1-26.1.3 (community changelog) that cause
@@ -89,5 +102,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: opnsense-image
+          name: ${{ inputs.artifact-name }}
           path: opnsense-images

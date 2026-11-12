@@ -31,5 +31,16 @@ jobs:
 
   opnsense-image:
     needs: delete-cache
+    strategy:
+      matrix:
+        include:
+          - version: '26.1'
+            sha1: '2266a644b1669be1a8d916a0a79fc91ba4be4733'
+          - version: '26.7'
+            sha1: '85adfabb6b1e23beec8673e4bbe83e869666f954'
     uses: ./.github/workflows/build-opnsense-image-reusable.yml
+    with:
+      opnsense-version: ${{ matrix.version }}
+      opnsense-sha1: ${{ matrix.sha1 }}
+      artifact-name: opnsense-image-${{ matrix.version }}
 
