@@ -16,9 +16,10 @@ variable "remote_public_key" {
   type = string
 }
 
+# Must resolve (or be an IP). OPNsense runs `wg syncconf` on apply, and an
+# unresolvable hostname makes it retry for about 70 seconds before failing.
 variable "remote_endpoint" {
-  type    = string
-  default = "vpn.example.net"
+  type = string
 }
 
 resource "opnsense_wireguard_key_pair" "site" {}

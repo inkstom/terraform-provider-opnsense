@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
+	"time"
 
 	"github.com/browningluke/opnsense-go/pkg/api"
 	"github.com/browningluke/opnsense-go/pkg/errs"
@@ -81,7 +83,20 @@ func (r *gatewayGroupResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 
-	id, err := r.client.Routing().AddGatewayGroup(ctx, obj)
+	var id string
+	err = retryStaleGatewayList(ctx, func() error {
+		var addErr error
+		id, addErr = r.client.Routing().AddGatewayGroup(ctx, obj)
+		if addErr != nil && id != "" {
+			// Saved but reconfigure failed: never retry, the group exists.
+			return permanent{addErr}
+		}
+		return addErr
+	})
+	var p permanent
+	if errors.As(err, &p) {
+		err = p.err
+	}
 	if err != nil {
 		if id != "" {
 			// Created but reconfigure failed: keep it in state so it isn't orphaned.
@@ -138,7 +153,9 @@ func (r *gatewayGroupResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 
-	if err := r.client.Routing().UpdateGatewayGroup(ctx, data.Id.ValueString(), obj); err != nil {
+	if err := retryStaleGatewayList(ctx, func() error {
+		return r.client.Routing().UpdateGatewayGroup(ctx, data.Id.ValueString(), obj)
+	}); err != nil {
 		resp.Diagnostics.AddError("Client Error",
 			fmt.Sprintf("Unable to update gateway group, got error: %s", err))
 		return
@@ -163,4 +180,39 @@ func (r *gatewayGroupResource) Delete(ctx context.Context, req resource.DeleteRe
 
 func (r *gatewayGroupResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
+
+// OPNsense builds the gateway-group member options from the configd action
+// "interface gateways list", which is cached for 20 seconds (cache_ttl in
+// actions_interface.conf). A gateway created moments earlier in the same
+// apply is rejected with "Option [NAME] not in list." until the cache expires,
+// so retry that specific validation error for a bounded time.
+const (
+	staleGatewayListTimeout  = 60 * time.Second
+	staleGatewayListInterval = 5 * time.Second
+)
+
+type permanent struct{ err error }
+
+func (p permanent) Error() string { return p.err.Error() }
+
+func isStaleGatewayListError(err error) bool {
+	return err != nil && strings.Contains(err.Error(), "not in list")
+}
+
+func retryStaleGatewayList(ctx context.Context, fn func() error) error {
+	deadline := time.Now().Add(staleGatewayListTimeout)
+	for {
+		err := fn()
+		var p permanent
+		if err == nil || errors.As(err, &p) || !isStaleGatewayListError(err) || time.Now().After(deadline) {
+			return err
+		}
+		tflog.Info(ctx, "gateway not yet in OPNsense's cached gateway list, retrying", map[string]any{"error": err.Error()})
+		select {
+		case <-ctx.Done():
+			return err
+		case <-time.After(staleGatewayListInterval):
+		}
+	}
 }

@@ -27,9 +27,10 @@ resource "opnsense_wireguard_server" "test" {
 }
 
 resource "opnsense_wireguard_client" "test" {
-  name       = "tfacc-keys-peer"
-  public_key = opnsense_wireguard_key_pair.test.public_key
-  psk        = opnsense_wireguard_psk.test.psk
+  name           = "tfacc-keys-peer"
+  public_key     = opnsense_wireguard_key_pair.test.public_key
+  psk            = opnsense_wireguard_psk.test.psk
+  tunnel_address = ["10.0.9.2/32"]
 }`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestMatchResourceAttr("opnsense_wireguard_key_pair.test", "public_key", base64Key),
