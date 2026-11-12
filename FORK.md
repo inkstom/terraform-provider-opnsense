@@ -15,6 +15,16 @@ This is a fork of [browningluke/terraform-provider-opnsense](https://github.com/
 
 End-to-end example: [`examples/complete/wireguard-site/main.tf`](examples/complete/wireguard-site/main.tf).
 
+## Verified
+
+On 2026-11-11 against a disposable OPNsense **26.7.9** VM (QEMU/KVM, single NIC, same layout as upstream CI):
+
+- Provider acceptance tests, `TF_ACC=1`: all 16 tests in `routing`, `wireguard` and `interfaces` pass, including gateway groups, interface assignment and WireGuard keys.
+- Client integration tests in `opnsense-go` for `routing`, `interfaces` and `wireguard` pass.
+- `examples/complete/wireguard-site` applies cleanly (7 resources), shows no drift on a second plan, and destroys cleanly.
+
+Two fixes came out of that run: a retry for OPNsense's 20-second gateway-list cache in `opnsense_routing_gateway_group`, and a missing `tunnel_address` in the WireGuard keys test.
+
 ## Build and use locally
 
 ```sh
