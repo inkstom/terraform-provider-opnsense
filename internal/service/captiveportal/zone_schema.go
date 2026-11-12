@@ -143,7 +143,7 @@ func zoneResourceSchema() schema.Schema {
 			"allowed_addresses":      optSet("Addresses or networks allowed through without logging in."),
 			"allowed_mac_addresses":  optSet("MAC addresses allowed through without logging in."),
 			"extended_pre_auth_data": optBool("Send extended data (e.g. MAC address) to the authenticator.", false),
-			"template":               optString("UUID of an uploaded portal template; empty uses the default page.", ""),
+			"template":               optString("UUID of a portal template (`opnsense_captiveportal_template.id`); empty uses the default page.", ""),
 			"description":            optString("Description, shown as the zone name.", ""),
 			"id": schema.StringAttribute{
 				Computed:            true,
