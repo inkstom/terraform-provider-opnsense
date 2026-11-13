@@ -59,6 +59,7 @@ type OPNsenseProviderModel struct {
 	MaxBackoff    types.Int64  `tfsdk:"max_backoff"`
 	MinBackoff    types.Int64  `tfsdk:"min_backoff"`
 	MaxRetries    types.Int64  `tfsdk:"retries"`
+	ReqTimeout    types.Int64  `tfsdk:"request_timeout"`
 }
 
 func (p *opnsenseProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -107,6 +108,13 @@ func (p *opnsenseProvider) Schema(ctx context.Context, req provider.SchemaReques
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 2147483647), // Since we convert the int64 to an int(32), set an upper bound.
+				},
+			},
+			"request_timeout": schema.Int64Attribute{
+				MarkdownDescription: "Seconds to wait for each API request before giving up (default 180). A request that times out is not retried, because OPNsense may already have applied it. Alternatively, can be configured using the `OPNSENSE_REQUEST_TIMEOUT` environment variable.",
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.AtLeast(1),
 				},
 			},
 		},
@@ -247,6 +255,15 @@ func (p *opnsenseProvider) Configure(ctx context.Context, req provider.Configure
 		retries = data.MaxRetries.ValueInt64()
 	}
 
+	requestTimeout, err := strconv.ParseInt(os.Getenv("OPNSENSE_REQUEST_TIMEOUT"), 10, 64)
+	if err != nil {
+		// 0 means the client default
+		requestTimeout = 0
+	}
+	if !data.ReqTimeout.IsNull() {
+		requestTimeout = data.ReqTimeout.ValueInt64()
+	}
+
 	// Ensure expected variables are not empty
 
 	if uri == "" {
@@ -288,6 +305,8 @@ func (p *opnsenseProvider) Configure(ctx context.Context, req provider.Configure
 		MaxBackoff:    maxBackoff,
 		MinBackoff:    minBackoff,
 		MaxRetries:    retries,
+
+		RequestTimeout: requestTimeout,
 	}
 	client := api.NewClient(opnOptions)
 

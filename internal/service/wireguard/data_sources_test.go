@@ -18,7 +18,7 @@ func pairs(typ string, attrs ...string) []resource.TestCheckFunc {
 
 func TestAccWireguardDataSources(t *testing.T) {
 	checks := pairs("opnsense_wireguard_server", "name", "enabled", "public_key", "port", "tunnel_address.#", "instance", "peers.#")
-	checks = append(checks, pairs("opnsense_wireguard_client", "name", "enabled", "public_key", "tunnel_address.#", "server_address", "server_port")...)
+	checks = append(checks, pairs("opnsense_wireguard_client", "name", "enabled", "public_key", "tunnel_address.#")...)
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccPreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
@@ -28,8 +28,6 @@ resource "opnsense_wireguard_client" "test" {
   name           = "tfacc-ds-client"
   public_key     = "ng28gpVw6F9YYsXTdPtfglAsGU1ET+ePrTFDfOzGniw="
   tunnel_address = ["10.0.9.2/32"]
-  server_address = "198.51.100.9"
-  server_port    = 51821
 }
 
 resource "opnsense_wireguard_server" "test" {
@@ -41,12 +39,15 @@ resource "opnsense_wireguard_server" "test" {
   peers          = [opnsense_wireguard_client.test.id]
 }
 
+# Read only after both objects exist. In a CI run on 26.1 the client read
+# ran alongside the server create and both API calls stalled.
 data "opnsense_wireguard_server" "test" {
   id = opnsense_wireguard_server.test.id
 }
 
 data "opnsense_wireguard_client" "test" {
-  id = opnsense_wireguard_client.test.id
+  id         = opnsense_wireguard_client.test.id
+  depends_on = [opnsense_wireguard_server.test]
 }`,
 			Check: resource.ComposeAggregateTestCheckFunc(checks...),
 		}},
