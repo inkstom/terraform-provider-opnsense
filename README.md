@@ -1,13 +1,17 @@
 # Terraform Provider for OPNsense
 
-This Terraform provider enables management of various configs and resources within OPNsense®.
+Manage OPNsense® firewall configuration with Terraform, through the OPNsense API.
+
+This is a fork of [browningluke/terraform-provider-opnsense](https://github.com/browningluke/terraform-provider-opnsense), maintained by Thomas Inks. It covers almost all of the OPNsense core API: 89 resources and 91 data sources, and 85 of the 89 rows in the [coverage table](#current-api-coverage) below. Every resource has acceptance tests that run against real OPNsense 26.1 and 26.7 VMs in CI. [FORK.md](./FORK.md) lists what was added and fixed relative to upstream.
 
 > [!WARNING]
-> This provider is under active development and makes no guarantee of stability. Breaking changes to resource and data source schemas will occur as needed until v1.0. **It is not recommended to use this provider in production environments.**
+> Versions before 1.0 may change resource schemas. Try changes against a non-production firewall first, and run `terraform plan` after importing existing objects to check for unexpected diffs.
 
-
+- [Installation](#installation)
 - [Example Usage](#example-usage)
-- [Long Road to v1](#long-road-to-v1)
+- [OPNsense Versions](#opnsense-versions)
+- [Moving from the Upstream Provider](#moving-from-the-upstream-provider)
+- [Testing](#testing)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
 - [Current API Coverage](#current-api-coverage)
@@ -15,33 +19,44 @@ This Terraform provider enables management of various configs and resources with
   - [Plugin API](#plugin-api)
 - [License](#license)
 
-## Example Usage
+## Installation
+
+The provider isn't on the Terraform Registry. Build it from source (Go 1.24 or later) and Terraform picks it up from your local plugin directory:
+
+```sh
+git clone https://github.com/inkstom/terraform-provider-opnsense
+cd terraform-provider-opnsense
+make build-local   # installs dev.io/inkstom/opnsense v1.0.0 into ~/.terraform.d/plugins
+```
 
 ```hcl
-# 1. Configure Terraform to use the provider
 terraform {
   required_providers {
     opnsense = {
-      source  = "browningluke/opnsense"
-      version = "~> 0.16"
+      source  = "dev.io/inkstom/opnsense"
+      version = "1.0.0"
     }
   }
 }
+```
 
-# 2. Configure the OPNsense provider with API credentials
+Run `make build-local` again after pulling to update it, then `terraform init -upgrade`.
+
+## Example Usage
+
+```hcl
 provider "opnsense" {
-  uri        = "https://opnsense.example.com"
+  uri = "https://opnsense.example.com"
 
   # Either reference the API credentials literally
   api_key    = "<api key>"
-  api_secret = "<api password>"
+  api_secret = "<api secret>"
 
-  # Or specify them with environment variables
+  # Or set them in the environment:
   # export OPNSENSE_API_KEY="<api key>"
-  # export OPNSENSE_API_SECRET="<api key>"
+  # export OPNSENSE_API_SECRET="<api secret>"
 }
 
-# 3. Create resources - example: firewall rule
 resource "opnsense_firewall_filter" "allow_https" {
   enabled     = true
   description = "Allow inbound HTTPS traffic"
@@ -69,24 +84,61 @@ resource "opnsense_firewall_filter" "allow_https" {
 }
 ```
 
-## Long Road to v1
+[`examples/complete/wireguard-site`](./examples/complete/wireguard-site/main.tf) builds a site-to-site WireGuard tunnel end to end: keys, instance, interface assignment, gateway and policy route.
 
-Version 1.0 will be released once the provider achieves feature-parity with the **Core** OPNsense API and all resources have comprehensive acceptance tests (see [Current API Coverage](#current-api-coverage)). Plugin resources will be added as requested (at a lower priority than requests for Core resources). There is no Plugin API converage requirement for v1.
+## OPNsense Versions
 
-v1 represents the first release where resource and data source schemas will be guaranteed to be stable, and breaking changes to these schemas will be forbidden. Any updates to these schemas will following appropriate SemVer conventions. Until v1.0 is reached, **schemas are subject to change as needed** to improve usability and align with best practices. Users should always check the release notes when upgrading between pre-v1.0 versions to understand any breaking changes that may affect their configurations.
+CI tests against OPNsense 26.1 and 26.7. Most resources also work on 24.7 and 25.x, but only those two are tested. A few resources need a newer firewall than that:
+
+- `opnsense_interfaces_assignment` needs 26.7.7, and so does anything that assigns an interface for you (bridges, captive portal zones on new VLANs).
+- `opnsense_routing_gateway_group` needs 26.7.
+- `opnsense_dnsmasq_tag`, `_domain` and `_boot` need 25.7.
+
+Each resource's documentation states its minimum version when it has one, and [FORK.md](./FORK.md) has the full list. Some attributes only exist on newer releases (for example `suppress` on syslog destinations, or `roaming` on captive portal zones). On older firewalls, leave those unset and the provider won't send them.
+
+## Moving from the Upstream Provider
+
+If you already manage OPNsense with `browningluke/opnsense`, install this provider as above, change `source` in `required_providers`, and move existing state over:
+
+```sh
+terraform state replace-provider registry.terraform.io/browningluke/opnsense dev.io/inkstom/opnsense
+terraform init
+terraform plan
+```
+
+The plan should be empty. One known exception: `auth_id` and `eap_id` on `opnsense_ipsec_auth_local` and `opnsense_ipsec_auth_remote` now default to `""`. If you left them unset, the first plan shows a harmless in-place update and later plans are clean.
+
+## Testing
+
+Every pull request runs the acceptance tests for the packages it changes (all of them when `go.mod` changes) against a fresh OPNsense 26.1 VM in GitHub Actions. Every merge to `main` runs the full suite on both 26.1 and 26.7. The tests create, read, import, update and delete real objects through the API. Data sources are compared attribute by attribute with their resources. Tests for APIs that older releases lack are skipped there and run on 26.7.
+
+To run them yourself, point them at a disposable OPNsense VM. They create and delete objects, and some change global settings before restoring them:
+
+```sh
+export OPNSENSE_URI=https://<test-vm> OPNSENSE_API_KEY=... OPNSENSE_API_SECRET=... OPNSENSE_ALLOW_INSECURE=true
+make testacc PKG=routing
+make testacc PKG=interfaces TEST=TestAccInterfacesAssignmentResource
+```
+
+A few end-to-end flows also run against a mock API, with no firewall needed (Terraform must be on your `PATH`):
+
+```sh
+go test ./internal/acctest/mockopnsense/
+```
 
 ## Documentation
 
-- **[Terraform Registry Documentation](https://registry.terraform.io/providers/browningluke/opnsense/latest/docs)** - Full resource and data source reference
-- **[Examples](./examples/)** - Working examples for all resources
+- **[Resource and data source reference](./docs/)**, generated from the schemas with `make docs`
+- **[Examples](./examples/)**, one per resource
+- **[FORK.md](./FORK.md)**: differences from upstream, OPNsense quirks the provider works around, and known limitations
 
 ## Contributing
 
-Interested in contributing? Please see our [Contributing Guide](./CONTRIBUTING.md) for development setup, testing requirements, and guidelines.
+Bug reports and pull requests go to [inkstom/terraform-provider-opnsense](https://github.com/inkstom/terraform-provider-opnsense/issues). Most features need a change in the API client too, [inkstom/opnsense-go](https://github.com/inkstom/opnsense-go). See the [Contributing Guide](./CONTRIBUTING.md) for the development setup.
 
 ## Current API Coverage
 
-This provider is actively expanding to cover the OPNsense API. The tables below contain the current status of said coverage.
+Coverage of the OPNsense API, by controller. The core table follows the API reference; settings that OPNsense still keeps on its older, non-API pages can't be managed by any provider.
 
 - ✅ = Fully implemented
 - 🚧 = Missing acceptance tests
@@ -189,7 +241,7 @@ This provider is actively expanding to cover the OPNsense API. The tables below 
 
 ### Plugin API
 
-The following is a non-exhaustive list of the plugin APIs OPNsense supports. The table shows those which are 'highest priority'. Please open a feature request to indicate interest for any plugin not listed here.
+The following is a non-exhaustive list of the plugin APIs OPNsense supports. The table shows those which are 'highest priority'. [Open an issue](https://github.com/inkstom/terraform-provider-opnsense/issues) if you need a plugin that isn't listed.
 
 | Plugin/Controller/Resource     | Resource | Data Source |
 |--------------------------------|----------|-------------|
@@ -244,4 +296,4 @@ The complete OPNsense API documentation can be found at: [docs.opnsense.org](htt
 
 ## License
 
-This project is licensed under the Mozilla Public License v2.0 - see the [LICENSE](./LICENSE) file for details.
+Mozilla Public License 2.0, the same as upstream. See [LICENSE](./LICENSE). The original provider is by Luke Browning and its contributors.

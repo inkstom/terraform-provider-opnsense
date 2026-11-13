@@ -1,4 +1,4 @@
-.PHONY: mkdocs build-local build fmt test testacc
+.PHONY: docs build-local build fmt test testacc
 
 # Variables for testacc
 PKG ?=
@@ -29,10 +29,10 @@ else
 endif
 
 # Build provider binary to local Terraform plugins directory
-# This installs the provider at: dev.io/browningluke/opnsense v1.0.0
+# This installs the provider at: dev.io/inkstom/opnsense v1.0.0
 # Detects OS and architecture automatically
 build-local:
-	go build -o ~/.terraform.d/plugins/dev.io/browningluke/opnsense/1.0.0/$$(go env GOOS)_$$(go env GOARCH)/terraform-provider-opnsense .
+	go build -o ~/.terraform.d/plugins/dev.io/inkstom/opnsense/1.0.0/$$(go env GOOS)_$$(go env GOARCH)/terraform-provider-opnsense .
 
 # Build provider binary to current directory
 build:

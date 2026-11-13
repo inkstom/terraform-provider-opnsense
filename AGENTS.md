@@ -6,7 +6,7 @@
 # Build provider binary to current directory
 make build
 
-# Build and install to local Terraform plugins directory (dev.io/browningluke/opnsense v1.0.0)
+# Build and install to local Terraform plugins directory (dev.io/inkstom/opnsense v1.0.0)
 make build-local
 
 # Run unit tests
@@ -45,7 +45,7 @@ CI runs the acceptance suite as parallel shards — one runner + one OPNsense VM
 
 ## Architecture
 
-This is a Terraform Plugin Framework (v6) provider for OPNsense. The API client lives in the separate [`opnsense-go`](https://github.com/browningluke/opnsense-go) module (`github.com/browningluke/opnsense-go`). To develop against a local copy, add to `go.mod`:
+This is a Terraform Plugin Framework (v6) provider for OPNsense. The API client lives in the separate [`opnsense-go`](https://github.com/inkstom/opnsense-go) fork. Its module path is still `github.com/browningluke/opnsense-go`; `go.mod` pins it to an inkstom/opnsense-go commit with a `replace`. To develop against a local copy, change that `replace` to:
 ```go
 replace github.com/browningluke/opnsense-go => ../opnsense-go
 ```

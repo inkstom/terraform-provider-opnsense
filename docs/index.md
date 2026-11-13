@@ -7,11 +7,14 @@ description: |-
 
 # OPNsense Provider
 
-~> Please note that this provider is under active development, and makes no
-guarantee to be stable. For that reason, it is not currently recommended
-to use this provider in any production environment. If a feature is missing,
-but is documented in the OPNsense API, please raise an issue on the Github repo
-to indicate interest.
+This is [inkstom/terraform-provider-opnsense](https://github.com/inkstom/terraform-provider-opnsense),
+a fork of browningluke/terraform-provider-opnsense that covers almost all of the
+OPNsense core API. It isn't on the Terraform Registry: build it with
+`make build-local` and use the source address `dev.io/inkstom/opnsense`.
+
+~> Versions before 1.0 may change resource schemas. Try changes against a
+non-production firewall first. If something documented in the OPNsense API is
+missing, [open an issue](https://github.com/inkstom/terraform-provider-opnsense/issues).
 
 The OPNsense provider is used to interact with resources (only) supported by
 the OPNsense API. This provider does not, and will not, support resources
@@ -33,15 +36,15 @@ These can then be used to configure the provider.
 terraform {
   required_providers {
     opnsense = {
-      version = "~> x.0"
-      source  = "browningluke/opnsense"
+      source  = "dev.io/inkstom/opnsense"
+      version = "1.0.0"
     }
   }
 }
 
 provider "opnsense" {
-  uri = "https://opnsense.example.com"
-  api_key = "..."
+  uri        = "https://opnsense.example.com"
+  api_key    = "..."
   api_secret = "..."
 }
 ```

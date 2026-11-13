@@ -40,5 +40,5 @@ Describe how you tested your changes:
 - [ ] Code follows project style guidelines
 - [ ] Documentation has been generated (`make docs`)
 - [ ] Code has been formatted (`make fmt`)
-- [ ] Supporting code has been merged and _released_ in [browningluke/opnsense-go](https://github.com/browningluke/opnsense-go)
+- [ ] Client changes are pushed to [inkstom/opnsense-go](https://github.com/inkstom/opnsense-go) and pinned in `go.mod` (no local `replace`)
 - [ ] Tests pass locally & in test workflow
