@@ -52,7 +52,7 @@ You should also be familiar with:
 
 ### 1. Fork and Clone
 
-If you are adding a new feature, or modifying an existing resource, fork the `browningluke/opnsense-go` repo on Github, then clone that fork:
+Most new features need API client changes too. Fork [`inkstom/opnsense-go`](https://github.com/inkstom/opnsense-go) on GitHub, then clone that fork:
 ```bash
 $ git clone https://github.com/YOUR-USERNAME/opnsense-go.git
 ```
@@ -66,12 +66,18 @@ $ cd terraform-provider-opnsense
 
 ### 2. Local Dependencies
 
-This provider depends *heavily* on [`opnsense-go`](https://github.com/browningluke/opnsense-go) as its API client. Development will be made much easier if you add the following replace directive to your `go.mod` file:
+This provider depends *heavily* on [`opnsense-go`](https://github.com/inkstom/opnsense-go) as its API client. The Go module path is still `github.com/browningluke/opnsense-go`, and `go.mod` points it at the fork with a `replace` pinned to an exact commit. While you work, point that `replace` at your local copy:
+
 ```go
 replace github.com/browningluke/opnsense-go => ../opnsense-go
 ```
 
-The provider will automatically use your local version. If you're only working on the provider, the published version will be used via Go modules.
+When the client change is ready, push it to inkstom/opnsense-go and pin the provider to that commit before opening the pull request:
+
+```bash
+$ go mod edit -replace github.com/browningluke/opnsense-go=github.com/inkstom/opnsense-go@<commit>
+$ GOPROXY=direct go mod tidy
+```
 
 ### 3. Install Dependencies
 
@@ -88,7 +94,7 @@ Build the provider binary:
 $ make build
 
 # Or build and install to your local Terraform plugins directory
-# This makes the provider available at: dev.io/browningluke/opnsense v1.0.0
+# This makes the provider available at: dev.io/inkstom/opnsense v1.0.0
 $ make build-local
 ```
 
@@ -98,7 +104,7 @@ After running `make build-local`, you can use the provider in your Terraform con
 terraform {
   required_providers {
     opnsense = {
-      source  = "dev.io/browningluke/opnsense"
+      source  = "dev.io/inkstom/opnsense"
       version = "1.0.0"
     }
   }
@@ -557,7 +563,7 @@ terraform-provider-opnsense/
 
 ## Getting Help
 
-- **Issues** - [GitHub Issues](https://github.com/browningluke/terraform-provider-opnsense/issues) for bug reports and feature requests
+- **Issues** - [GitHub Issues](https://github.com/inkstom/terraform-provider-opnsense/issues) for bug reports and feature requests
 - **Documentation** - Check existing docs and examples first
 
 When asking for help, please provide:

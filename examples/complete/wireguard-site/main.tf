@@ -5,7 +5,8 @@
 terraform {
   required_providers {
     opnsense = {
-      source = "browningluke/opnsense"
+      source  = "dev.io/inkstom/opnsense"
+      version = "1.0.0"
     }
   }
 }

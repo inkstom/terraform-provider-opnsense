@@ -1,14 +1,14 @@
 terraform {
   required_providers {
     opnsense = {
-      version = "~> x.0"
-      source  = "browningluke/opnsense"
+      source  = "dev.io/inkstom/opnsense"
+      version = "1.0.0"
     }
   }
 }
 
 provider "opnsense" {
-  uri = "https://opnsense.example.com"
-  api_key = "..."
+  uri        = "https://opnsense.example.com"
+  api_key    = "..."
   api_secret = "..."
 }
