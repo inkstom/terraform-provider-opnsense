@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Upgrade the QEMU-booted OPNsense VM to the latest 26.1.x patch level.
+"""Upgrade the QEMU-booted OPNsense VM to the latest patch level of its series.
 
-The bsd.ac qemu image ships OPNsense 26.1 base. Several DNAT bugs were fixed
-in 26.1.1-26.1.3 (see community changelog), causing /api/firewall/d_nat/addRule
-to return 500 on the base image. Run opnsense-update to apply the patches
-before tests.
+The bsd.ac qemu images ship the base release (26.1, 26.7). Patch releases fix
+API bugs the tests hit (for example /api/firewall/d_nat/addRule returned 500 on
+26.1 base), so apply them before tests.
+
+Commands run through the QEMU guest agent. The workflow starts the VM and
+waits a fixed time, but boot time varies between runners, so wait for the agent
+to answer before sending anything.
 """
 
 import base64
@@ -37,12 +40,29 @@ def send(command, timeout=10):
         return chunks.decode().strip()
 
 
+def start_exec(path, args, attempts=10):
+    """Start a command through the guest agent and return its PID.
+
+    An agent that is still starting, or busy, can answer with nothing or with
+    an error. Retry instead of failing on the first bad reply.
+    """
+    last = ""
+    for attempt in range(attempts):
+        try:
+            last = send({
+                "execute": "guest-exec",
+                "arguments": {"path": path, "arg": args, "capture-output": True},
+            })
+            return json.loads(last)["return"]["pid"]
+        except (json.JSONDecodeError, KeyError, socket.error, OSError) as exc:
+            print(f"guest-exec {path}: no usable reply ({exc!r}, got {last!r}); retry {attempt + 1}/{attempts}",
+                  file=sys.stderr, flush=True)
+            time.sleep(6)
+    sys.exit(f"guest agent never started {path}; last reply {last!r}")
+
+
 def guest_exec(path, args, max_wait_s=900):
-    resp = send({
-        "execute": "guest-exec",
-        "arguments": {"path": path, "arg": args, "capture-output": True},
-    })
-    pid = json.loads(resp)["return"]["pid"]
+    pid = start_exec(path, args)
     deadline = time.monotonic() + max_wait_s
     data = {}
     while time.monotonic() < deadline:
@@ -52,7 +72,7 @@ def guest_exec(path, args, max_wait_s=900):
                 "execute": "guest-exec-status",
                 "arguments": {"pid": pid},
             })).get("return", {})
-        except json.JSONDecodeError:
+        except (json.JSONDecodeError, socket.error, OSError):
             continue
         if data.get("exited"):
             break
@@ -80,6 +100,10 @@ def wait_for_agent(max_wait_s=180):
 
 
 def main():
+    print("Waiting for the QEMU guest agent...", flush=True)
+    if not wait_for_agent(max_wait_s=600):
+        sys.exit("QEMU guest agent did not answer within 10 minutes; the VM probably failed to boot")
+
     print("Refreshing pkg repository...", flush=True)
     code, out, err = guest_exec("/usr/sbin/pkg", ["update", "-f"], max_wait_s=180)
     print(f"pkg update exit={code}")
