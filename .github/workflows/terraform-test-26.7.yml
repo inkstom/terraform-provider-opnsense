@@ -23,6 +23,11 @@ on:
 permissions:
   contents: read
 
+# A newer push to the same branch or PR supersedes this run.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     uses: ./.github/workflows/terraform-test-reusable.yml

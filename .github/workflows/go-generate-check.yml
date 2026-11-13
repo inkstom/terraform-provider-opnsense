@@ -1,15 +1,15 @@
 name: Go Generate Check
 
 on:
+  # Runs on every PR: it is a required check on main.
   pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'scripts/**'
-      - 'README.md'
-      - '.github/**'
 
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   check-go-generate:

@@ -59,5 +59,6 @@ provider "opnsense" {
 - `api_secret` (String) The API secret for a user. Alternatively, can be configured using the `OPNSENSE_API_SECRET` environment variable.
 - `max_backoff` (Number) Maximum backoff period in seconds after failed API calls. Alternatively, can be configured using the `OPNSENSE_MAX_BACKOFF` environment variable.
 - `min_backoff` (Number) Minimum backoff period in seconds after failed API calls. Alternatively, can be configured using the `OPNSENSE_MIN_BACKOFF` environment variable.
+- `request_timeout` (Number) Seconds to wait for each API request before giving up (default 180). A request that times out is not retried, because OPNsense may already have applied it. Alternatively, can be configured using the `OPNSENSE_REQUEST_TIMEOUT` environment variable.
 - `retries` (Number) Maximum number of retries to perform when an API request fails. Alternatively, can be configured using the `OPNSENSE_RETRIES` environment variable.
 - `uri` (String) The URI to an OPNsense host. Alternatively, can be configured using the `OPNSENSE_URI` environment variable.

@@ -1,22 +1,20 @@
 name: PR Tests (Tier 1)
 
 on:
+  # No path filter: main's branch protection requires "PR tests passed", so this
+  # workflow must report on every PR. detect-changes skips the tests when no Go
+  # code changed.
   pull_request:
     branches:
       - main
-    paths:
-      - '**'
-      - '!docs/**'
-      - '!examples/**'
-      - '!scripts/**'
-      - '!templates/**'
-      - '!README.md'
-      - '!.github/**'
-      - '.github/workflows/terraform-test-pr.yml'
-      - '.github/workflows/terraform-test-reusable.yml'
 
 permissions:
   contents: read
+
+# A newer push to the same PR supersedes this run.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   detect-changes:
@@ -41,7 +39,14 @@ jobs:
           GO_FILES=$(echo "$ALL_CHANGED" | grep '\.go$' || true)
           MOD_CHANGED=$(echo "$ALL_CHANGED" | grep -E '^go\.(mod|sum)$' || true)
 
-          if [ -z "$GO_FILES" ] && [ -z "$MOD_CHANGED" ]; then
+          # Changes to the test harness itself (VM image, upgrade script, test
+          # workflows) can break every test, so they run the full suite.
+          HARNESS_CHANGED=$(echo "$ALL_CHANGED" | grep -E '^(scripts/upgrade-opnsense\.py|\.github/workflows/(terraform-test-(pr|reusable)|build-opnsense-image-reusable)\.yml)$' || true)
+
+          if [ -n "$HARNESS_CHANGED" ]; then
+            echo "Test harness changed — running full suite"
+            echo "packages=./..." >> "$GITHUB_OUTPUT"
+          elif [ -z "$GO_FILES" ] && [ -z "$MOD_CHANGED" ]; then
             echo "No Go files changed — skipping tests"
             echo "packages=" >> "$GITHUB_OUTPUT"
           elif [ -n "$MOD_CHANGED" ]; then
@@ -70,3 +75,21 @@ jobs:
     uses: ./.github/workflows/terraform-test-reusable.yml
     with:
       packages: ${{ needs.detect-changes.outputs.packages }}
+
+  # The single required check. Passes when the tests passed or were skipped
+  # because nothing testable changed; fails if any needed job failed or was
+  # cancelled.
+  result:
+    name: PR tests passed
+    needs: [detect-changes, test]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        env:
+          DETECT: ${{ needs.detect-changes.result }}
+          TEST: ${{ needs.test.result }}
+        run: |
+          echo "detect-changes: $DETECT, test: $TEST"
+          [ "$DETECT" = success ] || exit 1
+          case "$TEST" in success|skipped) ;; *) exit 1 ;; esac
