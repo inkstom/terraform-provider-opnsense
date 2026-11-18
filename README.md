@@ -233,6 +233,7 @@ Coverage of the OPNsense API, by controller. The core table follows the API refe
 | `Unbound/Settings/Host Alias`    | ✅        | ✅           |
 | `Unbound/Settings/Host Override` | ✅        | ✅           |
 | `Unbound/Settings/ACL`           | ✅        | ✅           |
+| `Unbound/Settings/Dnsbl`         | ✅        | ✅           |
 | `Wireguard/Settings`             | ✅        | ✅           |
 | `Wireguard/Client`               | ✅       | ✅          |
 | `Wireguard/Server`               | ✅       | ✅          |
@@ -250,6 +251,7 @@ The following is a non-exhaustive list of the plugin APIs OPNsense supports. The
 | `Acmeclient/Validation`        | ❌        | ❌           |
 | `Acmeclient/Certificates`      | ❌        | ❌           |
 | `Acmeclient/Action`            | ❌        | ❌           |
+| `Dyndns/Accounts`              | ✅        | ✅           |
 | `Haproxy/Maintenance`          | ❌        | ❌           |
 | `Haproxy/Settings`             | ❌        | ❌           |
 | `Haproxy/Settings/Acl`         | ❌        | ❌           |

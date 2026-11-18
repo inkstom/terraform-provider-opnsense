@@ -25,6 +25,7 @@ Minimum OPNsense versions come from the controller and model history in opnsense
 | `opnsense_dnsmasq_tag` | `dnsmasq/settings/*_tag` | 25.7 |
 | `opnsense_dnsmasq_domain` | `dnsmasq/settings/*_domain` | 25.7 |
 | `opnsense_dnsmasq_boot` | `dnsmasq/settings/*_boot` | 25.7 |
+| `opnsense_dyndns_account` (needs the `os-ddclient` plugin) | `dyndns/accounts/*_item` | any, with the plugin |
 | `opnsense_firewall_group` | `firewall/group/*` | 24.7 |
 | `opnsense_firewall_npt` | `firewall/npt/*` | 24.7 |
 | `opnsense_interfaces_assignment` | `interfaces/assignment/*` | 26.7.7 |
@@ -50,6 +51,7 @@ Minimum OPNsense versions come from the controller and model history in opnsense
 | `opnsense_trafficshaper_pipe` | `trafficshaper/settings/*Pipe` | 24.7 |
 | `opnsense_trafficshaper_queue` | `trafficshaper/settings/*Queue` | 24.7 |
 | `opnsense_trafficshaper_rule` | `trafficshaper/settings/*Rule` | 24.7 |
+| `opnsense_unbound_dnsbl` | `unbound/settings/*_dnsbl` | 26.1 |
 | `opnsense_wireguard_key_pair` (resource only) | `wireguard/server/keyPair` | any |
 | `opnsense_wireguard_psk` (resource only) | `wireguard/client/psk` | any |
 
@@ -88,6 +90,8 @@ In CI:
 
 - **Traffic shaper:** a deleted pipe or queue stays active in dummynet until the shaper is reset (Firewall > Shaper > Reset, or `trafficshaper/service/flushreload`). The reset briefly clears every ipfw rule, captive portal included, so the provider doesn't do it for you.
 - **HA sync:** `disable_preempt` is saved immediately but only takes effect at the next boot.
+- **Dynamic DNS passwords:** OPNsense never returns an account's password, so an imported account shows a password change on the first plan when the configuration sets one. An empty password leaves the stored one unchanged.
+- **DNSBL:** each change runs `unbound/service/dnsbl`, which reloads the Unbound templates and downloads every enabled policy's lists.
 - **Kea control agent:** OPNsense only runs it while Kea DHCPv4 or DHCPv6 is enabled.
 - **Captive portal templates:** OPNsense strips files identical to its default template before storing the zip, so the stored copy never matches the upload. The provider tracks the zip you configured and re-uploads it when that changes. Edits made on the firewall aren't detected.
 - **Interface assignments:** assign a VLAN by its explicit device name. If you let OPNsense generate the name, the VLAN resource stores an empty `device`.

@@ -160,10 +160,27 @@ func MinVersionPreCheck(t *testing.T, minVersion string) {
 	}
 }
 
-func opnsenseVersion() (string, error) {
-	req, err := http.NewRequest(http.MethodGet, os.Getenv("OPNSENSE_URI")+"/api/core/firmware/status", nil)
+// PluginPreCheck skips the test when the plugin that serves endpoint (an API
+// path such as "/api/dyndns/settings/get") is not installed: OPNsense answers
+// 404 for controllers it doesn't have. The CI image ships no plugins.
+func PluginPreCheck(t *testing.T, plugin, endpoint string) {
+	t.Helper()
+	AccPreCheck(t)
+
+	resp, err := apiGet(endpoint)
 	if err != nil {
-		return "", fmt.Errorf("new request: %w", err)
+		t.Fatalf("PluginPreCheck: %s", err)
+	}
+	resp.Body.Close()
+	if resp.StatusCode == http.StatusNotFound {
+		t.Skipf("requires the %s plugin", plugin)
+	}
+}
+
+func apiGet(path string) (*http.Response, error) {
+	req, err := http.NewRequest(http.MethodGet, os.Getenv("OPNSENSE_URI")+path, nil)
+	if err != nil {
+		return nil, fmt.Errorf("new request: %w", err)
 	}
 	req.Header.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString(
 		[]byte(os.Getenv("OPNSENSE_API_KEY")+":"+os.Getenv("OPNSENSE_API_SECRET"))))
@@ -171,7 +188,11 @@ func opnsenseVersion() (string, error) {
 	client := &http.Client{Transport: &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: os.Getenv("OPNSENSE_ALLOW_INSECURE") == "true"},
 	}}
-	resp, err := client.Do(req)
+	return client.Do(req)
+}
+
+func opnsenseVersion() (string, error) {
+	resp, err := apiGet("/api/core/firmware/status")
 	if err != nil {
 		return "", fmt.Errorf("firmware status: %w", err)
 	}
