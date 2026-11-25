@@ -42,5 +42,5 @@ output "site_public_key" {
 ### Read-Only
 
 - `id` (String) Same as `public_key`.
-- `private_key` (String, Sensitive) Base64 private key.
-- `public_key` (String) Base64 public key.
+- `private_key` (String, Sensitive) Private key of this instance, generated together with `public_key`. Please keep this key safe. Base64 encoded; use as `private_key` of `opnsense_wireguard_server`.
+- `public_key` (String) Public key of this instance, generated like the gear button next to *Public key* in the instance dialog. Base64 encoded; use as `public_key` of `opnsense_wireguard_server`.

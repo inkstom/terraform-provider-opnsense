@@ -2,14 +2,14 @@
 page_title: "opnsense_interfaces_assignment Resource - terraform-provider-opnsense"
 subcategory: Interfaces
 description: |-
-  Assigns a network device (NIC, VLAN, WireGuard wgX, bridge, LAGG, ...) to a logical interface (optN) and configures it (Interfaces > Assignments). Requires OPNsense 26.7.7 or later. Requires OPNsense 26.7.7 or later.
+  Assigns a network device (NIC, VLAN, WireGuard wgX, bridge, LAGG, ...) to a logical interface (optN) and configures it (Interfaces > Assignments). Requires OPNsense 26.7.7 or later.
   ~> Warning: every change runs a full interface apply on the firewall. Changing the interface you reach the API through can cut off Terraform mid-apply. Deleting an assignment also deletes firewall/NAT rules that reference only that interface.
   Only static, DHCP and track/SLAAC-style addressing are modelled; settings not exposed here are left untouched on update.
 ---
 
 # opnsense_interfaces_assignment (Resource)
 
-Assigns a network device (NIC, VLAN, WireGuard `wgX`, bridge, LAGG, ...) to a logical interface (`optN`) and configures it (Interfaces > Assignments). Requires OPNsense 26.7.7 or later. Requires OPNsense 26.7.7 or later.
+Assigns a network device (NIC, VLAN, WireGuard `wgX`, bridge, LAGG, ...) to a logical interface (`optN`) and configures it (Interfaces > Assignments). Requires OPNsense 26.7.7 or later.
 
 ~> **Warning:** every change runs a full interface apply on the firewall. Changing the interface you reach the API through can cut off Terraform mid-apply. Deleting an assignment also deletes firewall/NAT rules that reference only that interface.
 
@@ -59,33 +59,33 @@ resource "opnsense_firewall_filter" "iot_dns" {
 
 ### Required
 
-- `device` (String) Device to assign, e.g. `igc2`, `vlan0.10` (reference `opnsense_interfaces_vlan.device` only when you set that name explicitly; auto-generated names are not exposed), `wg0` (see `opnsense_wireguard_server.device`). A device can only be assigned once.
+- `device` (String) Device name to connect this interface to, e.g. `igc2`, `vlan0.10` (reference `opnsense_interfaces_vlan.device` only when you set that name explicitly; auto-generated names are not exposed), `wg0` (see `opnsense_wireguard_server.device`). A device can only be assigned once.
 
 ### Optional
 
-- `block_bogons` (Boolean) Block traffic from bogon networks on this interface. Defaults to `false`.
-- `block_private` (Boolean) Block traffic from private networks (RFC 1918) on this interface. Defaults to `false`.
-- `description` (String) Interface name shown throughout the UI, e.g. `IOT`. Letters, digits and `_` only; must be unique. When unset, OPNsense shows the identifier (e.g. `OPT3`).
-- `dhcp_hostname` (String) Hostname sent to the DHCP server when `ipv4_type` is `dhcp`.
-- `enabled` (Boolean) Enable the interface. Defaults to `true`.
-- `gateway_interface` (Boolean) Dynamic gateway policy: allow sending traffic to this interface without an intermediate gateway (useful for VPN interfaces such as WireGuard). Defaults to `false`.
+- `block_bogons` (Boolean) When set, this option blocks traffic from IP addresses that are reserved (but not RFC 1918) or not yet assigned by IANA. Bogons are prefixes that should never appear in the Internet routing table, and obviously should not appear as the source address in any packets you receive. Defaults to `false`.
+- `block_private` (Boolean) When set, this option blocks traffic from IP addresses that are reserved for private networks as per RFC 1918 as well as loopback, link-local and Carrier-grade NAT addresses. This option should only be set for WAN interfaces that use the public IP address space. Defaults to `false`.
+- `description` (String) You may enter a description here for your reference (not parsed). This is the interface name shown throughout the UI, e.g. `IOT`. Letters, digits and `_` only; must be unique. When unset, OPNsense shows the identifier (e.g. `OPT3`).
+- `dhcp_hostname` (String) The value in this field is sent as the DHCP client identifier and hostname when requesting a DHCP lease. Some ISPs may require this (for client identification). Used when `ipv4_type` is `dhcp`.
+- `enabled` (Boolean) Enable this interface. Defaults to `true`.
+- `gateway_interface` (Boolean) If the destination is directly reachable via an interface requiring no intermediary system to act as a gateway, you can select this option which allows dynamic gateways to be created without direct target addresses. Some tunnel types support this. Useful for VPN interfaces such as WireGuard. Defaults to `false`.
 - `ipv4_address` (String) IPv4 address in CIDR notation, e.g. `10.10.0.1/24`. Required when `ipv4_type` is `staticv4`.
-- `ipv4_gateway` (String) Name of an IPv4 upstream gateway for this interface (WAN-type interfaces only), e.g. `opnsense_gateway.wan2.name`. Note: a gateway references its interface, so setting both creates a cycle — prefer `opnsense_gateway.upstream`.
-- `ipv4_type` (String) IPv4 configuration type: `staticv4` or `dhcp`. Leave unset for none.
+- `ipv4_gateway` (String) Select a gateway from the list to reply the incoming packets to the proper next hop on their way back and apply source NAT when configured. This is typically disabled for LAN type interfaces. Takes a gateway name, e.g. `opnsense_gateway.wan2.name`. Note: a gateway references its interface, so setting both creates a cycle; prefer `opnsense_gateway.upstream`.
+- `ipv4_type` (String) The primary type for this interface for IPv4 communication. This resource supports `staticv4` or `dhcp`. Leave unset for none.
 - `ipv6_address` (String) IPv6 address in CIDR notation. Required when `ipv6_type` is `staticv6`.
-- `ipv6_gateway` (String) Name of an IPv6 upstream gateway for this interface.
-- `ipv6_type` (String) IPv6 configuration type: `staticv6`, `dhcp6`, `slaac`, `linklocal`, `idassoc6` or `track6`. Leave unset for none.
-- `lock` (Boolean) Prevent removal from the UI. The provider clears the lock itself before destroying. Defaults to `false` (OPNsense's UI defaults to `true`).
-- `mss` (Number) TCP MSS clamping (576-65535). Set to `-1` to use the device default. Defaults to `-1`.
-- `mtu` (Number) Interface MTU (576-65535). Set to `-1` to use the device default. Defaults to `-1`.
-- `promiscuous` (Boolean) Put the device in promiscuous mode. Defaults to `false`.
-- `spoof_mac` (String) MAC address to spoof on this interface, e.g. `02:00:00:00:00:01`.
-- `track6_interface` (String) Parent interface whose delegated prefix to use when `ipv6_type` is `idassoc6` or `track6`, e.g. `wan`.
-- `track6_prefix_id` (String) Hexadecimal prefix ID (e.g. `0x1`) selected from the delegated prefix.
+- `ipv6_gateway` (String) Select a gateway from the list to reply the incoming packets to the proper next hop on their way back. This is typically disabled for LAN type interfaces. Takes a gateway name.
+- `ipv6_type` (String) The primary type for this interface for IPv6 communication. This resource supports `staticv6`, `dhcp6`, `slaac`, `linklocal`, `idassoc6` or `track6`. Leave unset for none.
+- `lock` (Boolean) Prevent interface removal. The provider clears the lock itself before destroying. Defaults to `false` (OPNsense's UI defaults to `true`).
+- `mss` (Number) If you enter a value in this field, then MSS clamping for TCP connections to the value entered above minus 40 (IPv4) or 60 (IPv6) will be in effect (TCP/IP header size). Accepts `576` to `65535`. Set to `-1` to use the device default. Defaults to `-1`.
+- `mtu` (Number) If you leave this field blank, the adapter's default MTU will be used. This is typically 1500 bytes but can vary in some circumstances. Accepts `576` to `65535`. Set to `-1` to use the device default. Defaults to `-1`.
+- `promiscuous` (Boolean) Put interface into permanently promiscuous mode. Only to be used for specific usecases requiring the interface to receive all packets being received. When unsure, leave this disabled. Defaults to `false`.
+- `spoof_mac` (String) This field can be used to spoof the MAC address of the interface. Enter a MAC address in the following format: `xx:xx:xx:xx:xx:xx` or leave blank if unsure. This may only be required e.g. with certain cable connections on a WAN interface. When used on a single VLAN interface the setting "Promiscuous mode" (`promiscuous`) is required for this to work. Alternatively, the parent interface MAC can be spoofed applying the MAC address to all attached VLAN children automatically.
+- `track6_interface` (String) This selects the dynamic IPv6 WAN interface to track for configuration. Used when `ipv6_type` is `idassoc6` or `track6`, e.g. `wan`.
+- `track6_prefix_id` (String) The value in this field is the delegated hexadecimal IPv6 prefix ID. This determines the configurable /64 network ID based on the dynamic IPv6 connection. Give it as a hex value, e.g. `0x1`.
 
 ### Read-Only
 
-- `id` (String) Interface identifier assigned by OPNsense, e.g. `opt3`. Use this wherever an interface is expected (firewall rules, gateways, DHCP).
+- `id` (String) Technical identifier of the interface, used by hasync for example. Assigned by OPNsense, e.g. `opt3`. Use this wherever an interface is expected (firewall rules, gateways, DHCP).
 
 ## Import
 

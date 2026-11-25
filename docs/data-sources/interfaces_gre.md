@@ -21,10 +21,10 @@ GRE tunnels (Interfaces > Devices > GRE).
 
 ### Read-Only
 
-- `description` (String) Description.
+- `description` (String) You may enter a description here for your reference (not parsed).
 - `device` (String) Device name.
 - `local_address` (String) Local endpoint.
-- `remote_address` (String) Remote endpoint.
-- `tunnel_local_address` (String) Local tunnel address.
-- `tunnel_remote_address` (String) Remote tunnel address.
-- `tunnel_remote_net` (String) Tunnel prefix length.
+- `remote_address` (String) Peer address where encapsulated gre packets will be sent.
+- `tunnel_local_address` (String) Local gre tunnel endpoint.
+- `tunnel_remote_address` (String) Remote gre tunnel endpoint.
+- `tunnel_remote_net` (String) Netmask [ipv4] or prefix [ipv6] to use for this tunnel, as a prefix length.

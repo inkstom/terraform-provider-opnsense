@@ -54,8 +54,23 @@ func hasyncString(desc string, v ...validator.String) schema.StringAttribute {
 	}
 }
 
+// OPNsense help text (core hasyncSettings form), shared by resource and data source.
+var hasyncHelp = map[string]string{
+	"disable_preempt":   "When this device is configured as CARP master it will try to switch to master when powering up, this option will keep this one slave if there already is a master on the network. A reboot is required to take effect.",
+	"disconnect_dialup": "When this device is configured as CARP backup it will disconnect all PPP type interfaces and try to reconnect them when becoming master again.",
+	"pfsync_interface":  "This enables state insertion, update, and deletion messages between firewalls by utilizing the selected interface for communication. Best choose a dedicated interface for this type of communication to prevent manipulation of states causing security issues.",
+	"pfsync_peer_ip":    "Setting this option will force pfsync to synchronize its state table to this IP address. The default is directed multicast.",
+	"pfsync_version":    "Newer versions of OPNsense offer additional attributes in the state synchronization, for compatibility reasons you can optionally choose an older version here. Always make sure both nodes use the same version to avoid inconsistent state tables.",
+	"pfsync_defer":      "Defer transmission of the first packet in a state until a peer has acknowledged that the associated state has been inserted. This adds small delays but allows traffic to flow when more than one firewall might actively handle packets (\"active/active\").",
+	"synchronize_to_ip": "Enter the IP address of the firewall to which the selected configuration sections should be synchronized. This should be empty on the backup machine. When an IP address is offered, both web GUI configurations should be equal (port and protocol).",
+	"verify_peer":       "In most cases the target host will be a directly attached neighbor in which case TLS verification can be ignored.",
+	"username":          "Enter the web GUI username of the system entered above for synchronizing your configuration.",
+	"password":          "Enter the web GUI password of the system entered above for synchronizing your configuration.",
+	"sync_items":        "Select the services that should be sent to the other host.",
+}
+
 func hasyncResourceSchema() schema.Schema {
-	password := hasyncString("Password of `username` on the backup firewall.")
+	password := hasyncString(hasyncHelp["password"])
 	password.Sensitive = true
 	return schema.Schema{
 		MarkdownDescription: "High availability settings (System > High Availability > Settings): pfsync state synchronisation and configuration sync to a backup firewall. Saving reconfigures pfsync. " +
@@ -63,19 +78,19 @@ func hasyncResourceSchema() schema.Schema {
 			"destroying it only removes it from state.",
 
 		Attributes: map[string]schema.Attribute{
-			"disable_preempt":   hasyncBool("Disable CARP preemption, so a recovered master doesn't take its addresses back. OPNsense applies this at boot (`net.inet.carp.preempt`), not on save."),
-			"disconnect_dialup": hasyncBool("Disconnect dial-up (PPP) interfaces when this firewall becomes a CARP backup."),
-			"pfsync_interface":  hasyncString("Interface to synchronise firewall states over, e.g. a dedicated `opt1`; `\"\"` disables pfsync."),
-			"pfsync_peer_ip":    hasyncString("Peer address for pfsync, instead of multicast."),
-			"pfsync_version": hasyncString("pfsync protocol version: `1301`, `1400` or `1500`. Both firewalls must match.",
+			"disable_preempt":   hasyncBool(hasyncHelp["disable_preempt"] + " Sets `net.inet.carp.preempt`."),
+			"disconnect_dialup": hasyncBool(hasyncHelp["disconnect_dialup"]),
+			"pfsync_interface":  hasyncString(hasyncHelp["pfsync_interface"] + " Interface name, e.g. `opt1`; `\"\"` disables pfsync."),
+			"pfsync_peer_ip":    hasyncString(hasyncHelp["pfsync_peer_ip"]),
+			"pfsync_version": hasyncString(hasyncHelp["pfsync_version"]+" One of `1301` (OPNsense 24.1 or below), `1400` (24.7 to 26.1) or `1500` (26.7 or above).",
 				stringvalidator.OneOf("1301", "1400", "1500")),
-			"pfsync_defer":      hasyncBool("Defer packets until the peer acknowledges the state (for active/active setups)."),
-			"synchronize_to_ip": hasyncString("Address of the backup firewall to push configuration to; `\"\"` disables configuration sync."),
-			"verify_peer":       hasyncBool("Verify the backup firewall's TLS certificate."),
-			"username":          hasyncString("User on the backup firewall used for configuration sync."),
+			"pfsync_defer":      hasyncBool(hasyncHelp["pfsync_defer"]),
+			"synchronize_to_ip": hasyncString(hasyncHelp["synchronize_to_ip"] + " `\"\"` disables configuration sync."),
+			"verify_peer":       hasyncBool(hasyncHelp["verify_peer"] + " Set to `true` to verify the backup firewall's TLS certificate."),
+			"username":          hasyncString(hasyncHelp["username"]),
 			"password":          password,
 			"sync_items": schema.SetAttribute{
-				MarkdownDescription: "Sections to synchronise, e.g. `aliases`, `rules`, `nat`, `certs`, `dhcpd`, `cron`, `ipsec`, `wireguard`. Unset keeps the current value.",
+				MarkdownDescription: hasyncHelp["sync_items"] + " Section keys, e.g. `aliases`, `rules`, `nat`, `certs`, `dhcpd`, `cron`, `ipsec`, `wireguard`. Unset keeps the current value.",
 				ElementType:         types.StringType,
 				Optional:            true,
 				Computed:            true,
@@ -101,16 +116,16 @@ func hasyncDataSourceSchema() dschema.Schema {
 		MarkdownDescription: "High availability settings (System > High Availability > Settings). The password is not exposed.",
 
 		Attributes: map[string]dschema.Attribute{
-			"disable_preempt":   b("Whether CARP preemption is disabled."),
-			"disconnect_dialup": b("Whether dial-up interfaces disconnect on backup."),
-			"pfsync_interface":  s("pfsync interface."),
-			"pfsync_peer_ip":    s("pfsync peer address."),
-			"pfsync_version":    s("pfsync protocol version."),
-			"pfsync_defer":      b("Whether pfsync defers packets."),
-			"synchronize_to_ip": s("Backup firewall address for configuration sync."),
-			"verify_peer":       b("Whether the backup's certificate is verified."),
-			"username":          s("Configuration sync user."),
-			"sync_items":        dschema.SetAttribute{MarkdownDescription: "Synchronised sections.", ElementType: types.StringType, Computed: true},
+			"disable_preempt":   b(hasyncHelp["disable_preempt"]),
+			"disconnect_dialup": b(hasyncHelp["disconnect_dialup"]),
+			"pfsync_interface":  s(hasyncHelp["pfsync_interface"]),
+			"pfsync_peer_ip":    s(hasyncHelp["pfsync_peer_ip"]),
+			"pfsync_version":    s(hasyncHelp["pfsync_version"]),
+			"pfsync_defer":      b(hasyncHelp["pfsync_defer"]),
+			"synchronize_to_ip": s(hasyncHelp["synchronize_to_ip"]),
+			"verify_peer":       b(hasyncHelp["verify_peer"] + " `true` when the backup firewall's TLS certificate is verified."),
+			"username":          s(hasyncHelp["username"]),
+			"sync_items":        dschema.SetAttribute{MarkdownDescription: hasyncHelp["sync_items"], ElementType: types.StringType, Computed: true},
 			"id":                s("Always `" + hasyncID + "`."),
 		},
 	}

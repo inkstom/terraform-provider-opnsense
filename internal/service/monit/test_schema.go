@@ -24,9 +24,9 @@ func testResourceSchema() schema.Schema {
 	return schema.Schema{
 		MarkdownDescription: "Monit service tests: a condition and the action to take when it matches (Services > Monit > Service Tests Settings).",
 		Attributes: map[string]schema.Attribute{
-			"name": schema.StringAttribute{MarkdownDescription: "Test name.", Required: true},
+			"name": schema.StringAttribute{MarkdownDescription: "The name of the test. 1 to 255 letters, digits, spaces, `_`, `-` or `.`.", Required: true},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Test type, e.g. `SystemResource`, `ProcessResource`, `Existence` or `Custom`. OPNsense derives it from " +
+				MarkdownDescription: "The type of the test, e.g. `SystemResource`, `ProcessResource`, `Existence` or `Custom`. The OPNsense UI hides this field. OPNsense derives it from " +
 					"`condition` when the condition is recognised, so it is usually best left unset. " +
 					"A service only accepts tests of types that suit it (a `process` service takes `ProcessResource` tests, for example), " +
 					"and OPNsense refuses to change the type of a test a service uses.",
@@ -34,9 +34,9 @@ func testResourceSchema() schema.Schema {
 				Computed:      true,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
-			"condition": schema.StringAttribute{MarkdownDescription: "Monit condition, e.g. `cpu usage is greater than 75% for 3 cycles`.", Required: true},
-			"action":    schema.StringAttribute{MarkdownDescription: "Action: `alert`, `restart`, `start`, `stop`, `exec` or `unmonitor`.", Required: true},
-			"path":      strDefault("Script to run when `action` is `exec`.", ""),
+			"condition": schema.StringAttribute{MarkdownDescription: "The test condition. E.g. `cpu is greater than 50%` or `failed host 127.0.0.1 port 22 protocol ssh`.", Required: true},
+			"action":    schema.StringAttribute{MarkdownDescription: "Simply `alert` or `restart` the service or *execute* a program. One of `alert`, `restart`, `start`, `stop`, `exec` or `unmonitor`.", Required: true},
+			"path":      strDefault("Make sure the script is executable by the Monit service. The absolute path of the script to run when `action` is `exec`.", ""),
 			"id":        idAttr("UUID of the test."),
 		},
 	}
@@ -47,11 +47,11 @@ func testDataSourceSchema() dschema.Schema {
 		MarkdownDescription: "Monit service tests (Services > Monit > Service Tests Settings).",
 		Attributes: map[string]dschema.Attribute{
 			"id":        dsID("UUID of the test."),
-			"name":      dsStr("Test name."),
-			"type":      dsStr("Test type."),
-			"condition": dsStr("Monit condition."),
-			"action":    dsStr("Action."),
-			"path":      dsStr("Script for `exec`."),
+			"name":      dsStr("The name of the test."),
+			"type":      dsStr("The type of the test."),
+			"condition": dsStr("The test condition."),
+			"action":    dsStr("Simply `alert` or `restart` the service or *execute* a program."),
+			"path":      dsStr("The script to run when `action` is `exec`."),
 		},
 	}
 }

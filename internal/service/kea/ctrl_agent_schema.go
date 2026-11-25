@@ -32,19 +32,19 @@ func ctrlAgentResourceSchema() schema.Schema {
 
 		Attributes: map[string]schema.Attribute{
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Run the control agent. Required for Kea HA (`opnsense_kea_dhcpv4_peer`). OPNsense only starts it while Kea DHCPv4 or DHCPv6 is enabled.",
+				MarkdownDescription: "Enable control agent. Required for Kea HA (`opnsense_kea_dhcpv4_peer`). OPNsense only starts it while Kea DHCPv4 or DHCPv6 is enabled.",
 				Optional:            true,
 				Computed:            true,
 				PlanModifiers:       []planmodifier.Bool{boolplanmodifier.UseStateForUnknown()},
 			},
 			"http_host": schema.StringAttribute{
-				MarkdownDescription: "Address the agent listens on; HA peers must be able to reach it.",
+				MarkdownDescription: "Address on which the RESTful interface should be available. IPv4 address; OPNsense defaults to `127.0.0.1`, HA peers must be able to reach it.",
 				Optional:            true,
 				Computed:            true,
 				PlanModifiers:       []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"http_port": schema.Int64Attribute{
-				MarkdownDescription: "Port the agent listens on.",
+				MarkdownDescription: "Port number to use for the RESTful interface. OPNsense defaults to `8000`.",
 				Optional:            true,
 				Computed:            true,
 				PlanModifiers:       []planmodifier.Int64{int64planmodifier.UseStateForUnknown()},
@@ -64,9 +64,9 @@ func ctrlAgentDataSourceSchema() dschema.Schema {
 		MarkdownDescription: "Kea control agent settings (Services > Kea DHCP > Control Agent).",
 
 		Attributes: map[string]dschema.Attribute{
-			"enabled":   dschema.BoolAttribute{MarkdownDescription: "Whether the agent runs.", Computed: true},
-			"http_host": dschema.StringAttribute{MarkdownDescription: "Listen address.", Computed: true},
-			"http_port": dschema.Int64Attribute{MarkdownDescription: "Listen port.", Computed: true},
+			"enabled":   dschema.BoolAttribute{MarkdownDescription: "Enable control agent.", Computed: true},
+			"http_host": dschema.StringAttribute{MarkdownDescription: "Address on which the RESTful interface should be available.", Computed: true},
+			"http_port": dschema.Int64Attribute{MarkdownDescription: "Port number to use for the RESTful interface.", Computed: true},
 			"id":        dschema.StringAttribute{MarkdownDescription: "Always `" + ctrlAgentID + "`.", Computed: true},
 		},
 	}

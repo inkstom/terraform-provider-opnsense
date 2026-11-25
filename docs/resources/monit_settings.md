@@ -40,28 +40,28 @@ variable "smtp_password" {
 
 ### Optional
 
-- `enabled` (Boolean) Run Monit. Unset keeps the current value.
-- `event_queue_path` (String) Directory that queues alerts while the mail server is unreachable; empty disables the queue. Unset keeps the current value.
-- `event_queue_slots` (Number) Maximum queued alerts. Unset keeps the current value.
-- `httpd_allow` (Set of String) Hosts or networks allowed to reach the web interface. Unset keeps the current value.
-- `httpd_enabled` (Boolean) Run Monit's local web interface (needed for the status page and M/Monit). Unset keeps the current value.
-- `httpd_password` (String, Sensitive) Web interface password. Unset keeps the current value.
-- `httpd_port` (Number) Web interface port. Unset keeps the current value.
-- `httpd_username` (String) Web interface user. Unset keeps the current value.
-- `interval` (Number) Seconds between checks. Unset keeps the current value.
-- `log_file` (String) Log file; empty logs to syslog. Unset keeps the current value.
-- `mail_password` (String, Sensitive) Mail server password. Unset keeps the current value.
-- `mail_port` (Number) Mail server port. Unset keeps the current value.
-- `mail_servers` (Set of String) Mail servers for alerts, tried in order of preference. Unset keeps the current value.
-- `mail_ssl` (Boolean) Use TLS to the mail server. Unset keeps the current value.
-- `mail_ssl_verify` (Boolean) Verify the mail server's certificate. Unset keeps the current value.
-- `mail_ssl_version` (String) TLS version: `auto`, `tlsv1`, `tlsv11`, `tlsv12` or `tlsv13`. Unset keeps the current value.
-- `mail_username` (String) Mail server user. Unset keeps the current value.
-- `mmonit_register_credentials` (Boolean) Register the web interface credentials with M/Monit. Unset keeps the current value.
-- `mmonit_timeout` (Number) M/Monit timeout in seconds. Unset keeps the current value.
-- `mmonit_url` (String) M/Monit server URL; empty disables reporting. Unset keeps the current value.
-- `start_delay` (Number) Seconds to wait after boot before the first check. Unset keeps the current value.
-- `state_file` (String) State file; empty uses the default. Unset keeps the current value.
+- `enabled` (Boolean) Enable or disable monit. Unset keeps the current value.
+- `event_queue_path` (String) The path to the eventqueue directory. The eventqueue holds alerts while the mail server is unreachable; empty disables it. Unset keeps the current value.
+- `event_queue_slots` (Number) The number of eventqueue slots. Only used when `event_queue_path` is set. Unset keeps the current value.
+- `httpd_allow` (Set of String) The `username:password` or host/network etc. for accessing the Monit httpd service. See [Monit Authentication](https://mmonit.com/monit/documentation/monit.html#Authentication). Unset keeps the current value.
+- `httpd_enabled` (Boolean) Start the Monit httpd service. Needed for the Monit status page and M/Monit; requires `httpd_password`. Unset keeps the current value.
+- `httpd_password` (String, Sensitive) Password for the Monit httpd service. Required when `httpd_enabled` is `true`. Unset keeps the current value.
+- `httpd_port` (Number) Port of the Monit httpd service, from `1` to `65535`. Unset keeps the current value.
+- `httpd_username` (String) Username for the Monit httpd service. Unset keeps the current value.
+- `interval` (Number) Polling interval in seconds. From `1` to `3600`. Unset keeps the current value.
+- `log_file` (String) The log file of the Monit process. This can be the keyword `syslog` or the path to a file. Empty logs to syslog. Unset keeps the current value.
+- `mail_password` (String, Sensitive) The password for mail server authentication. Unset keeps the current value.
+- `mail_port` (Number) The port of the mail server. Typically `465` for SSL or `25` for TLS and non secure connections. Unset keeps the current value.
+- `mail_servers` (Set of String) List of SMTP servers for alert delivery. Hostnames or IP addresses. Unset keeps the current value.
+- `mail_ssl` (Boolean) Enable encryption for mail server communication. Unset keeps the current value.
+- `mail_ssl_verify` (Boolean) Enable or disable SSL server certificate verification. Unset keeps the current value.
+- `mail_ssl_version` (String) Set the SSL version to use. In `auto` mode, only TLS is used. One of `auto`, `tlsv1`, `tlsv11`, `tlsv12` or `tlsv13`. Unset keeps the current value.
+- `mail_username` (String) The username for mail server authentication. Unset keeps the current value.
+- `mmonit_register_credentials` (Boolean) Automatically register in M/Monit by sending Monit credentials (see `httpd_allow`). Unset keeps the current value.
+- `mmonit_timeout` (Number) M/Monit timeout in seconds, from `1` to `86400`. Unset keeps the current value.
+- `mmonit_url` (String) The M/Monit URL, e.g. `https://user:pass@192.168.1.10:8443/collector`. If you want to control Monit services from your M/Monit instance you have to configure the Monit Port too and add corresponding firewall rules as well. Empty disables reporting. Unset keeps the current value.
+- `start_delay` (Number) On system boot wait before Monit starts checking services. Seconds, from `0` to `86400`. Unset keeps the current value.
+- `state_file` (String) The state file of the Monit process. An absolute path; empty uses Monit's default. Unset keeps the current value.
 
 ### Read-Only
 

@@ -21,19 +21,19 @@ Services monitored by Monit (Services > Monit > Service Settings).
 
 ### Read-Only
 
-- `address` (String) Host address.
-- `depends` (Set of String) Dependency UUIDs.
-- `description` (String) Description.
-- `enabled` (Boolean) Whether monitoring is enabled.
-- `interface` (String) Network interface.
-- `match` (String) Process name pattern.
-- `name` (String) Service name.
-- `path` (String) Path.
-- `pidfile` (String) PID file.
-- `poll_time` (String) Polling schedule.
-- `start` (String) Start command.
-- `start_timeout` (String) Start timeout.
-- `stop` (String) Stop command.
-- `tests` (Set of String) Test UUIDs.
-- `timeout` (String) Program timeout.
-- `type` (String) Service type.
+- `address` (String) The target IP address for 'Remote Host' (`host`) and 'Network' (`network`) checks.
+- `depends` (Set of String) Services which are required before monitoring this one. UUIDs of other `opnsense_monit_service` resources.
+- `description` (String) Description of the service.
+- `enabled` (Boolean) Enable or disable service checks.
+- `interface` (String) The Interface for 'Network' (`network`) checks.
+- `match` (String) Find the process by regular expression.
+- `name` (String) The name of the service.
+- `path` (String) According to the service type path can be a file or a directory.
+- `pidfile` (String) The PID file of the process.
+- `poll_time` (String) Set the service poll time. Either as a number of cycles `NUMBER CYCLES` or Cron-style `* 8-19 * * 1-5`.
+- `start` (String) The start script of the service.
+- `start_timeout` (String) The timeout for custom program to start a service.
+- `stop` (String) The stop script of the service.
+- `tests` (Set of String) This is a list with service tests. UUIDs of `opnsense_monit_test` resources.
+- `timeout` (String) The timeout for custom program checks.
+- `type` (String) The service check type.

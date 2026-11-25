@@ -21,7 +21,7 @@ import {
 # Keep 90 days of logs locally, rotating files at 50 MB.
 resource "opnsense_syslog_settings" "this" {
   max_preserve  = 90
-  max_file_size = 52428800
+  max_file_size = 50
 }
 ```
 
@@ -31,9 +31,9 @@ resource "opnsense_syslog_settings" "this" {
 ### Optional
 
 - `enabled` (Boolean) Run the local syslog service. Disabling it stops all logging, including remote destinations. Unset keeps the current value.
-- `log_local` (Boolean) Write logs to local disk. Unset keeps the current value.
-- `max_file_size` (Number) Maximum size of a log file in bytes before it is rotated; 0 means no limit. Unset keeps the current value.
-- `max_preserve` (Number) Days of logs to keep. Unset keeps the current value.
+- `log_local` (Boolean) Enable writing log files to the local disk. Unset keeps the current value.
+- `max_file_size` (Number) Maximum file size per log file. When set and a log file exceeds the amount specified, it will be rotated. In megabytes (MB); `0` means no limit. Unset keeps the current value.
+- `max_preserve` (Number) Number of logs to preserve. When no maximum file size is offered or the logs are smaller than the size requested, this equals the number of days. OPNsense defaults to `31`. Unset keeps the current value.
 
 ### Read-Only
 

@@ -17,7 +17,7 @@ Kea control agent settings (Services > Kea DHCP > Control Agent).
 
 ### Read-Only
 
-- `enabled` (Boolean) Whether the agent runs.
-- `http_host` (String) Listen address.
-- `http_port` (Number) Listen port.
+- `enabled` (Boolean) Enable control agent.
+- `http_host` (String) Address on which the RESTful interface should be available.
+- `http_port` (Number) Port number to use for the RESTful interface.
 - `id` (String) Always `kea_control_agent`.

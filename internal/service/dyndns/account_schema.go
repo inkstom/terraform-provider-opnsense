@@ -64,14 +64,14 @@ func accountResourceSchema() schema.Schema {
 		Attributes: map[string]schema.Attribute{
 			"enabled": optionalBool("Enable this account. Defaults to `true`.", true),
 			"service": schema.StringAttribute{
-				MarkdownDescription: "Provider key, e.g. `cloudflare`, `duckdns`, `freemyip` or `custom`.",
+				MarkdownDescription: "Select the service to use. Provider key, e.g. `cloudflare`, `duckdns`, `freemyip` or `custom`.",
 				Required:            true,
 			},
-			"protocol": optionalString("Protocol for the `custom` service: `dyndns1`, `dyndns2`, `get`, `post` or `put`."),
-			"server":   optionalString("Server (or URL) for the `custom` service."),
-			"username": optionalString("Username."),
+			"protocol": optionalString("Select the protocol to use. Only used by the `custom` service: `dyndns1`, `dyndns2`, `get`, `post` or `put`."),
+			"server":   optionalString("DynDNS Server hostname or uri to use (depending on the protocol). When a URI is provided, the tag `__MYIP__` will be replaced with the current detected address for this service and `__HOSTNAME__` will contain the (comma separated) list of hostnames provided. Used by the `custom` and `powerdns` services."),
+			"username": optionalString("Username or login to use."),
 			"password": schema.StringAttribute{
-				MarkdownDescription: "Password or API token. OPNsense never returns it, so Terraform keeps the value it last wrote, " +
+				MarkdownDescription: "Password associated with this account, or API token. OPNsense never returns it, so Terraform keeps the value it last wrote, " +
 					"and an empty value leaves the stored password unchanged. After an import, the first apply writes it again. Defaults to `\"\"`.",
 				Optional:  true,
 				Computed:  true,
@@ -80,28 +80,28 @@ func accountResourceSchema() schema.Schema {
 			},
 			"resource_id": optionalString("Resource ID, for services that need one."),
 			"hostnames": schema.SetAttribute{
-				MarkdownDescription: "Hostnames to update.",
+				MarkdownDescription: "Hostname to update. Accepts one or more hostnames.",
 				ElementType:         types.StringType,
 				Required:            true,
 				Validators:          []validator.Set{setvalidator.SizeAtLeast(1)},
 			},
-			"wildcard": optionalBool("Also update the wildcard record. Defaults to `false`.", false),
-			"zone":     optionalString("DNS zone, for services that need one."),
+			"wildcard": optionalBool("Add a DNS wildcard CNAME record that points to the configured host. Defaults to `false`.", false),
+			"zone":     optionalString("Zone containing the host entry. Only used by services that need one, such as `cloudflare` or `aws`."),
 			"checkip": schema.StringAttribute{
-				MarkdownDescription: "How to find the current IP address, e.g. `web_icanhazip`, `web_cloudflare` or `if` (read it from `interface`).",
+				MarkdownDescription: "How to determine the address to use for this host. For example `web_icanhazip`, `web_cloudflare` or `if` (read it from `interface`); `if6` is also offered with the `native` backend.",
 				Required:            true,
 			},
-			"dynipv6host": optionalString("Partial IPv6 host address appended to the prefix, e.g. `::1000`."),
+			"dynipv6host": optionalString("Swap the interface identifier of the ipv6 address with the given partial ipv6 address (the least significant 64 bits of the address). For example `::1000`."),
 			"checkip_timeout": schema.Int64Attribute{
-				MarkdownDescription: "Timeout in seconds for the IP check, 10 to 60. Defaults to `10`.",
+				MarkdownDescription: "How long to wait before the checkip process times out. In seconds, `10` to `60`. Defaults to `10`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             int64default.StaticInt64(10),
 				Validators:          []validator.Int64{int64validator.Between(10, 60)},
 			},
-			"force_ssl": optionalBool("Use HTTPS for updates. Defaults to `true`.", true),
+			"force_ssl": optionalBool("Force update using HTTPS, please note setting this option will enforce https updates on all accounts as ddclient only supports `SSL=yes` on a global level (the check ip service may still use HTTP on other services). Defaults to `true`.", true),
 			"ttl": schema.Int64Attribute{
-				MarkdownDescription: "Record TTL in seconds, for services that set one. Defaults to `300`.",
+				MarkdownDescription: "Time to Live for the DNS entry. In seconds, `1` to `604800`, for services that set one. Defaults to `300`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             int64default.StaticInt64(300),

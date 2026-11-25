@@ -28,7 +28,7 @@ resource "opnsense_captiveportal_template" "example" {
 ### Required
 
 - `content_base64` (String) The template zip, base64 encoded, e.g. `filebase64("portal.zip")`.
-- `name` (String) Template name.
+- `name` (String) Template name, between 1 and 255 characters.
 
 ### Read-Only
 

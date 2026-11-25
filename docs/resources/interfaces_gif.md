@@ -29,17 +29,17 @@ resource "opnsense_interfaces_gif" "he_ipv6" {
 ### Required
 
 - `local_address` (String) Local endpoint: an interface such as `wan`, or a virtual IP.
-- `remote_address` (String) Remote endpoint address.
-- `tunnel_local_address` (String) Local address inside the tunnel.
-- `tunnel_remote_address` (String) Remote address inside the tunnel.
+- `remote_address` (String) Peer address where encapsulated gif packets will be sent.
+- `tunnel_local_address` (String) Local gif tunnel endpoint.
+- `tunnel_remote_address` (String) Remote gif tunnel endpoint.
 
 ### Optional
 
-- `description` (String) Description. Defaults to `""`.
-- `link1` (Boolean) Set ECN-friendly behaviour (`link1` flag). Defaults to `false`.
-- `link2` (Boolean) Ingress filtering on outer addresses off (`link2` flag). Defaults to `false`.
-- `no_clamp` (Boolean) Do not clamp the MSS of TCP traffic through the tunnel. Defaults to `false`.
-- `tunnel_remote_net` (String) Prefix length of the tunnel network. Defaults to `"32"`.
+- `description` (String) You may enter a description here for your reference (not parsed). Defaults to `""`.
+- `link1` (Boolean) Note that the ECN friendly behavior violates RFC2893. This should be used in mutual agreement with the peer. Setting this enables ECN friendly behavior (`link1` flag). Defaults to `false`.
+- `link2` (Boolean) Ingress filtering on outer tunnel source can break tunnel operation in asymmetrically routed networks, in which case this can be disabled by marking this option. Setting this disables ingress filtering (`link2` flag). Defaults to `false`.
+- `no_clamp` (Boolean) Do not clamp the effective MTU to 1280 bytes when the outer tunnel protocol is IPv6. Defaults to `false`.
+- `tunnel_remote_net` (String) Netmask [ipv4] or prefix [ipv6] to use for this tunnel. Given as a prefix length from `1` to `128`. Defaults to `"32"`.
 
 ### Read-Only
 

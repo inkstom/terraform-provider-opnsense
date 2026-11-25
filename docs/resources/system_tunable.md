@@ -37,7 +37,7 @@ resource "opnsense_system_tunable" "blackhole_tcp" {
 
 - `default_value` (String) The system default for this tunable, if OPNsense knows it.
 - `id` (String) UUID of the tunable.
-- `type` (String) `w` for a runtime sysctl, `t` for a boot-time tunable, empty when unknown.
+- `type` (String) Tunable type as shown in the UI: `w` runtime, `t` boot-time, `y` read-only; empty is shown as environment.
 
 ## Import
 

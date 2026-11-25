@@ -26,15 +26,15 @@ resource "opnsense_dnsmasq_option" "mgmt_dns" {
 
 ### Optional
 
-- `description` (String) Description. Defaults to `""`.
-- `force` (Boolean) Send the option even if the client didn't request it. Defaults to `false`.
-- `interface` (String) Only apply on this interface, e.g. `opt1`. Empty applies everywhere. Defaults to `""`.
-- `option` (String) DHCPv4 option number, e.g. `3` (router), `6` (DNS servers), `42` (NTP servers). Defaults to `""`.
-- `option6` (String) DHCPv6 option number. Defaults to `""`.
-- `set_tag` (String) UUID of the tag to set on matching clients (`match` type). Defaults to `""`.
-- `tags` (Set of String) UUIDs of dnsmasq tags a client must have for this option to apply (`set` type). Defaults to `[]`.
-- `type` (String) `set` or `match`. Defaults to `"set"`.
-- `value` (String) Option value, e.g. `172.30.30.1` or a comma-separated list. Defaults to `""`.
+- `description` (String) You may enter a description here for your reference (not parsed). Defaults to `""`.
+- `force` (Boolean) Always send the option, also when the client does not ask for it in the parameter request list. Defaults to `false`.
+- `interface` (String) This adds a single interface as tag so this DHCP option can match the interface of a DHCP range. Example `opt1`; empty matches any interface. Defaults to `""`.
+- `option` (String) DHCPv4 option to offer to the client. Set as the option number, e.g. `3` (router), `6` (DNS servers), `42` (NTP servers). Defaults to `""`.
+- `option6` (String) DHCPv6 option to offer to the client. Set as the option number. Defaults to `""`.
+- `set_tag` (String) Tag to set for requests matching this range which can be used to selectively match DHCP options. UUID of an `opnsense_dnsmasq_tag`; used with `type = "match"`. Defaults to `""`.
+- `tags` (Set of String) If the optional tags are given then this option is only sent when all the tags are matched. Can be optionally combined with an interface tag. UUIDs of `opnsense_dnsmasq_tag` resources. Defaults to `[]`.
+- `type` (String) `set` option to send it to a client in a DHCP offer or `match` option to dynamically tag clients that send it in the initial DHCP request. One of `set` or `match`. Defaults to `"set"`.
+- `value` (String) Value (or values) to send to the client. The special address `0.0.0.0` or `[::]` is taken to mean "the address of the machine running Dnsmasq". When using `match`, leave empty to match on the option only. Separate multiple values with commas, e.g. `172.30.30.1,172.30.30.2`. Defaults to `""`.
 
 ### Read-Only
 

@@ -21,10 +21,10 @@ Monit e-mail alert recipients (Services > Monit > Alert Settings).
 
 ### Read-Only
 
-- `description` (String) Description.
-- `enabled` (Boolean) Whether the alert is enabled.
-- `events` (Set of String) Events alerted on.
-- `format` (String) Mail format override.
-- `not_on` (Boolean) Whether `events` is inverted.
-- `recipient` (String) E-mail address.
-- `reminder` (String) Reminder interval in cycles.
+- `description` (String) Description of the alert.
+- `enabled` (Boolean) Enable or disable alert.
+- `events` (Set of String) List with events. Empty means all events.
+- `format` (String) The email format for alerts.
+- `not_on` (Boolean) Do not send alerts for the following events but on all others. The events are those listed in `events`.
+- `recipient` (String) The email address to send alerts to.
+- `reminder` (String) Send a reminder after some cycles. Empty or `0` sends the alert only once.

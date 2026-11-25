@@ -35,45 +35,45 @@ func nptResourceSchema() schema.Schema {
 
 		Attributes: map[string]schema.Attribute{
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Enable the rule. Defaults to `true`.",
+				MarkdownDescription: "Enable this rule. Defaults to `true`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
 			"log": schema.BoolAttribute{
-				MarkdownDescription: "Log packets that match the rule. Defaults to `false`.",
+				MarkdownDescription: "Log packets that are handled by this rule. Defaults to `false`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
 			"sequence": schema.Int64Attribute{
-				MarkdownDescription: "Order of evaluation. Defaults to `100`.",
+				MarkdownDescription: "Sequence (order of evaluation), between `1` and `999999`. Defaults to `100`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             int64default.StaticInt64(100),
 			},
 			"interface": schema.StringAttribute{
-				MarkdownDescription: "Interface the translation applies on, e.g. `wan`.",
+				MarkdownDescription: "Choose which interface this rule applies to. Interface identifier, e.g. `wan`.",
 				Required:            true,
 			},
 			"internal_prefix": schema.StringAttribute{
-				MarkdownDescription: "Internal (source) IPv6 prefix, e.g. `fd00:1::/64`.",
+				MarkdownDescription: "Enter the internal IPv6 prefix (source) for this network prefix translation. For example `fd00:1::/64`.",
 				Required:            true,
 			},
 			"external_prefix": schema.StringAttribute{
-				MarkdownDescription: "External (translated) IPv6 prefix of the same length. Leave empty with `track_interface` to follow a dynamic prefix. Defaults to `\"\"`.",
+				MarkdownDescription: "Enter the external IPv6 prefix (target) for this network prefix translation. Leave empty to auto-detect the prefix address using the specified tracking interface instead. The prefix size specified for the internal prefix will also be applied to the external prefix. Required unless `track_interface` is set. Defaults to `\"\"`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString(""),
 			},
 			"track_interface": schema.StringAttribute{
-				MarkdownDescription: "Interface whose delegated prefix is used as the external prefix; the interface must have a prefix ID. Defaults to `\"\"`.",
+				MarkdownDescription: "Use prefix defined on the selected interface instead of the interface this rule applies to when target prefix is not provided. Interface identifier; the interface must have a prefix ID. Defaults to `\"\"`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString(""),
 			},
 			"categories": schema.SetAttribute{
-				MarkdownDescription: "UUIDs of `opnsense_firewall_category` to tag the rule with. Defaults to `[]`.",
+				MarkdownDescription: "For grouping purposes you may select multiple groups here to organize items. UUIDs of `opnsense_firewall_category` resources. Defaults to `[]`.",
 				ElementType:         types.StringType,
 				Optional:            true,
 				Computed:            true,
@@ -100,14 +100,14 @@ func nptDataSourceSchema() dschema.Schema {
 
 		Attributes: map[string]dschema.Attribute{
 			"id":              dschema.StringAttribute{MarkdownDescription: "UUID of the rule.", Required: true},
-			"enabled":         dschema.BoolAttribute{MarkdownDescription: "Whether the rule is enabled.", Computed: true},
-			"log":             dschema.BoolAttribute{MarkdownDescription: "Whether matches are logged.", Computed: true},
-			"sequence":        dschema.Int64Attribute{MarkdownDescription: "Order of evaluation.", Computed: true},
-			"interface":       dschema.StringAttribute{MarkdownDescription: "Interface.", Computed: true},
-			"internal_prefix": dschema.StringAttribute{MarkdownDescription: "Internal prefix.", Computed: true},
-			"external_prefix": dschema.StringAttribute{MarkdownDescription: "External prefix.", Computed: true},
-			"track_interface": dschema.StringAttribute{MarkdownDescription: "Tracked interface.", Computed: true},
-			"categories":      dschema.SetAttribute{MarkdownDescription: "Category UUIDs.", ElementType: types.StringType, Computed: true},
+			"enabled":         dschema.BoolAttribute{MarkdownDescription: "Enable this rule.", Computed: true},
+			"log":             dschema.BoolAttribute{MarkdownDescription: "Log packets that are handled by this rule.", Computed: true},
+			"sequence":        dschema.Int64Attribute{MarkdownDescription: "Sequence (order of evaluation).", Computed: true},
+			"interface":       dschema.StringAttribute{MarkdownDescription: "Choose which interface this rule applies to.", Computed: true},
+			"internal_prefix": dschema.StringAttribute{MarkdownDescription: "Enter the internal IPv6 prefix (source) for this network prefix translation.", Computed: true},
+			"external_prefix": dschema.StringAttribute{MarkdownDescription: "Enter the external IPv6 prefix (target) for this network prefix translation. Empty when the prefix is taken from `track_interface`.", Computed: true},
+			"track_interface": dschema.StringAttribute{MarkdownDescription: "Use prefix defined on the selected interface instead of the interface this rule applies to when target prefix is not provided.", Computed: true},
+			"categories":      dschema.SetAttribute{MarkdownDescription: "For grouping purposes you may select multiple groups here to organize items. UUIDs of `opnsense_firewall_category` resources.", ElementType: types.StringType, Computed: true},
 			"description":     dschema.StringAttribute{MarkdownDescription: "Description.", Computed: true},
 		},
 	}

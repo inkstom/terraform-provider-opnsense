@@ -59,10 +59,10 @@ resource "opnsense_ipsec_auth_remote" "example" {
 
 ### Optional
 
-- `auth_id` (String) Authentication ID for the AuthRemote Resource. Defaults to `""`.
+- `auth_id` (String) IKE identity to use for authentication round. When using certificate authentication the IKE identity must be contained in the certificate, either as the subject DN or as a subjectAltName (the identity will default to the certificate's subject DN if not specified). Refer to https://docs.strongswan.org/docs/5.9/config/identityParsing.html for details on how identities are parsed and may be configured. Defaults to `""`.
 - `certificates` (Set of String) List of certificates for the AuthRemote Resource.
 - `description` (String) Optional description for the AuthRemote Resource.
-- `eap_id` (String) EAP ID for the AuthRemote Resource. Defaults to `""`.
+- `eap_id` (String) Client EAP-Identity to use in EAP-Identity exchange and the EAP method. If set to `%any` the EAP-Identity method will be used to ask the client for an EAP identity. Defaults to `""`.
 - `enabled` (String) Enable or disable the AuthRemote Resource.
 - `public_keys` (Set of String) List of public keys for the AuthRemote Resource.
 - `round` (String) Authentication round for the AuthRemote Resource.

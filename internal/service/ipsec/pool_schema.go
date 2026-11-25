@@ -34,15 +34,15 @@ func poolResourceSchema() schema.Schema {
 				Default:             booldefault.StaticBool(true),
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Pool name.",
+				MarkdownDescription: "Pool name. Must be unique and may only contain letters, digits, `,`, `_`, `-` and `:`.",
 				Required:            true,
 			},
 			"addresses": schema.StringAttribute{
-				MarkdownDescription: "Address range to assign, as a network, e.g. `10.200.0.0/24`.",
+				MarkdownDescription: "Subnet or range defining addresses allocated in pool. Accepts a single CIDR subnet defining the pool to allocate addresses from. For example `10.200.0.0/24`.",
 				Required:            true,
 			},
 			"dns": schema.SetAttribute{
-				MarkdownDescription: "DNS servers pushed to clients. Defaults to `[]`.",
+				MarkdownDescription: "DNS servers to push as configuration payload (RFC4306 3.15 - Value 3 and 10). Accepts multiple IPv4/IPv6 addresses. Defaults to `[]`.",
 				ElementType:         types.StringType,
 				Optional:            true,
 				Computed:            true,
@@ -64,9 +64,9 @@ func poolDataSourceSchema() dschema.Schema {
 		Attributes: map[string]dschema.Attribute{
 			"id":        dschema.StringAttribute{MarkdownDescription: "UUID of the pool.", Required: true},
 			"enabled":   dschema.BoolAttribute{MarkdownDescription: "Whether the pool is enabled.", Computed: true},
-			"name":      dschema.StringAttribute{MarkdownDescription: "Pool name.", Computed: true},
-			"addresses": dschema.StringAttribute{MarkdownDescription: "Address range.", Computed: true},
-			"dns":       dschema.SetAttribute{MarkdownDescription: "DNS servers.", ElementType: types.StringType, Computed: true},
+			"name":      dschema.StringAttribute{MarkdownDescription: "Pool name. Must be unique and may only contain letters, digits, `,`, `_`, `-` and `:`.", Computed: true},
+			"addresses": dschema.StringAttribute{MarkdownDescription: "Subnet or range defining addresses allocated in pool. Accepts a single CIDR subnet defining the pool to allocate addresses from.", Computed: true},
+			"dns":       dschema.SetAttribute{MarkdownDescription: "DNS servers to push as configuration payload (RFC4306 3.15 - Value 3 and 10). Accepts multiple IPv4/IPv6 addresses.", ElementType: types.StringType, Computed: true},
 		},
 	}
 }

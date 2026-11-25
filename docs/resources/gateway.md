@@ -42,34 +42,34 @@ resource "opnsense_route" "backup_mgmt" {
 
 ### Required
 
-- `interface` (String) Interface identifier this gateway is attached to, e.g. `wan`, `lan`, `opt1`.
+- `interface` (String) Choose which interface this gateway applies to. Use the interface identifier, e.g. `wan`, `lan`, `opt1`.
 - `name` (String) Gateway name. Letters, digits, `_` and `-` only, max 32 characters. This is the value routes, gateway groups and firewall rules refer to.
 
 ### Optional
 
-- `data_length` (Number) Size of the ICMP data payload in bytes. Set to `-1` to use the OPNsense default. Defaults to `-1`.
-- `description` (String) Optional description here for your reference (not parsed).
-- `enabled` (Boolean) Enable this gateway. Defaults to `true`.
-- `far_gateway` (Boolean) Allow the gateway to exist outside of the interface subnet. Defaults to `false`.
-- `force_down` (Boolean) Mark the gateway as down so it is never considered as default gateway. Defaults to `false`.
-- `gateway` (String) IP address of the gateway. Leave unset for a dynamic gateway (DHCP/PPP/VPN interfaces).
-- `interval` (Number) Probe interval in seconds. Set to `-1` to use the OPNsense default. Defaults to `-1`.
-- `ip_protocol` (String) Address family, one of `inet` (IPv4) or `inet6` (IPv6). Defaults to `inet`.
-- `latency_high` (Number) High latency threshold in milliseconds. Set to `-1` to use the OPNsense default. Defaults to `-1`.
-- `latency_low` (Number) Low latency threshold in milliseconds. Set to `-1` to use the OPNsense default. Defaults to `-1`.
-- `loss_high` (Number) High packet loss threshold in percent. Set to `-1` to use the OPNsense default. Defaults to `-1`.
-- `loss_interval` (Number) Time after which a probe without reply is considered lost, in seconds. Set to `-1` to use the OPNsense default. Defaults to `-1`.
-- `loss_low` (Number) Low packet loss threshold in percent. Set to `-1` to use the OPNsense default. Defaults to `-1`.
-- `monitor` (String) Alternative address to monitor. Make sure it is reachable via this gateway.
-- `monitor_enabled` (Boolean) Monitor the gateway with dpinger. When disabled, the gateway is always considered up. Defaults to `false`, matching OPNsense.
-- `monitor_kill_states` (Boolean) Kill states for this gateway when it goes down. Defaults to `false`.
-- `monitor_kill_states_priority` (Boolean) Kill states for the higher-priority gateway when it comes back up. Defaults to `false`.
-- `monitor_no_route` (Boolean) Do not create a dedicated host route for the monitor IP. Defaults to `false`.
-- `no_sync` (Boolean) Do not sync this gateway to the HA peer. Defaults to `false`.
-- `priority` (Number) Priority (0-255); a lower value means more important. Defaults to `255`.
-- `time_period` (Number) Time period over which results are averaged, in seconds. Set to `-1` to use the OPNsense default. Defaults to `-1`.
-- `upstream` (Boolean) Upstream gateway: consider this gateway as a default gateway candidate. Defaults to `false`.
-- `weight` (Number) Weight (1-10) used when this gateway is part of a load-balancing group. Defaults to `1`.
+- `data_length` (Number) Specify the number of data bytes to be sent. Default is 1. Set to `-1` to use the OPNsense default. Defaults to `-1`.
+- `description` (String) You may enter a description here for your reference (not parsed).
+- `enabled` (Boolean) Enable this gateway. Inverse of the OPNsense *Disabled* checkbox. Defaults to `true`.
+- `far_gateway` (Boolean) This will allow the gateway to exist outside of the interface subnet. Defaults to `false`.
+- `force_down` (Boolean) This will force this gateway to be considered "down". Defaults to `false`.
+- `gateway` (String) IP address of the gateway (*IP Address* in OPNsense). Leave unset for a dynamic gateway (DHCP/PPP/VPN interfaces).
+- `interval` (Number) How often that an ICMP probe will be sent in seconds. Default is 1. Set to `-1` to use the OPNsense default. Defaults to `-1`.
+- `ip_protocol` (String) Choose the Internet Protocol this gateway uses. One of `inet` (IPv4) or `inet6` (IPv6). Defaults to `inet`.
+- `latency_high` (Number) High threshold for latency in milliseconds. Default is 500. Set to `-1` to use the OPNsense default. Defaults to `-1`.
+- `latency_low` (Number) Low threshold for latency in milliseconds. Default is 200. Set to `-1` to use the OPNsense default. Defaults to `-1`.
+- `loss_high` (Number) High threshold for packet loss in %. Default is 20. Must be between `1` and `100`. Set to `-1` to use the OPNsense default. Defaults to `-1`.
+- `loss_interval` (Number) Time interval before packets are treated as lost. Default is 4 (four times the probe interval). Set to `-1` to use the OPNsense default. Defaults to `-1`.
+- `loss_low` (Number) Low threshold for packet loss in %. Default is 10. Must be between `1` and `99`. Set to `-1` to use the OPNsense default. Defaults to `-1`.
+- `monitor` (String) Enter an alternative address here to be used to monitor the link. This is used for the quality RRD graphs as well as the load balancer entries. Use this if the gateway does not respond to ICMP echo requests (pings).
+- `monitor_enabled` (Boolean) Monitor this gateway. When disabled, OPNsense considers this gateway as always being "up". Inverse of the OPNsense *Disable Gateway Monitoring* checkbox. Defaults to `false`, matching OPNsense.
+- `monitor_kill_states` (Boolean) If this gateway goes down, force clients to reconnect over a different online gateway by killing states associated with this gateway. This option requires "default gateway switching" to be enabled, or this gateway assigned as part of a gateway group to trigger. Defaults to `false`.
+- `monitor_kill_states_priority` (Boolean) If another gateway comes up with a higher priority than this gateway, force clients to reconnect by killing states associated with this gateway. This option requires "default gateway switching" to be enabled, or this gateway assigned as part of a gateway group to trigger. The common use case for this option are metered connections over LTE that should only be used when no other gateway is online. Defaults to `false`.
+- `monitor_no_route` (Boolean) Do not create a dedicated host route for this monitor. Defaults to `false`.
+- `no_sync` (Boolean) Ignore this gateway from being updated using HA sync. Defaults to `false`.
+- `priority` (Number) Choose a value between 1 and 255. Influences sort order when selecting a (default) gateway, lower means more important. The OPNsense model also accepts `0`. Defaults to `255`.
+- `time_period` (Number) The time period over which results are averaged. Default is 60. Set to `-1` to use the OPNsense default. Defaults to `-1`.
+- `upstream` (Boolean) This will select the above gateway as a default gateway candidate. Shown as *Upstream Gateway* in OPNsense. Defaults to `false`.
+- `weight` (Number) Weight for this gateway when used in a gateway group. Specified as an integer number between 1 and 10. Default equals 1. Defaults to `1`.
 
 ### Read-Only
 

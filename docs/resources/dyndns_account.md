@@ -36,26 +36,26 @@ resource "opnsense_dyndns_account" "example" {
 
 ### Required
 
-- `checkip` (String) How to find the current IP address, e.g. `web_icanhazip`, `web_cloudflare` or `if` (read it from `interface`).
-- `hostnames` (Set of String) Hostnames to update.
-- `service` (String) Provider key, e.g. `cloudflare`, `duckdns`, `freemyip` or `custom`.
+- `checkip` (String) How to determine the address to use for this host. For example `web_icanhazip`, `web_cloudflare` or `if` (read it from `interface`); `if6` is also offered with the `native` backend.
+- `hostnames` (Set of String) Hostname to update. Accepts one or more hostnames.
+- `service` (String) Select the service to use. Provider key, e.g. `cloudflare`, `duckdns`, `freemyip` or `custom`.
 
 ### Optional
 
-- `checkip_timeout` (Number) Timeout in seconds for the IP check, 10 to 60. Defaults to `10`.
+- `checkip_timeout` (Number) How long to wait before the checkip process times out. In seconds, `10` to `60`. Defaults to `10`.
 - `description` (String) Description. Defaults to `""`.
-- `dynipv6host` (String) Partial IPv6 host address appended to the prefix, e.g. `::1000`. Defaults to `""`.
+- `dynipv6host` (String) Swap the interface identifier of the ipv6 address with the given partial ipv6 address (the least significant 64 bits of the address). For example `::1000`. Defaults to `""`.
 - `enabled` (Boolean) Enable this account. Defaults to `true`.
-- `force_ssl` (Boolean) Use HTTPS for updates. Defaults to `true`.
+- `force_ssl` (Boolean) Force update using HTTPS, please note setting this option will enforce https updates on all accounts as ddclient only supports `SSL=yes` on a global level (the check ip service may still use HTTP on other services). Defaults to `true`.
 - `interface` (String) Interface to read the address from (required when `checkip` is `if` or `if6`), e.g. `wan`. Defaults to `""`.
-- `password` (String, Sensitive) Password or API token. OPNsense never returns it, so Terraform keeps the value it last wrote, and an empty value leaves the stored password unchanged. After an import, the first apply writes it again. Defaults to `""`.
-- `protocol` (String) Protocol for the `custom` service: `dyndns1`, `dyndns2`, `get`, `post` or `put`. Defaults to `""`.
+- `password` (String, Sensitive) Password associated with this account, or API token. OPNsense never returns it, so Terraform keeps the value it last wrote, and an empty value leaves the stored password unchanged. After an import, the first apply writes it again. Defaults to `""`.
+- `protocol` (String) Select the protocol to use. Only used by the `custom` service: `dyndns1`, `dyndns2`, `get`, `post` or `put`. Defaults to `""`.
 - `resource_id` (String) Resource ID, for services that need one. Defaults to `""`.
-- `server` (String) Server (or URL) for the `custom` service. Defaults to `""`.
-- `ttl` (Number) Record TTL in seconds, for services that set one. Defaults to `300`.
-- `username` (String) Username. Defaults to `""`.
-- `wildcard` (Boolean) Also update the wildcard record. Defaults to `false`.
-- `zone` (String) DNS zone, for services that need one. Defaults to `""`.
+- `server` (String) DynDNS Server hostname or uri to use (depending on the protocol). When a URI is provided, the tag `__MYIP__` will be replaced with the current detected address for this service and `__HOSTNAME__` will contain the (comma separated) list of hostnames provided. Used by the `custom` and `powerdns` services. Defaults to `""`.
+- `ttl` (Number) Time to Live for the DNS entry. In seconds, `1` to `604800`, for services that set one. Defaults to `300`.
+- `username` (String) Username or login to use. Defaults to `""`.
+- `wildcard` (Boolean) Add a DNS wildcard CNAME record that points to the configured host. Defaults to `false`.
+- `zone` (String) Zone containing the host entry. Only used by services that need one, such as `cloudflare` or `aws`. Defaults to `""`.
 
 ### Read-Only
 

@@ -25,14 +25,14 @@ resource "opnsense_monit_test" "high_cpu" {
 
 ### Required
 
-- `action` (String) Action: `alert`, `restart`, `start`, `stop`, `exec` or `unmonitor`.
-- `condition` (String) Monit condition, e.g. `cpu usage is greater than 75% for 3 cycles`.
-- `name` (String) Test name.
+- `action` (String) Simply `alert` or `restart` the service or *execute* a program. One of `alert`, `restart`, `start`, `stop`, `exec` or `unmonitor`.
+- `condition` (String) The test condition. E.g. `cpu is greater than 50%` or `failed host 127.0.0.1 port 22 protocol ssh`.
+- `name` (String) The name of the test. 1 to 255 letters, digits, spaces, `_`, `-` or `.`.
 
 ### Optional
 
-- `path` (String) Script to run when `action` is `exec`. Defaults to `""`.
-- `type` (String) Test type, e.g. `SystemResource`, `ProcessResource`, `Existence` or `Custom`. OPNsense derives it from `condition` when the condition is recognised, so it is usually best left unset. A service only accepts tests of types that suit it (a `process` service takes `ProcessResource` tests, for example), and OPNsense refuses to change the type of a test a service uses.
+- `path` (String) Make sure the script is executable by the Monit service. The absolute path of the script to run when `action` is `exec`. Defaults to `""`.
+- `type` (String) The type of the test, e.g. `SystemResource`, `ProcessResource`, `Existence` or `Custom`. The OPNsense UI hides this field. OPNsense derives it from `condition` when the condition is recognised, so it is usually best left unset. A service only accepts tests of types that suit it (a `process` service takes `ProcessResource` tests, for example), and OPNsense refuses to change the type of a test a service uses.
 
 ### Read-Only
 

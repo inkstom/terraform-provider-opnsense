@@ -21,8 +21,8 @@ Monit service tests (Services > Monit > Service Tests Settings).
 
 ### Read-Only
 
-- `action` (String) Action.
-- `condition` (String) Monit condition.
-- `name` (String) Test name.
-- `path` (String) Script for `exec`.
-- `type` (String) Test type.
+- `action` (String) Simply `alert` or `restart` the service or *execute* a program.
+- `condition` (String) The test condition.
+- `name` (String) The name of the test.
+- `path` (String) The script to run when `action` is `exec`.
+- `type` (String) The type of the test.

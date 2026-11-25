@@ -17,14 +17,14 @@ High availability settings (System > High Availability > Settings). The password
 
 ### Read-Only
 
-- `disable_preempt` (Boolean) Whether CARP preemption is disabled.
-- `disconnect_dialup` (Boolean) Whether dial-up interfaces disconnect on backup.
+- `disable_preempt` (Boolean) When this device is configured as CARP master it will try to switch to master when powering up, this option will keep this one slave if there already is a master on the network. A reboot is required to take effect.
+- `disconnect_dialup` (Boolean) When this device is configured as CARP backup it will disconnect all PPP type interfaces and try to reconnect them when becoming master again.
 - `id` (String) Always `high_availability`.
-- `pfsync_defer` (Boolean) Whether pfsync defers packets.
-- `pfsync_interface` (String) pfsync interface.
-- `pfsync_peer_ip` (String) pfsync peer address.
-- `pfsync_version` (String) pfsync protocol version.
-- `sync_items` (Set of String) Synchronised sections.
-- `synchronize_to_ip` (String) Backup firewall address for configuration sync.
-- `username` (String) Configuration sync user.
-- `verify_peer` (Boolean) Whether the backup's certificate is verified.
+- `pfsync_defer` (Boolean) Defer transmission of the first packet in a state until a peer has acknowledged that the associated state has been inserted. This adds small delays but allows traffic to flow when more than one firewall might actively handle packets ("active/active").
+- `pfsync_interface` (String) This enables state insertion, update, and deletion messages between firewalls by utilizing the selected interface for communication. Best choose a dedicated interface for this type of communication to prevent manipulation of states causing security issues.
+- `pfsync_peer_ip` (String) Setting this option will force pfsync to synchronize its state table to this IP address. The default is directed multicast.
+- `pfsync_version` (String) Newer versions of OPNsense offer additional attributes in the state synchronization, for compatibility reasons you can optionally choose an older version here. Always make sure both nodes use the same version to avoid inconsistent state tables.
+- `sync_items` (Set of String) Select the services that should be sent to the other host.
+- `synchronize_to_ip` (String) Enter the IP address of the firewall to which the selected configuration sections should be synchronized. This should be empty on the backup machine. When an IP address is offered, both web GUI configurations should be equal (port and protocol).
+- `username` (String) Enter the web GUI username of the system entered above for synchronizing your configuration.
+- `verify_peer` (Boolean) In most cases the target host will be a directly attached neighbor in which case TLS verification can be ignored. `true` when the backup firewall's TLS certificate is verified.

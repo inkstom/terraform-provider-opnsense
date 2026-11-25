@@ -69,8 +69,7 @@ func assignmentResourceSchema() schema.Schema {
 	}
 
 	return schema.Schema{
-		MarkdownDescription: "Assigns a network device (NIC, VLAN, WireGuard `wgX`, bridge, LAGG, ...) to a logical interface (`optN`) and configures it (Interfaces > Assignments). Requires OPNsense 26.7.7 or later. " +
-			"Requires OPNsense 26.7.7 or later.\n\n" +
+		MarkdownDescription: "Assigns a network device (NIC, VLAN, WireGuard `wgX`, bridge, LAGG, ...) to a logical interface (`optN`) and configures it (Interfaces > Assignments). Requires OPNsense 26.7.7 or later.\n\n" +
 			"~> **Warning:** every change runs a full interface apply on the firewall. Changing the interface you reach the API through can cut off Terraform mid-apply. " +
 			"Deleting an assignment also deletes firewall/NAT rules that reference only that interface.\n\n" +
 			"Only static, DHCP and track/SLAAC-style addressing are modelled; settings not exposed here are left untouched on update.",
@@ -78,43 +77,43 @@ func assignmentResourceSchema() schema.Schema {
 
 		Attributes: map[string]schema.Attribute{
 			"device": schema.StringAttribute{
-				MarkdownDescription: "Device to assign, e.g. `igc2`, `vlan0.10` (reference `opnsense_interfaces_vlan.device` only when you set that name explicitly; auto-generated names are not exposed), `wg0` (see `opnsense_wireguard_server.device`). A device can only be assigned once.",
+				MarkdownDescription: "Device name to connect this interface to, e.g. `igc2`, `vlan0.10` (reference `opnsense_interfaces_vlan.device` only when you set that name explicitly; auto-generated names are not exposed), `wg0` (see `opnsense_wireguard_server.device`). A device can only be assigned once.",
 				Required:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Interface name shown throughout the UI, e.g. `IOT`. Letters, digits and `_` only; must be unique. When unset, OPNsense shows the identifier (e.g. `OPT3`).",
+				MarkdownDescription: "You may enter a description here for your reference (not parsed). This is the interface name shown throughout the UI, e.g. `IOT`. Letters, digits and `_` only; must be unique. When unset, OPNsense shows the identifier (e.g. `OPT3`).",
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.RegexMatches(assignmentDescrRegex, "may only contain letters, digits and underscores"),
 				},
 			},
-			"enabled": optBool("Enable the interface. Defaults to `true`.", true),
-			"lock": optBool("Prevent removal from the UI. The provider clears the lock itself before destroying. "+
+			"enabled": optBool("Enable this interface. Defaults to `true`.", true),
+			"lock": optBool("Prevent interface removal. The provider clears the lock itself before destroying. "+
 				"Defaults to `false` (OPNsense's UI defaults to `true`).", false),
-			"block_private":     optBool("Block traffic from private networks (RFC 1918) on this interface. Defaults to `false`.", false),
-			"block_bogons":      optBool("Block traffic from bogon networks on this interface. Defaults to `false`.", false),
-			"promiscuous":       optBool("Put the device in promiscuous mode. Defaults to `false`.", false),
-			"gateway_interface": optBool("Dynamic gateway policy: allow sending traffic to this interface without an intermediate gateway (useful for VPN interfaces such as WireGuard). Defaults to `false`.", false),
-			"spoof_mac": optString("MAC address to spoof on this interface, e.g. `02:00:00:00:00:01`.",
+			"block_private":     optBool("When set, this option blocks traffic from IP addresses that are reserved for private networks as per RFC 1918 as well as loopback, link-local and Carrier-grade NAT addresses. This option should only be set for WAN interfaces that use the public IP address space. Defaults to `false`.", false),
+			"block_bogons":      optBool("When set, this option blocks traffic from IP addresses that are reserved (but not RFC 1918) or not yet assigned by IANA. Bogons are prefixes that should never appear in the Internet routing table, and obviously should not appear as the source address in any packets you receive. Defaults to `false`.", false),
+			"promiscuous":       optBool("Put interface into permanently promiscuous mode. Only to be used for specific usecases requiring the interface to receive all packets being received. When unsure, leave this disabled. Defaults to `false`.", false),
+			"gateway_interface": optBool("If the destination is directly reachable via an interface requiring no intermediary system to act as a gateway, you can select this option which allows dynamic gateways to be created without direct target addresses. Some tunnel types support this. Useful for VPN interfaces such as WireGuard. Defaults to `false`.", false),
+			"spoof_mac": optString("This field can be used to spoof the MAC address of the interface. Enter a MAC address in the following format: `xx:xx:xx:xx:xx:xx` or leave blank if unsure. This may only be required e.g. with certain cable connections on a WAN interface. When used on a single VLAN interface the setting \"Promiscuous mode\" (`promiscuous`) is required for this to work. Alternatively, the parent interface MAC can be spoofed applying the MAC address to all attached VLAN children automatically.",
 				stringvalidator.RegexMatches(regexp.MustCompile(`^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$`), "must be a MAC address")),
-			"mtu": optSize("Interface MTU (576-65535)."),
-			"mss": optSize("TCP MSS clamping (576-65535)."),
-			"ipv4_type": optString("IPv4 configuration type: `staticv4` or `dhcp`. Leave unset for none.",
+			"mtu": optSize("If you leave this field blank, the adapter's default MTU will be used. This is typically 1500 bytes but can vary in some circumstances. Accepts `576` to `65535`."),
+			"mss": optSize("If you enter a value in this field, then MSS clamping for TCP connections to the value entered above minus 40 (IPv4) or 60 (IPv6) will be in effect (TCP/IP header size). Accepts `576` to `65535`."),
+			"ipv4_type": optString("The primary type for this interface for IPv4 communication. This resource supports `staticv4` or `dhcp`. Leave unset for none.",
 				stringvalidator.OneOf("staticv4", "dhcp")),
 			"ipv4_address": optString("IPv4 address in CIDR notation, e.g. `10.10.0.1/24`. Required when `ipv4_type` is `staticv4`."),
-			"ipv4_gateway": optString("Name of an IPv4 upstream gateway for this interface (WAN-type interfaces only), e.g. `opnsense_gateway.wan2.name`. " +
-				"Note: a gateway references its interface, so setting both creates a cycle — prefer `opnsense_gateway.upstream`."),
-			"ipv6_type": optString("IPv6 configuration type: `staticv6`, `dhcp6`, `slaac`, `linklocal`, `idassoc6` or `track6`. Leave unset for none.",
+			"ipv4_gateway": optString("Select a gateway from the list to reply the incoming packets to the proper next hop on their way back and apply source NAT when configured. This is typically disabled for LAN type interfaces. Takes a gateway name, e.g. `opnsense_gateway.wan2.name`. " +
+				"Note: a gateway references its interface, so setting both creates a cycle; prefer `opnsense_gateway.upstream`."),
+			"ipv6_type": optString("The primary type for this interface for IPv6 communication. This resource supports `staticv6`, `dhcp6`, `slaac`, `linklocal`, `idassoc6` or `track6`. Leave unset for none.",
 				stringvalidator.OneOf("staticv6", "dhcp6", "slaac", "linklocal", "idassoc6", "track6")),
 			"ipv6_address":     optString("IPv6 address in CIDR notation. Required when `ipv6_type` is `staticv6`."),
-			"ipv6_gateway":     optString("Name of an IPv6 upstream gateway for this interface."),
-			"dhcp_hostname":    optString("Hostname sent to the DHCP server when `ipv4_type` is `dhcp`."),
-			"track6_interface": optString("Parent interface whose delegated prefix to use when `ipv6_type` is `idassoc6` or `track6`, e.g. `wan`."),
-			"track6_prefix_id": optString("Hexadecimal prefix ID (e.g. `0x1`) selected from the delegated prefix.",
+			"ipv6_gateway":     optString("Select a gateway from the list to reply the incoming packets to the proper next hop on their way back. This is typically disabled for LAN type interfaces. Takes a gateway name."),
+			"dhcp_hostname":    optString("The value in this field is sent as the DHCP client identifier and hostname when requesting a DHCP lease. Some ISPs may require this (for client identification). Used when `ipv4_type` is `dhcp`."),
+			"track6_interface": optString("This selects the dynamic IPv6 WAN interface to track for configuration. Used when `ipv6_type` is `idassoc6` or `track6`, e.g. `wan`."),
+			"track6_prefix_id": optString("The value in this field is the delegated hexadecimal IPv6 prefix ID. This determines the configurable /64 network ID based on the dynamic IPv6 connection. Give it as a hex value, e.g. `0x1`.",
 				stringvalidator.RegexMatches(hexIdRegex, "must be a hex value like 0x1")),
 			"id": schema.StringAttribute{
 				Computed:            true,
-				MarkdownDescription: "Interface identifier assigned by OPNsense, e.g. `opt3`. Use this wherever an interface is expected (firewall rules, gateways, DHCP).",
+				MarkdownDescription: "Technical identifier of the interface, used by hasync for example. Assigned by OPNsense, e.g. `opt3`. Use this wherever an interface is expected (firewall rules, gateways, DHCP).",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
@@ -139,29 +138,29 @@ func assignmentDataSourceSchema() dschema.Schema {
 
 		Attributes: map[string]dschema.Attribute{
 			"id": dschema.StringAttribute{
-				MarkdownDescription: "Interface identifier, e.g. `wan`, `lan`, `opt3`.",
+				MarkdownDescription: "Technical identifier of the interface, used by hasync for example. E.g. `wan`, `lan`, `opt3`.",
 				Required:            true,
 			},
-			"device":            str("Assigned device."),
-			"description":       str("Interface name."),
-			"enabled":           bl("Whether the interface is enabled."),
-			"lock":              bl("Whether the interface is locked against removal."),
-			"block_private":     bl("Whether private networks are blocked."),
-			"block_bogons":      bl("Whether bogon networks are blocked."),
-			"promiscuous":       bl("Whether promiscuous mode is on."),
-			"gateway_interface": bl("Whether the dynamic gateway policy is on."),
-			"spoof_mac":         str("Spoofed MAC address."),
-			"mtu":               in("MTU (`-1` when default)."),
-			"mss":               in("MSS (`-1` when default)."),
-			"ipv4_type":         str("IPv4 configuration type."),
-			"ipv4_address":      str("IPv4 address (CIDR)."),
-			"ipv4_gateway":      str("IPv4 upstream gateway."),
-			"ipv6_type":         str("IPv6 configuration type."),
-			"ipv6_address":      str("IPv6 address (CIDR)."),
-			"ipv6_gateway":      str("IPv6 upstream gateway."),
-			"dhcp_hostname":     str("DHCP client hostname."),
-			"track6_interface":  str("Track/IA parent interface."),
-			"track6_prefix_id":  str("Track/IA prefix ID."),
+			"device":            str("Device name to connect this interface to."),
+			"description":       str("You may enter a description here for your reference (not parsed). This is the interface name."),
+			"enabled":           bl("Enable this interface."),
+			"lock":              bl("Prevent interface removal."),
+			"block_private":     bl("When set, this option blocks traffic from IP addresses that are reserved for private networks as per RFC 1918 as well as loopback, link-local and Carrier-grade NAT addresses. This option should only be set for WAN interfaces that use the public IP address space."),
+			"block_bogons":      bl("When set, this option blocks traffic from IP addresses that are reserved (but not RFC 1918) or not yet assigned by IANA. Bogons are prefixes that should never appear in the Internet routing table, and obviously should not appear as the source address in any packets you receive."),
+			"promiscuous":       bl("Put interface into permanently promiscuous mode. Only to be used for specific usecases requiring the interface to receive all packets being received. When unsure, leave this disabled."),
+			"gateway_interface": bl("If the destination is directly reachable via an interface requiring no intermediary system to act as a gateway, you can select this option which allows dynamic gateways to be created without direct target addresses. Some tunnel types support this."),
+			"spoof_mac":         str("This field can be used to spoof the MAC address of the interface."),
+			"mtu":               in("If you leave this field blank, the adapter's default MTU will be used. This is typically 1500 bytes but can vary in some circumstances. `-1` when the default is used."),
+			"mss":               in("If you enter a value in this field, then MSS clamping for TCP connections to the value entered above minus 40 (IPv4) or 60 (IPv6) will be in effect (TCP/IP header size). `-1` when unset."),
+			"ipv4_type":         str("The primary type for this interface for IPv4 communication."),
+			"ipv4_address":      str("IPv4 address in CIDR notation."),
+			"ipv4_gateway":      str("Select a gateway from the list to reply the incoming packets to the proper next hop on their way back and apply source NAT when configured. This is typically disabled for LAN type interfaces."),
+			"ipv6_type":         str("The primary type for this interface for IPv6 communication."),
+			"ipv6_address":      str("IPv6 address in CIDR notation."),
+			"ipv6_gateway":      str("Select a gateway from the list to reply the incoming packets to the proper next hop on their way back. This is typically disabled for LAN type interfaces."),
+			"dhcp_hostname":     str("The value in this field is sent as the DHCP client identifier and hostname when requesting a DHCP lease. Some ISPs may require this (for client identification)."),
+			"track6_interface":  str("This selects the dynamic IPv6 WAN interface to track for configuration."),
+			"track6_prefix_id":  str("The value in this field is the delegated hexadecimal IPv6 prefix ID. This determines the configurable /64 network ID based on the dynamic IPv6 connection."),
 		},
 	}
 }

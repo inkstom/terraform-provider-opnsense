@@ -22,13 +22,13 @@ Local users (System > Access > Users).
 ### Read-Only
 
 - `authorized_keys` (String) SSH public keys.
-- `comment` (String) Comment.
-- `email` (String) E-mail address.
-- `enabled` (Boolean) Whether the user can log in.
-- `expires` (String) Expiration date.
-- `full_name` (String) Full name.
+- `comment` (String) User comment, for your own information only.
+- `email` (String) User's e-mail address, for your own information only.
+- `enabled` (Boolean) Allow authentication, only applicable for local users. This is the inverse of the OPNsense `Disabled` checkbox.
+- `expires` (String) Expiration date as `MM/DD/YYYY`; empty never expires.
+- `full_name` (String) User's full name, for your own information only.
 - `group_memberships` (Set of String) Group IDs the user belongs to.
-- `landing_page` (String) Landing page.
+- `landing_page` (String) Preferred landing page after login or authentication failure.
 - `language` (String) UI language.
 - `name` (String) Login name.
 - `password` (String, Sensitive) Always null; OPNsense does not return passwords.

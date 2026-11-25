@@ -18,9 +18,9 @@ Gateway groups combine gateways into tiers for failover and load balancing.
 
 ### Read-Only
 
-- `description` (String) Description.
+- `description` (String) You may enter a description here for your reference (not parsed).
 - `name` (String) Group name.
-- `pool_options` (String) Load-balancing pool option.
-- `tiers` (List of Set of String) Ordered list of tiers, each a set of gateway names.
-- `trigger` (String) Trigger level.
+- `pool_options` (String) Pool options. One of `""` (Default), `round-robin` or `round-robin sticky-address`.
+- `tiers` (List of Set of String) Ordered list of tiers (*Tier 1* to *Tier 5* in OPNsense), each a set of gateway names.
+- `trigger` (String) When to trigger exclusion of a member. One of `down`, `downloss`, `downlatency` or `downlosslatency`.
 

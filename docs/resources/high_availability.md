@@ -39,17 +39,17 @@ variable "backup_root_password" {
 
 ### Optional
 
-- `disable_preempt` (Boolean) Disable CARP preemption, so a recovered master doesn't take its addresses back. OPNsense applies this at boot (`net.inet.carp.preempt`), not on save. Unset keeps the current value.
-- `disconnect_dialup` (Boolean) Disconnect dial-up (PPP) interfaces when this firewall becomes a CARP backup. Unset keeps the current value.
-- `password` (String, Sensitive) Password of `username` on the backup firewall. Unset keeps the current value.
-- `pfsync_defer` (Boolean) Defer packets until the peer acknowledges the state (for active/active setups). Unset keeps the current value.
-- `pfsync_interface` (String) Interface to synchronise firewall states over, e.g. a dedicated `opt1`; `""` disables pfsync. Unset keeps the current value.
-- `pfsync_peer_ip` (String) Peer address for pfsync, instead of multicast. Unset keeps the current value.
-- `pfsync_version` (String) pfsync protocol version: `1301`, `1400` or `1500`. Both firewalls must match. Unset keeps the current value.
-- `sync_items` (Set of String) Sections to synchronise, e.g. `aliases`, `rules`, `nat`, `certs`, `dhcpd`, `cron`, `ipsec`, `wireguard`. Unset keeps the current value.
-- `synchronize_to_ip` (String) Address of the backup firewall to push configuration to; `""` disables configuration sync. Unset keeps the current value.
-- `username` (String) User on the backup firewall used for configuration sync. Unset keeps the current value.
-- `verify_peer` (Boolean) Verify the backup firewall's TLS certificate. Unset keeps the current value.
+- `disable_preempt` (Boolean) When this device is configured as CARP master it will try to switch to master when powering up, this option will keep this one slave if there already is a master on the network. A reboot is required to take effect. Sets `net.inet.carp.preempt`. Unset keeps the current value.
+- `disconnect_dialup` (Boolean) When this device is configured as CARP backup it will disconnect all PPP type interfaces and try to reconnect them when becoming master again. Unset keeps the current value.
+- `password` (String, Sensitive) Enter the web GUI password of the system entered above for synchronizing your configuration. Unset keeps the current value.
+- `pfsync_defer` (Boolean) Defer transmission of the first packet in a state until a peer has acknowledged that the associated state has been inserted. This adds small delays but allows traffic to flow when more than one firewall might actively handle packets ("active/active"). Unset keeps the current value.
+- `pfsync_interface` (String) This enables state insertion, update, and deletion messages between firewalls by utilizing the selected interface for communication. Best choose a dedicated interface for this type of communication to prevent manipulation of states causing security issues. Interface name, e.g. `opt1`; `""` disables pfsync. Unset keeps the current value.
+- `pfsync_peer_ip` (String) Setting this option will force pfsync to synchronize its state table to this IP address. The default is directed multicast. Unset keeps the current value.
+- `pfsync_version` (String) Newer versions of OPNsense offer additional attributes in the state synchronization, for compatibility reasons you can optionally choose an older version here. Always make sure both nodes use the same version to avoid inconsistent state tables. One of `1301` (OPNsense 24.1 or below), `1400` (24.7 to 26.1) or `1500` (26.7 or above). Unset keeps the current value.
+- `sync_items` (Set of String) Select the services that should be sent to the other host. Section keys, e.g. `aliases`, `rules`, `nat`, `certs`, `dhcpd`, `cron`, `ipsec`, `wireguard`. Unset keeps the current value.
+- `synchronize_to_ip` (String) Enter the IP address of the firewall to which the selected configuration sections should be synchronized. This should be empty on the backup machine. When an IP address is offered, both web GUI configurations should be equal (port and protocol). `""` disables configuration sync. Unset keeps the current value.
+- `username` (String) Enter the web GUI username of the system entered above for synchronizing your configuration. Unset keeps the current value.
+- `verify_peer` (Boolean) In most cases the target host will be a directly attached neighbor in which case TLS verification can be ignored. Set to `true` to verify the backup firewall's TLS certificate. Unset keeps the current value.
 
 ### Read-Only
 

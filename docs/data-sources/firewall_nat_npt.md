@@ -21,12 +21,12 @@ IPv6 network prefix translation rules (Firewall > NAT > NPTv6).
 
 ### Read-Only
 
-- `categories` (Set of String) Category UUIDs.
+- `categories` (Set of String) For grouping purposes you may select multiple groups here to organize items. UUIDs of `opnsense_firewall_category` resources.
 - `description` (String) Description.
-- `enabled` (Boolean) Whether the rule is enabled.
-- `external_prefix` (String) External prefix.
-- `interface` (String) Interface.
-- `internal_prefix` (String) Internal prefix.
-- `log` (Boolean) Whether matches are logged.
-- `sequence` (Number) Order of evaluation.
-- `track_interface` (String) Tracked interface.
+- `enabled` (Boolean) Enable this rule.
+- `external_prefix` (String) Enter the external IPv6 prefix (target) for this network prefix translation. Empty when the prefix is taken from `track_interface`.
+- `interface` (String) Choose which interface this rule applies to.
+- `internal_prefix` (String) Enter the internal IPv6 prefix (source) for this network prefix translation.
+- `log` (Boolean) Log packets that are handled by this rule.
+- `sequence` (Number) Sequence (order of evaluation).
+- `track_interface` (String) Use prefix defined on the selected interface instead of the interface this rule applies to when target prefix is not provided.

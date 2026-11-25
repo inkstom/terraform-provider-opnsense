@@ -17,10 +17,10 @@ IPsec general settings (VPN > IPsec > Advanced Settings, general section).
 
 ### Read-Only
 
-- `disable_vpn_rules` (Boolean) Whether automatic rules are disabled.
+- `disable_vpn_rules` (Boolean) This option only applies to legacy tunnel configurations, connections do require manual firewall rules being setup.
 - `enabled` (Boolean) Whether IPsec is enabled.
 - `id` (String) Always `ipsec_settings`.
-- `local_group` (String) Mobile user group.
-- `passthrough_networks` (Set of String) Passthrough networks.
-- `prefer_old_sa` (Boolean) Whether older SAs are preferred.
-- `user_sources` (Set of String) Mobile user authentication servers.
+- `local_group` (String) Restrict access to users in the selected local group. Please be aware that other authentication backends will refuse to authenticate when using this option. Value is the group GID; empty allows all. Deprecated in OPNsense (Xauth).
+- `passthrough_networks` (Set of String) This exempts traffic for one or more subnets from getting processed by the IPsec stack in the kernel. When sending all traffic to the remote location, you probably want to add your LAN network(s) here.
+- `prefer_old_sa` (Boolean) By default, if several SAs match, the newest one is preferred if it's at least 30 seconds old. Select this option to always prefer old SAs over new ones.
+- `user_sources` (Set of String) Select authentication methods to use, leave empty if no challenge response authentication is needed. Values are authentication server names, e.g. `Local Database`. Deprecated in OPNsense (Xauth).

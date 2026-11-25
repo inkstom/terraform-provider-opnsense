@@ -30,19 +30,19 @@ resource "opnsense_syslog_destination" "siem" {
 ### Required
 
 - `hostname` (String) Syslog server host name or address.
-- `transport` (String) Protocol and address family: `udp4`, `tcp4`, `udp6`, `tcp6`, `tls4` or `tls6`.
+- `transport` (String) Transport protocol. One of `udp4`, `tcp4`, `udp6`, `tcp6`, `tls4` or `tls6`.
 
 ### Optional
 
-- `certificate` (String) Client certificate reference for `tls4`/`tls6`. Defaults to `""`.
-- `description` (String) Description. Defaults to `""`.
-- `enabled` (Boolean) Enable this destination. Defaults to `true`.
-- `facilities` (Set of String) Facilities to send, e.g. `kern`, `auth`, `daemon`, `local0`. Empty sends all. Defaults to `[]`.
-- `levels` (Set of String) Levels to send: `debug`, `info`, `notice`, `warn`, `err`, `crit`, `alert`, `emerg`. Empty sends all. Defaults to `[]`.
+- `certificate` (String) Transport certificate to use, please make sure to check the general system log when experiencing issues. Error messages can be a bit cryptic from time to time, in which case [this](https://support.oneidentity.com/kb/263658/common-issues-of-tls-encrypted-message-transfer) is a good resource for tracking common issues. Certificate reference, used with `tls4`/`tls6`. Defaults to `""`.
+- `description` (String) You may enter a description here for your reference (not parsed). Defaults to `""`.
+- `enabled` (Boolean) Set this option to enable this destination. Defaults to `true`.
+- `facilities` (Set of String) Choose which facilities to include, omit to select all. Values include `kern`, `user`, `daemon`, `auth`, `authpriv`, `security`, `local0` to `local7`. Defaults to `[]`.
+- `levels` (Set of String) Choose which levels to include, omit to select all. Values: `debug`, `info`, `notice`, `warn`, `err`, `crit`, `alert`, `emerg`. Defaults to `[]`.
 - `port` (String) Syslog server port. Defaults to `514`.
-- `programs` (Set of String) Applications to send, e.g. `filterlog`, `unbound`, `sshd`. Empty sends all. Defaults to `[]`.
-- `rfc5424` (Boolean) Send RFC 5424 formatted messages instead of BSD (RFC 3164). Defaults to `false`.
-- `suppress` (Boolean) Suppress repeated messages. Needs OPNsense 26.7 or later; leave unset on older versions, which don't have the setting.
+- `programs` (Set of String) Choose which applications should be forwarded to the specified target, omit to select all. Values are application names, e.g. `filterlog`, `unbound`, `sshd`. Defaults to `[]`.
+- `rfc5424` (Boolean) Use RFC5424 formatted messages for this destination. Defaults to `false`.
+- `suppress` (Boolean) Suppress consecutive identical messages for 30 seconds and send a summary with the number of repetitions. Needs OPNsense 26.7 or later; leave unset on older versions, which don't have the setting.
 
 ### Read-Only
 

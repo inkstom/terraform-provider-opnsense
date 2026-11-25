@@ -21,14 +21,14 @@ Unbound DNS blocklist policies (Services > Unbound DNS > Blocklist). Requires OP
 
 ### Read-Only
 
-- `address` (String) IPv4 address returned for blocked names instead of `0.0.0.0`. Defaults to `""`.
-- `allowlists` (Set of String) Domains (regular expressions) never blocked. Defaults to `[]`.
-- `blocklists` (Set of String) Extra domains to block. Defaults to `[]`.
-- `cache_ttl` (Number) Seconds to cache downloaded lists. Defaults to `72000`.
-- `description` (String) Description.
-- `enabled` (Boolean) Enable this policy. Defaults to `true`.
-- `lists` (Set of String) URLs of additional blocklists to download. Defaults to `[]`.
-- `nxdomain` (Boolean) Answer NXDOMAIN for blocked names instead of an address. Defaults to `false`.
-- `source_nets` (Set of String) Client networks this policy applies to; empty means all clients. Networks must be equally sized. Defaults to `[]`.
-- `type` (Set of String) Predefined list identifiers, e.g. `hgz002` (HaGeZi Multi NORMAL), `oisd0` or `sb`. Defaults to `[]`.
-- `wildcards` (Set of String) Domains blocked including all their subdomains. Defaults to `[]`.
+- `address` (String) Destination ip address for entries in the blocklist (leave empty to use default: `0.0.0.0`). Not used when "Return NXDOMAIN" (`nxdomain`) is checked. IPv4 only. Defaults to `""`.
+- `allowlists` (Set of String) List of domains to allow. You can use regular expressions. This allow list only applies to blocklist matches on items in this policy. Defaults to `[]`.
+- `blocklists` (Set of String) List of domains to blocklist. Only exact matches are supported. Defaults to `[]`.
+- `cache_ttl` (Number) TTL for the blocklists cache. Remote blocklists don't usually update more often than once a day. Therefore, when blocklists are downloaded, they are cached locally to prevent unnecessary fetches over the internet. You can change this behavior here if you know the remote files rotate faster than this. In seconds. Defaults to `72000`.
+- `description` (String) Description, 1 to 255 characters. OPNsense requires it to keep track of which policies apply to which source networks.
+- `enabled` (Boolean) Enable the usage of DNS blocklists. Defaults to `true`.
+- `lists` (Set of String) List of domains from where blocklist will be downloaded. Each entry is a blocklist URL. Defaults to `[]`.
+- `nxdomain` (Boolean) Use the DNS response code NXDOMAIN instead of a destination address. Defaults to `false`.
+- `source_nets` (Set of String) Source networks to apply policy on. Examples are `192.168.1.0/24` or `192.168.1.1`. Leave empty to apply on everything. All specified networks should use the same protocol family and have equal sizes to avoid priority issues. Defaults to `[]`.
+- `type` (Set of String) Select which kind of DNSBL you want to use. Predefined list identifiers, e.g. `hgz002` (HaGeZi Multi NORMAL), `oisd0` or `sb`. Defaults to `[]`.
+- `wildcards` (Set of String) List of wildcard domains to blocklist. All subdomains of the given domain will be blocked. Blocking first-level domains is not supported. Defaults to `[]`.

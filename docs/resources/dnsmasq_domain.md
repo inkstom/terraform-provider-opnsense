@@ -26,16 +26,16 @@ resource "opnsense_dnsmasq_domain" "corp" {
 
 ### Required
 
-- `domain` (String) Domain to override, e.g. `corp.example.com`.
-- `server` (String) DNS server to send the domain's queries to.
+- `domain` (String) Domain to override (NOTE: this does not have to be a valid TLD!). Example: `corp.example.com`.
+- `server` (String) IP address of the authoritative DNS server for this domain, leave empty to prevent lookups for this domain. Set to `""` to prevent lookups.
 
 ### Optional
 
-- `description` (String) Description. Defaults to `""`.
-- `firewall_alias` (String) Firewall alias (by name) to add the domain's resolved addresses to. Defaults to `""`.
-- `port` (String) DNS server port; empty uses 53. Defaults to `""`.
-- `sequence` (Number) Order of the entry in the generated configuration. Defaults to `1`.
-- `source_ip` (String) Source address for queries to the server. Defaults to `""`.
+- `description` (String) You may enter a description here for your reference (not parsed). Defaults to `""`.
+- `firewall_alias` (String) Choose an "external (advanced)" type alias from "Firewall - Aliases". Whenever a client successfully resolves the domain, the resolved IP addresses will be automatically added to the chosen alias. Adding a domain will also add all IP addresses of resolved subdomains. Please note that DNS record TTL is not evaluated; once an IP address is added, it will stay permanently, or until manually flushed in "Firewall - Diagnostics - Aliases", or until removed automatically when setting an expiration on the alias. UUID of an `opnsense_firewall_alias` of an external type. Defaults to `""`.
+- `port` (String) Specify a non standard port number here, leave blank for default (`53`). Defaults to `""`.
+- `sequence` (Number) Sort with a sequence number, e.g., for strict processing order when using the "Query DNS servers sequentially" option in general settings. Must be between `1` and `99999`. Defaults to `1`.
+- `source_ip` (String) Source IP address for queries to the DNS server for the override domain. Best to leave empty. Defaults to `""`.
 
 ### Read-Only
 

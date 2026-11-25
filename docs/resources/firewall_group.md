@@ -26,14 +26,14 @@ resource "opnsense_firewall_group" "untrusted" {
 
 ### Required
 
-- `members` (Set of String) Member interfaces, by identifier (e.g. `wan`, `lan`, `opt1`). At least one is required.
-- `name` (String) Group name, up to 15 characters; it may not start or end with a digit. Firewall rules and aliases refer to the group by this name, so renaming it can break those references.
+- `members` (Set of String) Rules for WAN type interfaces in groups do not contain the reply-to mechanism upon which Multi-WAN typically relies. Member interfaces, by identifier (e.g. `wan`, `lan`, `opt1`). At least one is required.
+- `name` (String) Only texts containing letters, digits and underscores with a maximum length of 15 characters are allowed and the name may not end with a digit. OPNsense also rejects names that start with a digit. Firewall rules and aliases refer to the group by this name, so renaming it can break those references.
 
 ### Optional
 
-- `description` (String) Description. Defaults to `""`.
-- `no_group` (Boolean) Hide the group from the interface menu, so it doesn't get its own rules tab. Defaults to `false`.
-- `sequence` (Number) Ordering of the group in the menu. Defaults to `0`.
+- `description` (String) You may enter a description here for your reference (not parsed). Defaults to `""`.
+- `no_group` (Boolean) Prevent grouping these members in the interfaces menu section. Defaults to `false`.
+- `sequence` (Number) Priority sequence used in sorting the groups. Between `0` and `9999`. Defaults to `0`.
 
 ### Read-Only
 

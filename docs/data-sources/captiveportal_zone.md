@@ -21,23 +21,23 @@ Captive portal zones (Services > Captive Portal > Administration).
 
 ### Read-Only
 
-- `allowed_addresses` (Set of String) Addresses allowed without login.
-- `allowed_mac_addresses` (Set of String) MAC addresses allowed without login.
-- `always_send_accounting` (Boolean) Whether accounting is always sent.
-- `auth_servers` (Set of String) Authentication servers.
-- `certificate` (String) Certificate reference.
-- `concurrent_logins` (Boolean) Whether concurrent logins are allowed.
-- `cors_origins` (Set of String) Allowed CORS origins.
-- `cors_policy` (String) CORS policy.
-- `description` (String) Description.
-- `disable_rules` (Boolean) Whether rule generation is disabled.
-- `enabled` (Boolean) Whether the zone is enabled.
-- `enforce_group` (String) Enforced group.
-- `extended_pre_auth_data` (Boolean) Whether extended pre-auth data is sent.
-- `hard_timeout` (Number) Hard timeout in minutes.
-- `idle_timeout` (Number) Idle timeout in minutes.
-- `interfaces` (Set of String) Interfaces.
-- `roaming` (Boolean) Whether roaming is enabled.
-- `server_name` (String) Portal host name.
-- `template` (String) Template UUID.
-- `zone_id` (String) Zone number.
+- `allowed_addresses` (Set of String) Avoid authentication for addresses and subnets in this list.
+- `allowed_mac_addresses` (Set of String) Avoid authentication for physical addresses in this list.
+- `always_send_accounting` (Boolean) Always send accounting requests, rather than just when there is a need for accounting.
+- `auth_servers` (Set of String) Authentication methods to use; empty means no authentication needed.
+- `certificate` (String) SSL certificate reference; if provided, all traffic is transmitted over HTTPS.
+- `concurrent_logins` (Boolean) If set, users can login on multiple machines at once.
+- `cors_origins` (Set of String) Origins allowed when Cross-origin access is set to Specific origins.
+- `cors_policy` (String) Control which browser origins may read responses from the Captive Portal Access API: `same_origin`, `listed` or `any`.
+- `description` (String) Description to identify this zone.
+- `disable_rules` (Boolean) If set, no automatic firewall rules for portal redirection and traffic blocking are generated.
+- `enabled` (Boolean) Enable this zone.
+- `enforce_group` (String) Restrict access to users in this (local) group, by GID.
+- `extended_pre_auth_data` (Boolean) Offer extended data to the login template before authentication (mac addresses for upstream use).
+- `hard_timeout` (Number) Clients are disconnected after this amount of time, in minutes, regardless of activity. `0` disables hard timeout.
+- `idle_timeout` (Number) Clients are disconnected after this amount of inactivity, in minutes. `0` disables idle timeout.
+- `interfaces` (Set of String) Interface(s) enabled for captive portal.
+- `roaming` (Boolean) Allow connecting IPv6 clients to use multiple IPs bound to the same MAC over the course of its session.
+- `server_name` (String) Hostname (of this machine) to redirect login page to; blank uses the interface IP address.
+- `template` (String) Custom template package for user login, by UUID.
+- `zone_id` (String) Internal number used for this zone.

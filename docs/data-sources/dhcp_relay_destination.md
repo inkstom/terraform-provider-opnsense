@@ -21,5 +21,5 @@ DHCP relay destinations (Services > DHCP Relay > Destinations).
 
 ### Read-Only
 
-- `name` (String) Destination name.
-- `servers` (Set of String) DHCP server addresses.
+- `name` (String) Unique name for this relay destination.
+- `servers` (Set of String) A list of server IP addresses to relay DHCP requests to.

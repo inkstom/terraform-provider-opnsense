@@ -21,11 +21,11 @@ IPsec AuthLocal Resources are used for phase 1 authentication of IPsec VPN conne
 
 ### Read-Only
 
-- `auth_id` (String) Authentication ID for the AuthLocal Resource.
+- `auth_id` (String) IKE identity to use for authentication round. When using certificate authentication the IKE identity must be contained in the certificate; either as the subject DN or as a subjectAltName (the identity will default to the certificate's subject DN if not specified). Refer to https://docs.strongswan.org/docs/5.9/config/identityParsing.html for details on how identities are parsed and may be configured.
 - `authentication` (String) Authentication method for the AuthLocal Resource.
 - `certificates` (Set of String) List of certificates for the AuthLocal Resource.
 - `description` (String) Optional description for the AuthLocal Resource.
-- `eap_id` (String) EAP ID for the AuthLocal Resource.
+- `eap_id` (String) Client EAP-Identity to use in EAP-Identity exchange and the EAP method. If set to `%any` the EAP-Identity method will be used to ask the client for an EAP identity.
 - `enabled` (String) Enable or disable the AuthLocal Resource.
 - `ipsec_connection` (String) Connection ID for the AuthLocal Resource.
 - `public_keys` (Set of String) List of public keys for the AuthLocal Resource.

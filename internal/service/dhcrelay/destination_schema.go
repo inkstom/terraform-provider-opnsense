@@ -26,11 +26,11 @@ func destinationResourceSchema() schema.Schema {
 
 		Attributes: map[string]schema.Attribute{
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Destination name.",
+				MarkdownDescription: "Enter a unique name for this relay destination.",
 				Required:            true,
 			},
 			"servers": schema.SetAttribute{
-				MarkdownDescription: "DHCP server addresses (IPv4 or IPv6, not mixed).",
+				MarkdownDescription: "A list of server IP addresses to relay DHCP requests to. IPv4 or IPv6, not mixed.",
 				ElementType:         types.StringType,
 				Required:            true,
 				Validators:          []validator.Set{setvalidator.SizeAtLeast(1)},
@@ -50,8 +50,8 @@ func destinationDataSourceSchema() dschema.Schema {
 
 		Attributes: map[string]dschema.Attribute{
 			"id":      dschema.StringAttribute{MarkdownDescription: "UUID of the destination.", Required: true},
-			"name":    dschema.StringAttribute{MarkdownDescription: "Destination name.", Computed: true},
-			"servers": dschema.SetAttribute{MarkdownDescription: "DHCP server addresses.", ElementType: types.StringType, Computed: true},
+			"name":    dschema.StringAttribute{MarkdownDescription: "Unique name for this relay destination.", Computed: true},
+			"servers": dschema.SetAttribute{MarkdownDescription: "A list of server IP addresses to relay DHCP requests to.", ElementType: types.StringType, Computed: true},
 		},
 	}
 }

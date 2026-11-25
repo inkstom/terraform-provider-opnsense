@@ -31,16 +31,16 @@ resource "opnsense_dhcp_relay" "guest" {
 
 ### Required
 
-- `destination` (String) UUID of the `opnsense_dhcp_relay_destination` to forward to.
-- `interface` (String) Interface to listen on, e.g. `lan` or `opt1`.
+- `destination` (String) The destination server group to relay DHCP requests to. UUID of an `opnsense_dhcp_relay_destination`.
+- `interface` (String) The interface to relay DHCP requests from, e.g. `lan` or `opt1`.
 
 ### Optional
 
-- `agent_info` (Boolean) Add relay agent information (option 82) to forwarded requests. Defaults to `false`.
-- `carp_depend_on` (String) Only run while this CARP VIP is master (VIP UUID or address as listed by OPNsense); empty always runs. Defaults to `""`.
-- `circuit_id` (String) Option 82 circuit ID; empty uses the interface name. Needs `agent_info` (OPNsense 26.7+). Defaults to `""`.
-- `enabled` (Boolean) Enable the relay. Defaults to `true`.
-- `remote_id` (String) Option 82 remote ID. Needs `agent_info` (OPNsense 26.7+). Defaults to `""`.
+- `agent_info` (Boolean) Add the relay agent information option (option 82). Defaults to `false`.
+- `carp_depend_on` (String) The CARP VHID to depend on. When this virtual address is not in master state, then the instance will be shutdown. CARP VIP UUID or address as listed by OPNsense; empty always runs. Defaults to `""`.
+- `circuit_id` (String) Choose which value should be sent as the relay agent circuit ID. Only implemented in the DHCPv4 relay. Empty uses the interface name. Needs `agent_info` (OPNsense 26.7+). Defaults to `""`.
+- `enabled` (Boolean) Enable or disable this relay. Defaults to `true`.
+- `remote_id` (String) Choose which value should be sent as the relay agent remote ID. Needs `agent_info` (OPNsense 26.7+). Defaults to `""`.
 
 ### Read-Only
 

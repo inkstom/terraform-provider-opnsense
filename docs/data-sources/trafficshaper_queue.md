@@ -21,15 +21,15 @@ Traffic shaper queues (Firewall > Shaper > Queues).
 
 ### Read-Only
 
-- `buckets` (Number) Hash table size.
-- `codel_ecn_enable` (Boolean) Whether ECN is enabled.
-- `codel_enable` (Boolean) Whether CoDel is enabled.
-- `codel_interval` (Number) CoDel interval.
-- `codel_target` (Number) CoDel target delay.
-- `description` (String) Description.
-- `enabled` (Boolean) Whether the queue is enabled.
-- `mask` (String) Dynamic queue mask.
+- `buckets` (Number) Specifies the size of the hash table used for storing the various dynamic queues configured with the mask setting.
+- `codel_ecn_enable` (Boolean) Explicit Congestion Notification.
+- `codel_enable` (Boolean) Enable CoDel active queue management.
+- `codel_interval` (Number) Interval before dropping packets (in ms).
+- `codel_target` (Number) Minimum acceptable persistent queue delay (in ms).
+- `description` (String) Description to identify this queue.
+- `enabled` (Boolean) Enable this queue and its related rules.
+- `mask` (String) Dynamic queue creation by source or destination address. One of `none` (empty), `src-ip` (source), `dst-ip` (destination), `src-ip6` (source, IPv6) or `dst-ip6` (destination, IPv6).
 - `number` (String) Queue number.
-- `pie_enable` (Boolean) Whether PIE is enabled.
-- `pipe` (String) UUID of the pipe.
-- `weight` (Number) Weight.
+- `pie_enable` (Boolean) Enable PIE active queue management.
+- `pipe` (String) Connected pipe for this queue (UUID of the pipe).
+- `weight` (Number) Weight of this queue (`1`..`100`), used to prioritize within a pipe (1 is low, 100 is high).

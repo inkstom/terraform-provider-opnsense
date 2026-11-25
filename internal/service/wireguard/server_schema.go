@@ -108,20 +108,20 @@ func serverResourceSchema() schema.Schema {
 				Default:             stringdefault.StaticString(""),
 			},
 			"carp_depend_on": schema.StringAttribute{
-				MarkdownDescription: "CARP virtual IP (by its `id`/UUID) this instance depends on; the tunnel only comes up on the CARP master. Defaults to `\"\"`.",
+				MarkdownDescription: "The CARP VHID to depend on. When this virtual address is not in master state, then the instance will be shutdown. Set to the CARP virtual IP `id` (UUID). Defaults to `\"\"`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString(""),
 			},
 			"debug": schema.BoolAttribute{
-				MarkdownDescription: "Enable debug logging for this instance. Defaults to `false`.",
+				MarkdownDescription: "Enable the debug flag on this instance for enhanced error logging. Defaults to `false`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
 			"device": schema.StringAttribute{
 				Computed:            true,
-				MarkdownDescription: "Device name of the tunnel (`wgX`). Use as `device` in `opnsense_interfaces_assignment` to assign the instance as an interface.",
+				MarkdownDescription: "Device name of the tunnel (`wgX`), derived from `instance`. Use as `device` in `opnsense_interfaces_assignment` to assign the instance as an interface.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
@@ -207,15 +207,15 @@ func serverDataSourceSchema() dschema.Schema {
 				Computed:            true,
 			},
 			"carp_depend_on": dschema.StringAttribute{
-				MarkdownDescription: "CARP virtual IP this instance depends on.",
+				MarkdownDescription: "The CARP VHID to depend on. When this virtual address is not in master state, then the instance will be shutdown. The CARP virtual IP `id` (UUID).",
 				Computed:            true,
 			},
 			"debug": dschema.BoolAttribute{
-				MarkdownDescription: "Whether debug logging is enabled.",
+				MarkdownDescription: "Enable the debug flag on this instance for enhanced error logging.",
 				Computed:            true,
 			},
 			"device": dschema.StringAttribute{
-				MarkdownDescription: "Device name of the tunnel (`wgX`).",
+				MarkdownDescription: "Device name of the tunnel (`wgX`), derived from `instance`.",
 				Computed:            true,
 			},
 		},

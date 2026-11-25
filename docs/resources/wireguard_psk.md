@@ -32,4 +32,4 @@ resource "opnsense_wireguard_client" "laptop" {
 ### Read-Only
 
 - `id` (String) Random identifier for this key.
-- `psk` (String, Sensitive) Base64 pre-shared key.
+- `psk` (String, Sensitive) Shared secret (PSK) for this peer, generated like `wg genpsk`. Base64 encoded; use as `psk` of `opnsense_wireguard_client`.

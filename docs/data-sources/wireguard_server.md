@@ -18,9 +18,9 @@ Server resources can be used to setup Wireguard servers.
 
 ### Read-Only
 
-- `carp_depend_on` (String) CARP virtual IP this instance depends on.
-- `debug` (Boolean) Whether debug logging is enabled.
-- `device` (String) Device name of the tunnel (`wgX`).
+- `carp_depend_on` (String) The CARP VHID to depend on. When this virtual address is not in master state, then the instance will be shutdown. The CARP virtual IP `id` (UUID).
+- `debug` (Boolean) Enable the debug flag on this instance for enhanced error logging.
+- `device` (String) Device name of the tunnel (`wgX`), derived from `instance`.
 - `disable_routes` (Boolean) Disables installation of routes.
 - `dns` (Set of String) The interface specific DNS servers.
 - `enabled` (Boolean) Whether this server is enabled.

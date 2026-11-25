@@ -26,12 +26,12 @@ resource "opnsense_interfaces_neighbor" "printer" {
 
 ### Required
 
-- `ip_address` (String) IPv4 or IPv6 address.
-- `mac_address` (String) Hardware address, e.g. `00:11:22:33:44:55`.
+- `ip_address` (String) IP address to assign to the provided MAC address, which will either end up in the ARP (IPv4) or NDP (IPv6) table.
+- `mac_address` (String) Hardware MAC address of the client (format `xx:xx:xx:xx:xx:xx`).
 
 ### Optional
 
-- `description` (String) Description. Defaults to `""`.
+- `description` (String) You may enter a description here for your reference (not parsed). Defaults to `""`.
 
 ### Read-Only
 

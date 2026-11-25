@@ -29,14 +29,14 @@ resource "opnsense_interfaces_gre" "branch" {
 ### Required
 
 - `local_address` (String) Local endpoint: an interface such as `wan`, or a virtual IP.
-- `remote_address` (String) Remote endpoint address.
-- `tunnel_local_address` (String) Local address inside the tunnel.
-- `tunnel_remote_address` (String) Remote address inside the tunnel.
+- `remote_address` (String) Peer address where encapsulated gre packets will be sent.
+- `tunnel_local_address` (String) Local gre tunnel endpoint.
+- `tunnel_remote_address` (String) Remote gre tunnel endpoint.
 
 ### Optional
 
-- `description` (String) Description. Defaults to `""`.
-- `tunnel_remote_net` (String) Prefix length of the tunnel network. Defaults to `"32"`.
+- `description` (String) You may enter a description here for your reference (not parsed). Defaults to `""`.
+- `tunnel_remote_net` (String) Netmask [ipv4] or prefix [ipv6] to use for this tunnel. Given as a prefix length from `1` to `128`. Defaults to `"32"`.
 
 ### Read-Only
 

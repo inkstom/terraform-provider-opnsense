@@ -24,5 +24,5 @@ System tunables (System > Settings > Tunables).
 - `default_value` (String) System default.
 - `description` (String) Description.
 - `tunable` (String) Tunable name.
-- `type` (String) `w` runtime sysctl, `t` boot-time tunable.
+- `type` (String) Tunable type: `w` runtime, `t` boot-time, `y` read-only; empty is shown as environment.
 - `value` (String) Configured value; empty means the default.

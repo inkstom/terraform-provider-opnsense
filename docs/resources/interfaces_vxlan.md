@@ -25,16 +25,16 @@ resource "opnsense_interfaces_vxlan" "dc" {
 
 ### Required
 
-- `local_address` (String) Source address for the tunnel.
-- `vni` (String) VXLAN network identifier (1-16777215).
+- `local_address` (String) The source address used in the encapsulating IPv4/IPv6 header. The address should already be assigned to an existing interface. When the interface is configured in unicast mode, the listening socket is bound to this address.
+- `vni` (String) VXLAN Network Identifier (VNI) that identifies the virtual network segment membership of the interface. Accepts `0` to `16777215`.
 
 ### Optional
 
-- `group` (String) Multicast group address. Defaults to `""`.
-- `interface` (String) Interface for multicast traffic, e.g. `wan`. Defaults to `""`.
-- `local_port` (String) Local UDP port; empty uses 4789. Defaults to `""`.
-- `remote_address` (String) Unicast remote address. Defaults to `""`.
-- `remote_port` (String) Remote UDP port; empty uses 4789. Defaults to `""`.
+- `group` (String) The interface can be configured in a multicast mode to create a virtual network of hosts. This is the IP multicast group address the interface will join. Defaults to `""`.
+- `interface` (String) When the interface is configured in multicast mode, the dev interface is used to transmit IP multicast packets. Takes an interface identifier, e.g. `wan`. Defaults to `""`.
+- `local_port` (String) Define the port to be used. This is the local UDP port; empty uses `4789`. Defaults to `""`.
+- `remote_address` (String) The interface can be configured in a unicast, or point-to-point, mode to create a tunnel between two hosts. This is the IP address of the remote end of the tunnel. Defaults to `""`.
+- `remote_port` (String) Define the port to be used. This is the remote UDP port; empty uses `4789`. Defaults to `""`.
 
 ### Read-Only
 

@@ -27,18 +27,18 @@ resource "opnsense_firewall_nat_npt" "lan" {
 
 ### Required
 
-- `interface` (String) Interface the translation applies on, e.g. `wan`.
-- `internal_prefix` (String) Internal (source) IPv6 prefix, e.g. `fd00:1::/64`.
+- `interface` (String) Choose which interface this rule applies to. Interface identifier, e.g. `wan`.
+- `internal_prefix` (String) Enter the internal IPv6 prefix (source) for this network prefix translation. For example `fd00:1::/64`.
 
 ### Optional
 
-- `categories` (Set of String) UUIDs of `opnsense_firewall_category` to tag the rule with. Defaults to `[]`.
+- `categories` (Set of String) For grouping purposes you may select multiple groups here to organize items. UUIDs of `opnsense_firewall_category` resources. Defaults to `[]`.
 - `description` (String) Description. Defaults to `""`.
-- `enabled` (Boolean) Enable the rule. Defaults to `true`.
-- `external_prefix` (String) External (translated) IPv6 prefix of the same length. Leave empty with `track_interface` to follow a dynamic prefix. Defaults to `""`.
-- `log` (Boolean) Log packets that match the rule. Defaults to `false`.
-- `sequence` (Number) Order of evaluation. Defaults to `100`.
-- `track_interface` (String) Interface whose delegated prefix is used as the external prefix; the interface must have a prefix ID. Defaults to `""`.
+- `enabled` (Boolean) Enable this rule. Defaults to `true`.
+- `external_prefix` (String) Enter the external IPv6 prefix (target) for this network prefix translation. Leave empty to auto-detect the prefix address using the specified tracking interface instead. The prefix size specified for the internal prefix will also be applied to the external prefix. Required unless `track_interface` is set. Defaults to `""`.
+- `log` (Boolean) Log packets that are handled by this rule. Defaults to `false`.
+- `sequence` (Number) Sequence (order of evaluation), between `1` and `999999`. Defaults to `100`.
+- `track_interface` (String) Use prefix defined on the selected interface instead of the interface this rule applies to when target prefix is not provided. Interface identifier; the interface must have a prefix ID. Defaults to `""`.
 
 ### Read-Only
 

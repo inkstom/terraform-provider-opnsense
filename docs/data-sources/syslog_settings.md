@@ -19,6 +19,6 @@ General logging settings (System > Settings > Logging).
 
 - `enabled` (Boolean) Whether the syslog service runs.
 - `id` (String) Always `syslog_settings`.
-- `log_local` (Boolean) Whether logs are written locally.
-- `max_file_size` (Number) Maximum log file size in bytes; 0 means no limit.
-- `max_preserve` (Number) Days of logs kept.
+- `log_local` (Boolean) Enable writing log files to the local disk.
+- `max_file_size` (Number) Maximum file size per log file, in megabytes (MB). `0` means no limit.
+- `max_preserve` (Number) Number of logs to preserve. When no maximum file size is offered or the logs are smaller than the size requested, this equals the number of days.

@@ -38,13 +38,13 @@ resource "opnsense_ipsec_key_pair" "peer" {
 
 ### Required
 
-- `key_type` (String) `rsa` or `ecdsa`; must match the keys.
-- `name` (String) Key pair name.
-- `public_key` (String) PEM public key (`-----BEGIN PUBLIC KEY-----`).
+- `key_type` (String) Select the type of the key pair. One of `rsa` or `ecdsa`; must match the keys.
+- `name` (String) Enter a name for this key pair. The name should help you to identify this key pair.
+- `public_key` (String) Paste a public key of the selected type in X.509 format. Must be pasted including the `-----BEGIN ...-----` and `-----END [...]-----` headers.
 
 ### Optional
 
-- `private_key` (String, Sensitive) PEM private key (PKCS#8, `-----BEGIN PRIVATE KEY-----`). Leave empty for a peer's key, where only the public key is known. Defaults to `""`.
+- `private_key` (String, Sensitive) Paste an optional private key of the selected type in X.509 format which belongs to the public key specified above. When adding the public key of a peer, this field should not be specified as the private key remains solely with the peer. Must be pasted including the `-----BEGIN ...-----` and `-----END [...]-----` headers. Use PKCS#8 (`-----BEGIN PRIVATE KEY-----`). Defaults to `""`.
 
 ### Read-Only
 

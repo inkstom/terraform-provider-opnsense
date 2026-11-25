@@ -25,16 +25,16 @@ resource "opnsense_monit_alert" "ops" {
 
 ### Required
 
-- `recipient` (String) E-mail address to notify.
+- `recipient` (String) The email address to send alerts to.
 
 ### Optional
 
-- `description` (String) Description. Defaults to `""`.
-- `enabled` (Boolean) Enable this alert. Defaults to `true`.
-- `events` (Set of String) Events to alert on, e.g. `nonexist`, `resource`, `status`, `connection`. Empty alerts on all. Defaults to `[]`.
-- `format` (String) Mail format override, e.g. `subject: $SERVICE $EVENT at $DATE`. Defaults to `""`.
-- `not_on` (Boolean) Invert `events`: alert on every event except those listed. Defaults to `false`.
-- `reminder` (String) Re-send the alert every N cycles while the problem persists; empty sends once. Defaults to `""`.
+- `description` (String) Description of the alert. Defaults to `""`.
+- `enabled` (Boolean) Enable or disable alert. Defaults to `true`.
+- `events` (Set of String) List with events. Leave it empty for all events. Each is one of `action`, `checksum`, `bytein`, `byteout`, `connection`, `content`, `data`, `exec`, `fsflags`, `gid`, `icmp`, `instance`, `invalid`, `link`, `nonexist`, `packetin`, `packetout`, `permission`, `pid`, `ppid`, `resource`, `saturation`, `size`, `speed`, `status`, `timeout`, `timestamp`, `uid` or `uptime`. Defaults to `[]`.
+- `format` (String) The email format for alerts, e.g. `Subject: $SERVICE on $HOST failed`. `{` and `}` are not allowed; empty uses Monit's default format. Defaults to `""`.
+- `not_on` (Boolean) Do not send alerts for the following events but on all others. The events are those listed in `events`. Defaults to `false`.
+- `reminder` (String) Send a reminder after some cycles. A number of cycles from `0` to `86400`; empty or `0` sends the alert only once. Defaults to `""`.
 
 ### Read-Only
 

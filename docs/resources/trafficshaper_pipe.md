@@ -26,26 +26,26 @@ resource "opnsense_trafficshaper_pipe" "guest" {
 
 ### Required
 
-- `bandwidth` (Number) Bandwidth, in `bandwidth_metric` units.
+- `bandwidth` (Number) Total bandwidth for this pipe, in `bandwidth_metric` units.
 
 ### Optional
 
-- `bandwidth_metric` (String) Unit of `bandwidth`: `bit`, `Kbit`, `Mbit` or `Gbit`. Defaults to `"Mbit"`.
-- `buckets` (Number) Hash table size for dynamic pipes; unset uses the system default.
-- `codel_ecn_enable` (Boolean) Mark packets with ECN instead of dropping them (CoDel/FQ-CoDel/FQ-PIE). Defaults to `false`.
-- `codel_enable` (Boolean) Enable CoDel active queue management. Defaults to `false`.
-- `codel_interval` (Number) CoDel interval in ms; unset uses 100.
-- `codel_target` (Number) CoDel target delay in ms; unset uses 5.
-- `delay` (Number) Added delay in ms, for testing; unset adds none.
-- `description` (String) Description. Defaults to `""`.
-- `enabled` (Boolean) Enable the pipe. Defaults to `true`.
-- `fqcodel_flows` (Number) FQ-CoDel flow count; unset uses 1024.
-- `fqcodel_limit` (Number) FQ-CoDel queue limit in packets; unset uses 10240.
-- `fqcodel_quantum` (Number) FQ-CoDel quantum in bytes; unset uses 1514.
-- `mask` (String) Dynamic per-host pipes: `none`, `src-ip`, `dst-ip`, `src-ip6` or `dst-ip6`. Defaults to `"none"`.
-- `pie_enable` (Boolean) Enable PIE active queue management. Defaults to `false`.
-- `queue_size` (Number) Queue size in slots (2-100); unset uses the system default.
-- `scheduler` (String) Scheduler: `""` (weighted fair queueing), `fifo`, `rr`, `qfq`, `fq_codel` or `fq_pie`. Defaults to `""`.
+- `bandwidth_metric` (String) Unit of `bandwidth`: `bit`, `Kbit`, `Mbit` or `Gbit`. The OPNsense UI defaults to `Kbit`. Defaults to `"Mbit"`.
+- `buckets` (Number) Specifies the size of the hash table used for storing the various dynamic pipes configured with the mask setting. Accepted range is 1-65535; unset uses the system default.
+- `codel_ecn_enable` (Boolean) Explicit Congestion Notification. Marks packets instead of dropping them, with CoDel, FQ-CoDel or FQ-PIE. Defaults to `false`.
+- `codel_enable` (Boolean) Enable CoDel active queue management. Cannot be combined with `pie_enable`. Defaults to `false`.
+- `codel_interval` (Number) Interval before dropping packets (in ms), leave empty for default. Accepted range is 1-10000; unset uses 100.
+- `codel_target` (Number) Minimum acceptable persistent queue delay (in ms), leave empty for default. Accepted range is 1-10000; unset uses 5.
+- `delay` (Number) Add delay in ms to this pipe. Accepted range is 1-3000; unset adds none.
+- `description` (String) Description to identify this pipe. OPNsense requires a value, and rules can only target pipes that have one. Defaults to `""`.
+- `enabled` (Boolean) Enable this pipe and its related queues and rules. Defaults to `true`.
+- `fqcodel_flows` (Number) The number of flow queues that are created and managed, leave empty for defaults. Applies to the `fq_codel` scheduler; accepted range is 1-65535; unset uses 1024.
+- `fqcodel_limit` (Number) The hard size limit of all queues managed by this instance, leave empty for defaults. Counted in packets; applies to the `fq_codel` scheduler; accepted range is 1-65535; unset uses 10240.
+- `fqcodel_quantum` (Number) The number of bytes a queue can serve before being moved to the tail of old queues list (bytes), leave empty for defaults. Applies to the `fq_codel` scheduler; accepted range is 1-65535; unset uses 1514.
+- `mask` (String) Dynamic pipe creation by source or destination address. Choose destination to give every IP in destination field of rules the specified bandwidth. A pipe with 1Mbit e.g. would let 3 clients lend 1Mbit each so 3Mbit max. Normally this is used for download pipes. Choose source to give every IP in the source field of rules the specified bandwidth. Normally this is used for upload pipes. Leave this value empty if you want to create a pipe with a fixed bandwidth. One of `none` (empty), `src-ip` (source), `dst-ip` (destination), `src-ip6` (source, IPv6) or `dst-ip6` (destination, IPv6). Defaults to `"none"`.
+- `pie_enable` (Boolean) Enable PIE active queue management. Cannot be combined with `codel_enable`. Defaults to `false`.
+- `queue_size` (Number) Number of dynamic queues, leave empty for default. Sets the dummynet queue size in slots (2-100); unset uses the system default.
+- `scheduler` (String) Specify the scheduling algorithm to use. One of `""` (Weighted Fair Queueing), `fifo` (FIFO), `rr` (Deficit Round Robin), `qfq` (QFQ), `fq_codel` (FlowQueue-CoDel) or `fq_pie` (FlowQueue-PIE). Defaults to `""`.
 
 ### Read-Only
 

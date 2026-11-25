@@ -31,9 +31,9 @@ resource "opnsense_kea_control_agent" "this" {
 
 ### Optional
 
-- `enabled` (Boolean) Run the control agent. Required for Kea HA (`opnsense_kea_dhcpv4_peer`). OPNsense only starts it while Kea DHCPv4 or DHCPv6 is enabled.
-- `http_host` (String) Address the agent listens on; HA peers must be able to reach it.
-- `http_port` (Number) Port the agent listens on.
+- `enabled` (Boolean) Enable control agent. Required for Kea HA (`opnsense_kea_dhcpv4_peer`). OPNsense only starts it while Kea DHCPv4 or DHCPv6 is enabled.
+- `http_host` (String) Address on which the RESTful interface should be available. IPv4 address; OPNsense defaults to `127.0.0.1`, HA peers must be able to reach it.
+- `http_port` (Number) Port number to use for the RESTful interface. OPNsense defaults to `8000`.
 
 ### Read-Only
 

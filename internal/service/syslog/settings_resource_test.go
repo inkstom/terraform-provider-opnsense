@@ -23,10 +23,10 @@ func TestAccSyslogSettingsResource(t *testing.T) {
 				ImportStatePersist: true,
 			},
 			{
-				Config: testAccSyslogSettingsConfig(20, 1000000),
+				Config: testAccSyslogSettingsConfig(20, 100),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("opnsense_syslog_settings.test", "max_preserve", "20"),
-					resource.TestCheckResourceAttr("opnsense_syslog_settings.test", "max_file_size", "1000000"),
+					resource.TestCheckResourceAttr("opnsense_syslog_settings.test", "max_file_size", "100"),
 					// Unset attributes keep the firewall's value.
 					resource.TestCheckResourceAttr("opnsense_syslog_settings.test", "enabled", "true"),
 					resource.TestCheckResourceAttr("opnsense_syslog_settings.test", "log_local", "true"),

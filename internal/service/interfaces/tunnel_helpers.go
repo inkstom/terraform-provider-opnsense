@@ -12,6 +12,9 @@ import (
 
 // Small schema helpers for the loopback, gif, gre, vxlan and neighbor resources.
 
+// descrHelp is OPNsense's help text for the shared description field.
+const descrHelp = "You may enter a description here for your reference (not parsed)."
+
 func optStr(desc, def string) schema.StringAttribute {
 	return schema.StringAttribute{
 		MarkdownDescription: desc + " Defaults to `\"" + def + "\"`.",

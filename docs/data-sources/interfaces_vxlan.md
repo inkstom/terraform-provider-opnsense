@@ -22,10 +22,10 @@ VXLAN interfaces (Interfaces > Devices > VXLAN).
 ### Read-Only
 
 - `device` (String) Device name.
-- `group` (String) Multicast group.
-- `interface` (String) Multicast interface.
-- `local_address` (String) Source address.
+- `group` (String) The IP multicast group address the interface will join (multicast mode).
+- `interface` (String) When the interface is configured in multicast mode, the dev interface is used to transmit IP multicast packets.
+- `local_address` (String) The source address used in the encapsulating IPv4/IPv6 header.
 - `local_port` (String) Local UDP port.
-- `remote_address` (String) Unicast remote address.
+- `remote_address` (String) The IP address of the remote end of the tunnel (unicast mode).
 - `remote_port` (String) Remote UDP port.
-- `vni` (String) VXLAN network identifier.
+- `vni` (String) VXLAN Network Identifier (VNI) that identifies the virtual network segment membership of the interface.

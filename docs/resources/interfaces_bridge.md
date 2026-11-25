@@ -37,27 +37,27 @@ resource "opnsense_interfaces_bridge" "lan" {
 
 ### Required
 
-- `members` (Set of String) Member interfaces, by identifier.
+- `members` (Set of String) Interfaces participating in the bridge. Takes interface identifiers, e.g. `opt1`.
 
 ### Optional
 
-- `address_timeout` (Number) Seconds before a learned address expires; unset uses 1200.
-- `auto_edge_ports` (Set of String) Members whose edge status is detected automatically. Defaults to `[]`.
-- `auto_ptp_ports` (Set of String) Members whose point-to-point status is detected automatically. Defaults to `[]`.
-- `description` (String) Description. Defaults to `""`.
-- `edge_ports` (Set of String) Members that are edge ports (no bridges behind them; skip the STP learning delay). Defaults to `[]`.
-- `forward_delay` (Number) STP forward delay in seconds (4-30); unset uses 15.
-- `hold_count` (Number) STP transmit hold count (1-10); unset uses 6.
-- `link_local` (Boolean) Enable IPv6 link-local addresses on the bridge. Defaults to `false`.
-- `max_addresses` (Number) Size of the address cache; unset uses 2000.
-- `max_age` (Number) STP max age in seconds (6-40); unset uses 20.
-- `private_ports` (Set of String) Private members: they can't send traffic to each other through the bridge. Defaults to `[]`.
-- `ptp_ports` (Set of String) Members on a point-to-point link (RSTP fast transitions). Defaults to `[]`.
-- `span_interface` (String) Interface that receives a copy of all bridge traffic (SPAN port). Defaults to `""`.
-- `static_ports` (Set of String) Members whose learned addresses never age out. Defaults to `[]`.
-- `stp_enabled` (Boolean) Enable spanning tree. Defaults to `false`.
-- `stp_interfaces` (Set of String) Members that take part in spanning tree. Defaults to `[]`.
-- `stp_protocol` (String) Spanning tree protocol: `rstp` or `stp`. Defaults to `"rstp"`.
+- `address_timeout` (Number) Set the timeout of address cache entries to this number of seconds. If seconds is zero, then address cache entries will not be expired. The default is 1200 seconds. Leave unset to use the default.
+- `auto_edge_ports` (Set of String) Allow interface to automatically detect edge status. This is the default for all interfaces added to a bridge. (This will disable the autoedge status of interfaces.) Defaults to `[]`.
+- `auto_ptp_ports` (Set of String) Automatically detect the point-to-point status on interface by checking the full duplex link status. This is the default for interfaces added to the bridge. (The interfaces selected here will be removed from default autoedge status.) Defaults to `[]`.
+- `description` (String) You may enter a description here for your reference (not parsed). Defaults to `""`.
+- `edge_ports` (Set of String) Set interface as an edge port. An edge port connects directly to end stations and cannot create bridging loops in the network; this allows it to transition straight to forwarding. Defaults to `[]`.
+- `forward_delay` (Number) Set the time that must pass before an interface begins forwarding packets when Spanning Tree is enabled. The default is 15 seconds. The minimum is 4 seconds and the maximum is 30 seconds. Leave unset to use the default.
+- `hold_count` (Number) Set the transmit hold count for Spanning Tree. This is the number of packets transmitted before being rate limited. The default is 6. The minimum is 1 and the maximum is 10. Leave unset to use the default.
+- `link_local` (Boolean) By default, link-local addresses for bridges are disabled. You can enable them manually using this option. However, when a bridge interface has IPv6 addresses, IPv6 addresses on a member interface will be automatically removed before the interface is added. Defaults to `false`.
+- `max_addresses` (Number) Set the size of the bridge address cache to size. The default is 2000 entries. The minimum is `1`. Leave unset to use the default.
+- `max_age` (Number) Set the time that a Spanning Tree Protocol configuration is valid. The default is 20 seconds. The minimum is 6 seconds and the maximum is 40 seconds. Leave unset to use the default.
+- `private_ports` (Set of String) Mark an interface as a "private" interface. A private interface does not forward any traffic to any other port that is also a private interface. Defaults to `[]`.
+- `ptp_ports` (Set of String) Set the interface as a point-to-point link. This is required for straight transitions to forwarding and should be enabled on a direct link to another RSTP-capable switch. Defaults to `[]`.
+- `span_interface` (String) Add the interface named by interface as a span port on the bridge. Span ports transmit a copy of every frame received by the bridge. This is most useful for snooping a bridged network passively on another host connected to one of the span ports of the bridge. Defaults to `""`.
+- `static_ports` (Set of String) Mark an interface as a "sticky" interface. Dynamically learned address entries are treated as static once entered into the cache. Sticky entries are never aged out of the cache or replaced, even if the address is seen on a different interface. Defaults to `[]`.
+- `stp_enabled` (Boolean) Enable spanning tree options for this bridge. Defaults to `false`.
+- `stp_interfaces` (Set of String) Enable Spanning Tree Protocol on interface. The if_bridge(4) driver has support for the IEEE 802.1D Spanning Tree Protocol (STP). STP is used to detect and remove loops in a network topology. Defaults to `[]`.
+- `stp_protocol` (String) Protocol used for spanning tree. One of `rstp` or `stp`. Defaults to `"rstp"`.
 
 ### Read-Only
 

@@ -48,7 +48,7 @@ func tunableResourceSchema() schema.Schema {
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "`w` for a runtime sysctl, `t` for a boot-time tunable, empty when unknown.",
+				MarkdownDescription: "Tunable type as shown in the UI: `w` runtime, `t` boot-time, `y` read-only; empty is shown as environment.",
 				Computed:            true,
 			},
 			"id": schema.StringAttribute{
@@ -73,7 +73,7 @@ func tunableDataSourceSchema() dschema.Schema {
 			"value":         str("Configured value; empty means the default."),
 			"description":   str("Description."),
 			"default_value": str("System default."),
-			"type":          str("`w` runtime sysctl, `t` boot-time tunable."),
+			"type":          str("Tunable type: `w` runtime, `t` boot-time, `y` read-only; empty is shown as environment."),
 		},
 	}
 }

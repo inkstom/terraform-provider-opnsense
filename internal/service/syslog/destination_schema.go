@@ -39,23 +39,23 @@ func emptySet() schema.SetAttribute {
 
 func destinationResourceSchema() schema.Schema {
 	levels := emptySet()
-	levels.MarkdownDescription = "Levels to send: `debug`, `info`, `notice`, `warn`, `err`, `crit`, `alert`, `emerg`. Empty sends all. Defaults to `[]`."
+	levels.MarkdownDescription = "Choose which levels to include, omit to select all. Values: `debug`, `info`, `notice`, `warn`, `err`, `crit`, `alert`, `emerg`. Defaults to `[]`."
 	facilities := emptySet()
-	facilities.MarkdownDescription = "Facilities to send, e.g. `kern`, `auth`, `daemon`, `local0`. Empty sends all. Defaults to `[]`."
+	facilities.MarkdownDescription = "Choose which facilities to include, omit to select all. Values include `kern`, `user`, `daemon`, `auth`, `authpriv`, `security`, `local0` to `local7`. Defaults to `[]`."
 	programs := emptySet()
-	programs.MarkdownDescription = "Applications to send, e.g. `filterlog`, `unbound`, `sshd`. Empty sends all. Defaults to `[]`."
+	programs.MarkdownDescription = "Choose which applications should be forwarded to the specified target, omit to select all. Values are application names, e.g. `filterlog`, `unbound`, `sshd`. Defaults to `[]`."
 	return schema.Schema{
 		MarkdownDescription: "Remote syslog destinations (System > Settings > Logging > Remote).",
 
 		Attributes: map[string]schema.Attribute{
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Enable this destination. Defaults to `true`.",
+				MarkdownDescription: "Set this option to enable this destination. Defaults to `true`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
 			"transport": schema.StringAttribute{
-				MarkdownDescription: "Protocol and address family: `udp4`, `tcp4`, `udp6`, `tcp6`, `tls4` or `tls6`.",
+				MarkdownDescription: "Transport protocol. One of `udp4`, `tcp4`, `udp6`, `tcp6`, `tls4` or `tls6`.",
 				Required:            true,
 				Validators:          []validator.String{stringvalidator.OneOf("udp4", "tcp4", "udp6", "tcp6", "tls4", "tls6")},
 			},
@@ -73,23 +73,24 @@ func destinationResourceSchema() schema.Schema {
 			"facilities": facilities,
 			"programs":   programs,
 			"certificate": schema.StringAttribute{
-				MarkdownDescription: "Client certificate reference for `tls4`/`tls6`. Defaults to `\"\"`.",
-				Optional:            true,
-				Computed:            true,
-				Default:             stringdefault.StaticString(""),
+				MarkdownDescription: "Transport certificate to use, please make sure to check the general system log when experiencing issues. Error messages can be a bit cryptic from time to time, in which case [this](https://support.oneidentity.com/kb/263658/common-issues-of-tls-encrypted-message-transfer) is a good resource for tracking common issues." +
+					" Certificate reference, used with `tls4`/`tls6`. Defaults to `\"\"`.",
+				Optional: true,
+				Computed: true,
+				Default:  stringdefault.StaticString(""),
 			},
 			"rfc5424": schema.BoolAttribute{
-				MarkdownDescription: "Send RFC 5424 formatted messages instead of BSD (RFC 3164). Defaults to `false`.",
+				MarkdownDescription: "Use RFC5424 formatted messages for this destination. Defaults to `false`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
 			"suppress": schema.BoolAttribute{
-				MarkdownDescription: "Suppress repeated messages. Needs OPNsense 26.7 or later; leave unset on older versions, which don't have the setting.",
+				MarkdownDescription: "Suppress consecutive identical messages for 30 seconds and send a summary with the number of repetitions. Needs OPNsense 26.7 or later; leave unset on older versions, which don't have the setting.",
 				Optional:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description. Defaults to `\"\"`.",
+				MarkdownDescription: "You may enter a description here for your reference (not parsed). Defaults to `\"\"`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString(""),
@@ -118,17 +119,17 @@ func destinationDataSourceSchema() dschema.Schema {
 
 		Attributes: map[string]dschema.Attribute{
 			"id":          dschema.StringAttribute{MarkdownDescription: "UUID of the destination.", Required: true},
-			"enabled":     boolean("Whether the destination is enabled."),
-			"transport":   str("Protocol and address family."),
+			"enabled":     boolean("Set this option to enable this destination."),
+			"transport":   str("Transport protocol, e.g. `udp4` or `tls6`."),
 			"hostname":    str("Syslog server."),
 			"port":        str("Syslog server port."),
-			"levels":      set("Levels sent."),
-			"facilities":  set("Facilities sent."),
-			"programs":    set("Applications sent."),
-			"certificate": str("Client certificate for TLS."),
-			"rfc5424":     boolean("Whether RFC 5424 format is used."),
-			"suppress":    boolean("Whether repeated messages are suppressed."),
-			"description": str("Description."),
+			"levels":      set("Choose which levels to include, omit to select all."),
+			"facilities":  set("Choose which facilities to include, omit to select all."),
+			"programs":    set("Choose which applications should be forwarded to the specified target, omit to select all."),
+			"certificate": str("Transport certificate to use. Certificate reference, used with `tls4`/`tls6`."),
+			"rfc5424":     boolean("Use RFC5424 formatted messages for this destination."),
+			"suppress":    boolean("Suppress consecutive identical messages for 30 seconds and send a summary with the number of repetitions."),
+			"description": str("You may enter a description here for your reference (not parsed)."),
 		},
 	}
 }

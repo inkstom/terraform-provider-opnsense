@@ -40,7 +40,7 @@ type gatewayGroupResourceModel struct {
 
 func gatewayGroupResourceSchema() schema.Schema {
 	return schema.Schema{
-		MarkdownDescription: "Gateway groups combine gateways into tiers for failover and load balancing (System > Gateways > Group). Requires OPNsense 26.7 or later. " +
+		MarkdownDescription: "Gateway groups combine gateways into tiers for failover and load balancing (System > Gateways > Group). " +
 			"Requires OPNsense 26.7 or later. A group cannot be deleted while it is referenced, e.g. by a firewall rule.",
 		Version: 1,
 
@@ -53,7 +53,7 @@ func gatewayGroupResourceSchema() schema.Schema {
 				},
 			},
 			"tiers": schema.ListAttribute{
-				MarkdownDescription: "Ordered list of tiers, each a set of gateway **names**. The first element is tier 1 (highest priority). " +
+				MarkdownDescription: "Ordered list of tiers (*Tier 1* to *Tier 5* in OPNsense), each a set of gateway **names**. The first element is tier 1 (highest priority). " +
 					"Gateways in the same tier load-balance; lower tiers are used when all gateways in the higher tiers are down. Between 1 and 5 tiers. " +
 					"Example: `[[\"WAN1_DHCP\"], [\"WAN2_DHCP\"]]` for failover.",
 				Required:    true,
@@ -64,7 +64,7 @@ func gatewayGroupResourceSchema() schema.Schema {
 				},
 			},
 			"trigger": schema.StringAttribute{
-				MarkdownDescription: "When to consider a member down: `down` (member down), `downloss` (packet loss), `downlatency` (high latency) or `downlosslatency` (packet loss or high latency). Defaults to `down`.",
+				MarkdownDescription: "When to trigger exclusion of a member. One of `down` (Member Down), `downloss` (Packet Loss), `downlatency` (High Latency) or `downlosslatency` (Packet Loss and High Latency). Defaults to `down`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString("down"),
@@ -73,16 +73,18 @@ func gatewayGroupResourceSchema() schema.Schema {
 				},
 			},
 			"pool_options": schema.StringAttribute{
-				MarkdownDescription: "Load-balancing pool option: `\"\"` (default), `round-robin` or `round-robin sticky-address`. Defaults to `\"\"`.",
-				Optional:            true,
-				Computed:            true,
-				Default:             stringdefault.StaticString(""),
+				MarkdownDescription: "Default: Round Robin, Sticky Address determined by advanced settings. Round Robin: Loops through the translation addresses. " +
+					"Sticky Address: The Sticky Address option can be used with the Round Robin pool type to ensure that a particular source address is always mapped to the same translation address. " +
+					"One of `\"\"` (Default), `round-robin` (Round Robin) or `round-robin sticky-address` (Round Robin with Sticky Address). Defaults to `\"\"`.",
+				Optional: true,
+				Computed: true,
+				Default:  stringdefault.StaticString(""),
 				Validators: []validator.String{
 					stringvalidator.OneOf("", "round-robin", "round-robin sticky-address"),
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional description here for your reference (not parsed).",
+				MarkdownDescription: "You may enter a description here for your reference (not parsed).",
 				Optional:            true,
 			},
 			"id": schema.StringAttribute{
@@ -110,20 +112,20 @@ func gatewayGroupDataSourceSchema() dschema.Schema {
 				Computed:            true,
 			},
 			"tiers": dschema.ListAttribute{
-				MarkdownDescription: "Ordered list of tiers, each a set of gateway names.",
+				MarkdownDescription: "Ordered list of tiers (*Tier 1* to *Tier 5* in OPNsense), each a set of gateway names.",
 				Computed:            true,
 				ElementType:         gatewayTierType,
 			},
 			"trigger": dschema.StringAttribute{
-				MarkdownDescription: "Trigger level.",
+				MarkdownDescription: "When to trigger exclusion of a member. One of `down`, `downloss`, `downlatency` or `downlosslatency`.",
 				Computed:            true,
 			},
 			"pool_options": dschema.StringAttribute{
-				MarkdownDescription: "Load-balancing pool option.",
+				MarkdownDescription: "Pool options. One of `\"\"` (Default), `round-robin` or `round-robin sticky-address`.",
 				Computed:            true,
 			},
 			"description": dschema.StringAttribute{
-				MarkdownDescription: "Description.",
+				MarkdownDescription: "You may enter a description here for your reference (not parsed).",
 				Computed:            true,
 			},
 		},

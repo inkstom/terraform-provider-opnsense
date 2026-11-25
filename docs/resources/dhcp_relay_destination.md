@@ -24,8 +24,8 @@ resource "opnsense_dhcp_relay_destination" "dc" {
 
 ### Required
 
-- `name` (String) Destination name.
-- `servers` (Set of String) DHCP server addresses (IPv4 or IPv6, not mixed).
+- `name` (String) Enter a unique name for this relay destination.
+- `servers` (Set of String) A list of server IP addresses to relay DHCP requests to. IPv4 or IPv6, not mixed.
 
 ### Read-Only
 

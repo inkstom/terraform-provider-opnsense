@@ -17,40 +17,40 @@ Global dnsmasq DNS and DHCP settings (Services: Dnsmasq DNS & DHCP: General). Th
 
 ### Read-Only
 
-- `add_mac` (String) Add the client MAC to forwarded queries: `standard`, `base64`, `text` or empty. Defaults to `""`.
-- `add_subnet` (Boolean) Add the client subnet to forwarded queries. Defaults to `false`.
-- `cache_size` (Number) DNS cache size. Leave unset for the OPNsense default.
-- `dhcp_authoritative` (Boolean) Act as the authoritative DHCP server. Defaults to `false`.
-- `dhcp_default_fw_rules` (Boolean) Add the automatic firewall rules for DHCP. Defaults to `true`.
-- `dhcp_disable_ha_sync` (Boolean) Exclude DHCP settings from HA sync. Defaults to `false`.
-- `dhcp_domain` (String) Default DHCP domain. Empty uses the system domain. Defaults to `""`.
-- `dhcp_domain_override` (String) Domain for registered ISC DHCP leases (legacy). Defaults to `""`.
-- `dhcp_enable_ra` (Boolean) Send IPv6 router advertisements. Defaults to `false`.
-- `dhcp_fqdn` (Boolean) Register clients as name.domain. Defaults to `true`.
-- `dhcp_host_ping` (Boolean) Ping an address before leasing it. Defaults to `true`.
-- `dhcp_lease_max` (Number) Maximum number of leases. Leave unset for the OPNsense default.
-- `dhcp_local` (Boolean) Treat the DHCP domain as local (never forwarded). Defaults to `true`.
-- `dhcp_log_dhcp` (Boolean) Log extra DHCP details. Defaults to `false`.
-- `dhcp_log_quiet` (Boolean) Suppress routine DHCP logging. Defaults to `false`.
-- `dhcp_no_interfaces` (Set of String) Interfaces where DHCP is disabled while DNS stays on. Defaults to `[]`.
-- `dhcp_reply_delay` (Number) Seconds to delay DHCP replies. Leave unset for the OPNsense default.
-- `dns_forward_max` (Number) Maximum concurrent DNS queries. Leave unset for the OPNsense default.
+- `add_mac` (String) Add the MAC address of the requestor to DNS queries which are forwarded upstream. The MAC address will only be added if the upstream DNS Server is in the same subnet as the requestor. Since this is not standardized, it should be considered experimental. This is useful for selective DNS filtering on the upstream DNS server. One of `standard`, `base64`, `text`, or empty to disable. Defaults to `""`.
+- `add_subnet` (Boolean) Add the real client IPv4 and IPv6 addresses (`add-subnet=32,128`) to DNS queries which are forwarded upstream. Be careful setting this option as it can undermine privacy. This is useful for selective DNS filtering on the upstream DNS server. Defaults to `false`.
+- `cache_size` (Number) Set the size of the cache. Setting the cache size to zero disables caching. Please note that huge cache size impacts performance. Leave unset for the OPNsense default.
+- `dhcp_authoritative` (Boolean) Should be set when Dnsmasq is definitely the only DHCP server on a network. For DHCPv4, it changes the behaviour from strict RFC compliance so that DHCP requests on unknown leases from unknown hosts are not ignored. Defaults to `false`.
+- `dhcp_default_fw_rules` (Boolean) Automatically register firewall rules to allow DHCP traffic for all explicitly selected interfaces, can be disabled for more fine grained control if needed. Defaults to `true`.
+- `dhcp_disable_ha_sync` (Boolean) Ignore the DHCP general settings from being updated using HA sync. Defaults to `false`.
+- `dhcp_domain` (String) To ensure that all names have a domain part, there must be a default domain specified when DHCP FQDN is set. Leave empty to use the system domain. Defaults to `""`.
+- `dhcp_domain_override` (String) The domain name to use for DHCP hostname registration. If empty, the default system domain is used. Note that all DHCP leases will be assigned to the same domain. If this is undesired, static DHCP lease registration is able to provide coherent mappings. Applies to ISC DHCP (legacy). Defaults to `""`.
+- `dhcp_enable_ra` (Boolean) Setting this will enable Router Advertisements for all configured DHCPv6 ranges with the managed address bits set, and the use SLAAC bit reset. To change this default, select a combination of the possible options in the individual DHCPv6 ranges. Keep in mind that this is a global option; if there are configured DHCPv6 ranges, RAs will be sent unconditionally and cannot be deactivated selectively. Setting Router Advertisement modes in DHCPv6 ranges will have no effect without this global option enabled. Defaults to `false`.
+- `dhcp_fqdn` (Boolean) If disabled, registers the unqualified names of DHCP clients into the DNS (e.g. `smartphone`), in which case they should be unique. If enabled, the qualified name (e.g. `smartphone.lan.internal`) is registered. This option must be enabled if you are forwarding from Unbound to Dnsmasq for specific local domains. Defaults to `true`.
+- `dhcp_host_ping` (Boolean) By default, the DHCP server will use a ping to ensure that an address is not in use before allocating it to a host. Defaults to `true`.
+- `dhcp_lease_max` (Number) Limits Dnsmasq to the specified maximum number of DHCP leases. This limit is to prevent DoS attacks from hosts which create thousands of leases and use lots of memory in the Dnsmasq process. Leave unset for the OPNsense default.
+- `dhcp_local` (Boolean) Sets all DHCP domains as local. This will configure this DNS server as authoritative; it will not forward queries to any upstream servers for these domains. Defaults to `true`.
+- `dhcp_log_dhcp` (Boolean) Extra logging for DHCP, log all the options sent to DHCP clients and the tags used to determine them. Defaults to `false`.
+- `dhcp_log_quiet` (Boolean) Suppress logging of the routine operation of DHCP, RA and TFTP. Errors and problems will still be logged. Defaults to `false`.
+- `dhcp_no_interfaces` (Set of String) Do not provide DHCP, TFTP or router advertisement on the specified interfaces, but do provide DNS service. Please note that Dnsmasq continues to listen on the default DHCP ports as long as any DHCP ranges are configured; setting this option only ignores these packets on the selected interfaces. Defaults to `[]`.
+- `dhcp_reply_delay` (Number) Delays sending DHCPOFFER and PROXYDHCP replies for at least the specified number of seconds. This can be practical for split DHCP solutions, to make sure the secondary server answers slower than the primary. Must be between `0` and `60`. Leave unset for the OPNsense default.
+- `dns_forward_max` (Number) Set the maximum number of concurrent DNS queries. On configurations with tight resources, this value may need to be reduced. Leave unset for the OPNsense default.
 - `dnssec` (Boolean) Validate DNSSEC. Defaults to `false`.
-- `domain_needed` (Boolean) Don't forward plain names without a domain. Defaults to `false`.
-- `enabled` (Boolean) Enable dnsmasq. Defaults to `false`.
-- `expand_hosts` (Boolean) Add the domain to simple names in hosts files. Defaults to `false`.
+- `domain_needed` (Boolean) If this option is set, we will not forward A or AAAA queries for plain names, without dots or domain parts, to upstream name servers. If the name is not known from `/etc/hosts` or DHCP then a "not found" answer is returned. Defaults to `false`.
+- `enabled` (Boolean) Enable Dnsmasq. Defaults to `false`.
+- `expand_hosts` (Boolean) Append the configured domain to simple hostnames read from hosts files. Defaults to `false`.
 - `id` (String) Always `dnsmasq_settings`.
-- `interfaces` (Set of String) Interfaces dnsmasq listens on, e.g. `["lan", "opt1"]`. Empty means all. Defaults to `[]`.
-- `local_ttl` (Number) TTL for local answers. Leave unset for the OPNsense default.
-- `log_queries` (Boolean) Log DNS queries. Defaults to `false`.
-- `no_hosts` (Boolean) Don't read /etc/hosts. Defaults to `false`.
-- `no_ident` (Boolean) Don't answer version/author queries. Defaults to `true`.
-- `no_private_reverse` (Boolean) Don't forward private reverse lookups. Defaults to `false`.
-- `no_resolv` (Boolean) Don't forward to the system DNS servers. Defaults to `false`.
-- `port` (Number) DNS listen port. `0` disables DNS (DHCP-only, e.g. alongside Unbound). Leave unset for the OPNsense default.
-- `prefer_dhcp` (Boolean) Prefer DHCP registrations over host overrides (legacy). Defaults to `false`.
-- `register_dhcp_leases` (Boolean) Register ISC DHCP leases (legacy). Defaults to `false`.
-- `register_dhcp_static_mappings` (Boolean) Register ISC DHCP static mappings (legacy). Defaults to `false`.
-- `strict_interface_binding` (Boolean) Bind only to the listed interfaces. Defaults to `false`.
-- `strict_order` (Boolean) Query upstream servers in order. Defaults to `false`.
-- `strip_subnet` (Boolean) Strip client subnet info from incoming queries. Defaults to `false`.
+- `interfaces` (Set of String) Interface IPs used to respond to queries from clients. If no interfaces are selected, Dnsmasq will listen on all available IPv4 and IPv6 addresses by default. However, DHCP related firewall rules will only be added for explicitly selected interfaces, never for all interfaces. Example `["lan", "opt1"]`. Defaults to `[]`.
+- `local_ttl` (Number) This option allows a time-to-live (in seconds) to be given for local DNS entries, i.e. `/etc/hosts` or DHCP leases. This will reduce the load on the server at the expense of clients using stale data under some circumstances. A value of zero will disable client-side caching. Leave unset for the OPNsense default.
+- `log_queries` (Boolean) Log the results of DNS queries. Defaults to `false`.
+- `no_hosts` (Boolean) Do not read hostnames in `/etc/hosts`. Defaults to `false`.
+- `no_ident` (Boolean) Do not respond to class CHAOS and type TXT in domain bind queries. Without this option being set, the cache statistics are also available in the DNS as answers to queries of class CHAOS and type TXT in domain bind. Defaults to `true`.
+- `no_private_reverse` (Boolean) If this option is set, we will not forward reverse DNS lookups (PTR) for private addresses (RFC 1918) to upstream name servers. Any entries in the Domain Overrides section forwarding private `n.n.n.in-addr.arpa` names to a specific server are still forwarded. If the IP to name is not known from `/etc/hosts`, DHCP or a specific domain override then a "not found" answer is immediately returned. Defaults to `false`.
+- `no_resolv` (Boolean) If this option is set, DNS forwarding to system nameservers (defined in System: General Setup: DNS Servers) will be disabled. Upstream servers defined in Services: Dnsmasq DNS & DHCP: Domains will still be used. This option is recommended when Unbound forwards local domain queries to Dnsmasq, so that all queries terminate without further lookups if they are unknown. Defaults to `false`.
+- `port` (Number) The port used for responding to DNS queries. It should normally be left blank unless another service needs to bind to TCP/UDP port 53. Setting this to zero (`0`) completely disables DNS function, e.g. for DHCP only alongside Unbound. Leave unset for the OPNsense default.
+- `prefer_dhcp` (Boolean) If this option is set, then DHCP mappings will be resolved before the manual list of names below. This only affects the name given for a reverse lookup (PTR). Applies to ISC DHCP (legacy). Defaults to `false`.
+- `register_dhcp_leases` (Boolean) If this option is set, then machines that specify their hostname when requesting a DHCP lease will be registered, so that their name can be resolved. Applies to ISC DHCPv4 leases (legacy). Defaults to `false`.
+- `register_dhcp_static_mappings` (Boolean) If this option is set, then DHCP static mappings will be registered, so that their name can be resolved. Applies to ISC DHCP (legacy). Defaults to `false`.
+- `strict_interface_binding` (Boolean) By default we bind the wildcard address, even when listening on some interfaces. Requests that should not be handled are discarded, this has the advantage of working even when interfaces come and go and change address. This option forces binding to only the interfaces we are listening on, which is less stable in non static environments. Defaults to `false`.
+- `strict_order` (Boolean) If this option is set, we will query the DNS servers sequentially in the order specified (System: General Setup: DNS Servers), rather than all at once in parallel. Defaults to `false`.
+- `strip_subnet` (Boolean) Strip the subnet received by a downstream DNS server. If "Add subnet" (`add_subnet`) is used and the downstream DNS server already added a subnet, Dnsmasq will not replace it without setting "Strip subnet". Defaults to `false`.

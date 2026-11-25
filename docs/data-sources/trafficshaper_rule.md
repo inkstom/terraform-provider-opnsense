@@ -21,19 +21,19 @@ Traffic shaper rules (Firewall > Shaper > Rules).
 
 ### Read-Only
 
-- `description` (String) Description.
-- `destination` (Set of String) Destination networks.
-- `destination_not` (Boolean) Whether the destination match is inverted.
-- `destination_port` (String) Destination port.
-- `direction` (String) Direction.
-- `dscp` (Set of String) DSCP classes matched.
-- `enabled` (Boolean) Whether the rule is enabled.
+- `description` (String) Description to identify this rule.
+- `destination` (Set of String) Destination IP or network, examples `10.0.0.0/24`, `10.0.0.1`.
+- `destination_not` (Boolean) Invert destination (not).
+- `destination_port` (String) Destination port number or well known name (`imap`, `imaps`, `http`, `https`, ...), for ranges use a dash.
+- `direction` (String) Matches incoming or outgoing packets or both (empty).
+- `dscp` (Set of String) Match against one or multiple DSCP values.
+- `enabled` (Boolean) Enable this rule.
 - `interface` (String) Interface.
-- `interface2` (String) Second interface.
-- `max_packet_length` (Number) Maximum packet length matched.
-- `protocol` (String) Protocol.
-- `sequence` (Number) Order of evaluation.
-- `source` (Set of String) Source networks.
-- `source_not` (Boolean) Whether the source match is inverted.
-- `source_port` (String) Source port.
-- `target` (String) UUID of the pipe or queue.
+- `interface2` (String) Secondary interface, matches packets traveling to/from interface (1) to/from interface (2).
+- `max_packet_length` (Number) Specifies the maximum size of packets to match in bytes.
+- `protocol` (String) Select the applicable protocol.
+- `sequence` (Number) Order in which the rule will be evaluated (lowest first).
+- `source` (Set of String) Source IP or network, examples `10.0.0.0/24`, `10.0.0.1`.
+- `source_not` (Boolean) Invert source (not).
+- `source_port` (String) Source port number or well known name (`imap`, `imaps`, `http`, `https`, ...), for ranges use a dash.
+- `target` (String) Target pipe or queue (UUID of the pipe or queue).

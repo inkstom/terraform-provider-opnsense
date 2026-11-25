@@ -21,10 +21,10 @@ DHCP relays (Services > DHCP Relay > Relays).
 
 ### Read-Only
 
-- `agent_info` (Boolean) Whether option 82 is added.
-- `carp_depend_on` (String) CARP VIP the relay depends on.
-- `circuit_id` (String) Option 82 circuit ID.
-- `destination` (String) Destination UUID.
-- `enabled` (Boolean) Whether the relay is enabled.
-- `interface` (String) Interface listened on.
-- `remote_id` (String) Option 82 remote ID.
+- `agent_info` (Boolean) Add the relay agent information option.
+- `carp_depend_on` (String) The CARP VHID to depend on. When this virtual address is not in master state, then the instance will be shutdown.
+- `circuit_id` (String) Choose which value should be sent as the relay agent circuit ID. Only implemented in the DHCPv4 relay.
+- `destination` (String) The destination server group to relay DHCP requests to (destination UUID).
+- `enabled` (Boolean) Enable or disable this relay.
+- `interface` (String) The interface to relay DHCP requests from.
+- `remote_id` (String) Choose which value should be sent as the relay agent remote ID.

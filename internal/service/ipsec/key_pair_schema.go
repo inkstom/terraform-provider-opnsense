@@ -33,20 +33,20 @@ func keyPairResourceSchema() schema.Schema {
 
 		Attributes: map[string]schema.Attribute{
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Key pair name.",
+				MarkdownDescription: "Enter a name for this key pair. The name should help you to identify this key pair.",
 				Required:            true,
 			},
 			"key_type": schema.StringAttribute{
-				MarkdownDescription: "`rsa` or `ecdsa`; must match the keys.",
+				MarkdownDescription: "Select the type of the key pair. One of `rsa` or `ecdsa`; must match the keys.",
 				Required:            true,
 				Validators:          []validator.String{stringvalidator.OneOf("rsa", "ecdsa")},
 			},
 			"public_key": schema.StringAttribute{
-				MarkdownDescription: "PEM public key (`-----BEGIN PUBLIC KEY-----`).",
+				MarkdownDescription: "Paste a public key of the selected type in X.509 format. Must be pasted including the `-----BEGIN ...-----` and `-----END [...]-----` headers.",
 				Required:            true,
 			},
 			"private_key": schema.StringAttribute{
-				MarkdownDescription: "PEM private key (PKCS#8, `-----BEGIN PRIVATE KEY-----`). Leave empty for a peer's key, where only the public key is known. Defaults to `\"\"`.",
+				MarkdownDescription: "Paste an optional private key of the selected type in X.509 format which belongs to the public key specified above. When adding the public key of a peer, this field should not be specified as the private key remains solely with the peer. Must be pasted including the `-----BEGIN ...-----` and `-----END [...]-----` headers. Use PKCS#8 (`-----BEGIN PRIVATE KEY-----`). Defaults to `\"\"`.",
 				Optional:            true,
 				Computed:            true,
 				Sensitive:           true,
@@ -75,10 +75,10 @@ func keyPairDataSourceSchema() dschema.Schema {
 
 		Attributes: map[string]dschema.Attribute{
 			"id":              dschema.StringAttribute{MarkdownDescription: "UUID of the key pair.", Required: true},
-			"name":            dschema.StringAttribute{MarkdownDescription: "Key pair name.", Computed: true},
-			"key_type":        dschema.StringAttribute{MarkdownDescription: "Key type.", Computed: true},
-			"public_key":      dschema.StringAttribute{MarkdownDescription: "PEM public key.", Computed: true},
-			"private_key":     dschema.StringAttribute{MarkdownDescription: "PEM private key.", Computed: true, Sensitive: true},
+			"name":            dschema.StringAttribute{MarkdownDescription: "Enter a name for this key pair. The name should help you to identify this key pair.", Computed: true},
+			"key_type":        dschema.StringAttribute{MarkdownDescription: "Select the type of the key pair. One of `rsa` or `ecdsa`.", Computed: true},
+			"public_key":      dschema.StringAttribute{MarkdownDescription: "Paste a public key of the selected type in X.509 format. Must be pasted including the `-----BEGIN ...-----` and `-----END [...]-----` headers.", Computed: true},
+			"private_key":     dschema.StringAttribute{MarkdownDescription: "Paste an optional private key of the selected type in X.509 format which belongs to the public key specified above. When adding the public key of a peer, this field should not be specified as the private key remains solely with the peer. Must be pasted including the `-----BEGIN ...-----` and `-----END [...]-----` headers. Use PKCS#8 (`-----BEGIN PRIVATE KEY-----`).", Computed: true, Sensitive: true},
 			"key_size":        dschema.StringAttribute{MarkdownDescription: "Key size in bits.", Computed: true},
 			"key_fingerprint": dschema.StringAttribute{MarkdownDescription: "Key fingerprint.", Computed: true},
 		},

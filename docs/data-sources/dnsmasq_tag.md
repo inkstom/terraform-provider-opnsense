@@ -21,4 +21,4 @@ Dnsmasq DHCP tags (Services > Dnsmasq DNS & DHCP > DHCP tags).
 
 ### Read-Only
 
-- `tag` (String) Tag name.
+- `tag` (String) An alphanumeric label which marks a network so that DHCP options may be specified on a per-network basis.

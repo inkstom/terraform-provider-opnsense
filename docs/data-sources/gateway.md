@@ -18,29 +18,29 @@ Gateways define the possible routes that can be used to access other networks, s
 
 ### Read-Only
 
-- `data_length` (Number) ICMP payload size (`-1` when unset).
-- `description` (String) Description.
-- `enabled` (Boolean) Whether this gateway is enabled.
-- `far_gateway` (Boolean) Whether the gateway may be outside the interface subnet.
-- `force_down` (Boolean) Whether the gateway is forced down.
-- `gateway` (String) Gateway IP address; empty for dynamic gateways.
-- `interface` (String) Interface identifier.
-- `interval` (Number) Probe interval (`-1` when unset).
-- `ip_protocol` (String) Address family (`inet` or `inet6`).
-- `latency_high` (Number) High latency threshold (`-1` when unset).
-- `latency_low` (Number) Low latency threshold (`-1` when unset).
-- `loss_high` (Number) High packet loss threshold (`-1` when unset).
-- `loss_interval` (Number) Loss interval (`-1` when unset).
-- `loss_low` (Number) Low packet loss threshold (`-1` when unset).
-- `monitor` (String) Alternative monitor address.
-- `monitor_enabled` (Boolean) Whether gateway monitoring is enabled.
-- `monitor_kill_states` (Boolean) Whether states are killed when the gateway goes down.
-- `monitor_kill_states_priority` (Boolean) Whether higher-priority states are killed on recovery.
-- `monitor_no_route` (Boolean) Whether the monitor host route is suppressed.
+- `data_length` (Number) Specify the number of data bytes to be sent. `-1` when unset.
+- `description` (String) You may enter a description here for your reference (not parsed).
+- `enabled` (Boolean) Whether this gateway is enabled. Inverse of the OPNsense *Disabled* checkbox.
+- `far_gateway` (Boolean) This will allow the gateway to exist outside of the interface subnet.
+- `force_down` (Boolean) This will force this gateway to be considered "down".
+- `gateway` (String) IP address of the gateway (*IP Address* in OPNsense). Empty for dynamic gateways.
+- `interface` (String) Choose which interface this gateway applies to. The interface identifier, e.g. `wan`.
+- `interval` (Number) How often that an ICMP probe will be sent in seconds. `-1` when unset.
+- `ip_protocol` (String) Choose the Internet Protocol this gateway uses. One of `inet` (IPv4) or `inet6` (IPv6).
+- `latency_high` (Number) High threshold for latency in milliseconds. `-1` when unset.
+- `latency_low` (Number) Low threshold for latency in milliseconds. `-1` when unset.
+- `loss_high` (Number) High threshold for packet loss in %. `-1` when unset.
+- `loss_interval` (Number) Time interval before packets are treated as lost. `-1` when unset.
+- `loss_low` (Number) Low threshold for packet loss in %. `-1` when unset.
+- `monitor` (String) Enter an alternative address here to be used to monitor the link.
+- `monitor_enabled` (Boolean) Monitor this gateway. When disabled, OPNsense considers this gateway as always being "up". Inverse of the OPNsense *Disable Gateway Monitoring* checkbox.
+- `monitor_kill_states` (Boolean) If this gateway goes down, force clients to reconnect over a different online gateway by killing states associated with this gateway.
+- `monitor_kill_states_priority` (Boolean) If another gateway comes up with a higher priority than this gateway, force clients to reconnect by killing states associated with this gateway.
+- `monitor_no_route` (Boolean) Do not create a dedicated host route for this monitor.
 - `name` (String) Gateway name.
-- `no_sync` (Boolean) Whether HA sync is disabled.
-- `priority` (Number) Priority.
-- `time_period` (Number) Averaging period (`-1` when unset).
-- `upstream` (Boolean) Whether this is an upstream (default candidate) gateway.
-- `weight` (Number) Weight.
+- `no_sync` (Boolean) Ignore this gateway from being updated using HA sync.
+- `priority` (Number) Influences sort order when selecting a (default) gateway, lower means more important.
+- `time_period` (Number) The time period over which results are averaged. `-1` when unset.
+- `upstream` (Boolean) This will select the above gateway as a default gateway candidate. Shown as *Upstream Gateway* in OPNsense.
+- `weight` (Number) Weight for this gateway when used in a gateway group.
 

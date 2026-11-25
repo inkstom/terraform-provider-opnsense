@@ -26,12 +26,12 @@ resource "opnsense_ipsec_pool" "roadwarrior" {
 
 ### Required
 
-- `addresses` (String) Address range to assign, as a network, e.g. `10.200.0.0/24`.
-- `name` (String) Pool name.
+- `addresses` (String) Subnet or range defining addresses allocated in pool. Accepts a single CIDR subnet defining the pool to allocate addresses from. For example `10.200.0.0/24`.
+- `name` (String) Pool name. Must be unique and may only contain letters, digits, `,`, `_`, `-` and `:`.
 
 ### Optional
 
-- `dns` (Set of String) DNS servers pushed to clients. Defaults to `[]`.
+- `dns` (Set of String) DNS servers to push as configuration payload (RFC4306 3.15 - Value 3 and 10). Accepts multiple IPv4/IPv6 addresses. Defaults to `[]`.
 - `enabled` (Boolean) Enable the pool. Defaults to `true`.
 
 ### Read-Only
