@@ -21,9 +21,9 @@ Local groups (System > Access > Groups).
 
 ### Read-Only
 
-- `description` (String) Group description.
+- `description` (String) You may enter a description here for your reference (not parsed).
 - `gid` (String) Numeric group ID.
-- `members` (Set of String) User IDs of the members.
+- `members` (Set of String) List of users that are a member of this group, given as user IDs (`uid`).
 - `name` (String) Group name.
 - `privileges` (Set of String) Privilege IDs granted to the group.
-- `source_networks` (Set of String) Networks members may log in from.
+- `source_networks` (Set of String) List of networks which constrain the membership of this group to their location.

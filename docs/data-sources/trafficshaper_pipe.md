@@ -21,21 +21,21 @@ Traffic shaper pipes (Firewall > Shaper > Pipes).
 
 ### Read-Only
 
-- `bandwidth` (Number) Bandwidth.
-- `bandwidth_metric` (String) Bandwidth unit.
-- `buckets` (Number) Hash table size.
-- `codel_ecn_enable` (Boolean) Whether ECN is enabled.
-- `codel_enable` (Boolean) Whether CoDel is enabled.
-- `codel_interval` (Number) CoDel interval.
-- `codel_target` (Number) CoDel target delay.
-- `delay` (Number) Added delay.
-- `description` (String) Description.
-- `enabled` (Boolean) Whether the pipe is enabled.
-- `fqcodel_flows` (Number) FQ-CoDel flows.
-- `fqcodel_limit` (Number) FQ-CoDel limit.
-- `fqcodel_quantum` (Number) FQ-CoDel quantum.
-- `mask` (String) Dynamic pipe mask.
+- `bandwidth` (Number) Total bandwidth for this pipe, in `bandwidth_metric` units.
+- `bandwidth_metric` (String) Unit of `bandwidth`: `bit`, `Kbit`, `Mbit` or `Gbit`.
+- `buckets` (Number) Specifies the size of the hash table used for storing the various dynamic pipes configured with the mask setting.
+- `codel_ecn_enable` (Boolean) Explicit Congestion Notification.
+- `codel_enable` (Boolean) Enable CoDel active queue management.
+- `codel_interval` (Number) Interval before dropping packets (in ms).
+- `codel_target` (Number) Minimum acceptable persistent queue delay (in ms).
+- `delay` (Number) Add delay in ms to this pipe.
+- `description` (String) Description to identify this pipe.
+- `enabled` (Boolean) Enable this pipe and its related queues and rules.
+- `fqcodel_flows` (Number) The number of flow queues that are created and managed.
+- `fqcodel_limit` (Number) The hard size limit of all queues managed by this instance.
+- `fqcodel_quantum` (Number) The number of bytes a queue can serve before being moved to the tail of old queues list (bytes).
+- `mask` (String) Dynamic pipe creation by source or destination address. One of `none` (empty), `src-ip` (source), `dst-ip` (destination), `src-ip6` (source, IPv6) or `dst-ip6` (destination, IPv6).
 - `number` (String) Pipe number.
-- `pie_enable` (Boolean) Whether PIE is enabled.
-- `queue_size` (Number) Queue size in slots.
-- `scheduler` (String) Scheduler.
+- `pie_enable` (Boolean) Enable PIE active queue management.
+- `queue_size` (Number) Number of dynamic queues (dummynet queue size in slots). Null when OPNsense uses the default.
+- `scheduler` (String) Specify the scheduling algorithm to use. Empty means Weighted Fair Queueing.

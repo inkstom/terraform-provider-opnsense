@@ -32,39 +32,39 @@ func relayResourceSchema() schema.Schema {
 
 		Attributes: map[string]schema.Attribute{
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Enable the relay. Defaults to `true`.",
+				MarkdownDescription: "Enable or disable this relay. Defaults to `true`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
 			"interface": schema.StringAttribute{
-				MarkdownDescription: "Interface to listen on, e.g. `lan` or `opt1`.",
+				MarkdownDescription: "The interface to relay DHCP requests from, e.g. `lan` or `opt1`.",
 				Required:            true,
 			},
 			"destination": schema.StringAttribute{
-				MarkdownDescription: "UUID of the `opnsense_dhcrelay_destination` to forward to.",
+				MarkdownDescription: "The destination server group to relay DHCP requests to. UUID of an `opnsense_dhcp_relay_destination`.",
 				Required:            true,
 			},
 			"agent_info": schema.BoolAttribute{
-				MarkdownDescription: "Add relay agent information (option 82) to forwarded requests. Defaults to `false`.",
+				MarkdownDescription: "Add the relay agent information option (option 82). Defaults to `false`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
 			"circuit_id": schema.StringAttribute{
-				MarkdownDescription: "Option 82 circuit ID; empty uses the interface name. Needs `agent_info` (OPNsense 26.7+). Defaults to `\"\"`.",
+				MarkdownDescription: "Choose which value should be sent as the relay agent circuit ID. Only implemented in the DHCPv4 relay. Empty uses the interface name. Needs `agent_info` (OPNsense 26.7+). Defaults to `\"\"`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString(""),
 			},
 			"remote_id": schema.StringAttribute{
-				MarkdownDescription: "Option 82 remote ID. Needs `agent_info` (OPNsense 26.7+). Defaults to `\"\"`.",
+				MarkdownDescription: "Choose which value should be sent as the relay agent remote ID. Needs `agent_info` (OPNsense 26.7+). Defaults to `\"\"`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString(""),
 			},
 			"carp_depend_on": schema.StringAttribute{
-				MarkdownDescription: "Only run while this CARP VIP is master (VIP UUID or address as listed by OPNsense); empty always runs. Defaults to `\"\"`.",
+				MarkdownDescription: "The CARP VHID to depend on. When this virtual address is not in master state, then the instance will be shutdown. CARP VIP UUID or address as listed by OPNsense; empty always runs. Defaults to `\"\"`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString(""),
@@ -87,13 +87,13 @@ func relayDataSourceSchema() dschema.Schema {
 
 		Attributes: map[string]dschema.Attribute{
 			"id":             dschema.StringAttribute{MarkdownDescription: "UUID of the relay.", Required: true},
-			"enabled":        dschema.BoolAttribute{MarkdownDescription: "Whether the relay is enabled.", Computed: true},
-			"interface":      str("Interface listened on."),
-			"destination":    str("Destination UUID."),
-			"agent_info":     dschema.BoolAttribute{MarkdownDescription: "Whether option 82 is added.", Computed: true},
-			"circuit_id":     str("Option 82 circuit ID."),
-			"remote_id":      str("Option 82 remote ID."),
-			"carp_depend_on": str("CARP VIP the relay depends on."),
+			"enabled":        dschema.BoolAttribute{MarkdownDescription: "Enable or disable this relay.", Computed: true},
+			"interface":      str("The interface to relay DHCP requests from."),
+			"destination":    str("The destination server group to relay DHCP requests to (destination UUID)."),
+			"agent_info":     dschema.BoolAttribute{MarkdownDescription: "Add the relay agent information option.", Computed: true},
+			"circuit_id":     str("Choose which value should be sent as the relay agent circuit ID. Only implemented in the DHCPv4 relay."),
+			"remote_id":      str("Choose which value should be sent as the relay agent remote ID."),
+			"carp_depend_on": str("The CARP VHID to depend on. When this virtual address is not in master state, then the instance will be shutdown."),
 		},
 	}
 }

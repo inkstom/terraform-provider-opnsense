@@ -21,14 +21,14 @@ Remote syslog destinations (System > Settings > Logging > Remote).
 
 ### Read-Only
 
-- `certificate` (String) Client certificate for TLS.
-- `description` (String) Description.
-- `enabled` (Boolean) Whether the destination is enabled.
-- `facilities` (Set of String) Facilities sent.
+- `certificate` (String) Transport certificate to use. Certificate reference, used with `tls4`/`tls6`.
+- `description` (String) You may enter a description here for your reference (not parsed).
+- `enabled` (Boolean) Set this option to enable this destination.
+- `facilities` (Set of String) Choose which facilities to include, omit to select all.
 - `hostname` (String) Syslog server.
-- `levels` (Set of String) Levels sent.
+- `levels` (Set of String) Choose which levels to include, omit to select all.
 - `port` (String) Syslog server port.
-- `programs` (Set of String) Applications sent.
-- `rfc5424` (Boolean) Whether RFC 5424 format is used.
-- `suppress` (Boolean) Whether repeated messages are suppressed.
-- `transport` (String) Protocol and address family.
+- `programs` (Set of String) Choose which applications should be forwarded to the specified target, omit to select all.
+- `rfc5424` (Boolean) Use RFC5424 formatted messages for this destination.
+- `suppress` (Boolean) Suppress consecutive identical messages for 30 seconds and send a summary with the number of repetitions.
+- `transport` (String) Transport protocol, e.g. `udp4` or `tls6`.

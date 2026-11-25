@@ -80,8 +80,8 @@ func (r *keyPairResource) Schema(ctx context.Context, req resource.SchemaRequest
 		Version: 1,
 		Attributes: map[string]schema.Attribute{
 			"keepers":     keepersAttribute(),
-			"public_key":  computedKey("Base64 public key.", false),
-			"private_key": computedKey("Base64 private key.", true),
+			"public_key":  computedKey("Public key of this instance, generated like the gear button next to *Public key* in the instance dialog. Base64 encoded; use as `public_key` of `opnsense_wireguard_server`.", false),
+			"private_key": computedKey("Private key of this instance, generated together with `public_key`. Please keep this key safe. Base64 encoded; use as `private_key` of `opnsense_wireguard_server`.", true),
 			"id":          computedKey("Same as `public_key`.", false),
 		},
 	}
@@ -152,7 +152,7 @@ func (r *pskResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 		Version: 1,
 		Attributes: map[string]schema.Attribute{
 			"keepers": keepersAttribute(),
-			"psk":     computedKey("Base64 pre-shared key.", true),
+			"psk":     computedKey("Shared secret (PSK) for this peer, generated like `wg genpsk`. Base64 encoded; use as `psk` of `opnsense_wireguard_client`.", true),
 			"id":      computedKey("Random identifier for this key.", false),
 		},
 	}

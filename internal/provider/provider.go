@@ -13,6 +13,7 @@ import (
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/dhcrelay"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/diagnostics"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/dnsmasq"
+	"github.com/browningluke/terraform-provider-opnsense/internal/service/dyndns"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/firewall"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/interfaces"
 	"github.com/browningluke/terraform-provider-opnsense/internal/service/ipsec"
@@ -323,6 +324,7 @@ func (p *opnsenseProvider) Resources(ctx context.Context) []func() resource.Reso
 		interfaces.Resources(ctx),
 		ipsec.Resources(ctx),
 		cron.Resources(ctx),
+		dyndns.Resources(ctx),
 		captiveportal.Resources(ctx),
 		trafficshaper.Resources(ctx),
 		monit.Resources(ctx),
@@ -355,6 +357,7 @@ func (p *opnsenseProvider) DataSources(ctx context.Context) []func() datasource.
 		interfaces.DataSources(ctx),
 		ipsec.DataSources(ctx),
 		cron.DataSources(ctx),
+		dyndns.DataSources(ctx),
 		captiveportal.DataSources(ctx),
 		trafficshaper.DataSources(ctx),
 		monit.DataSources(ctx),

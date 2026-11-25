@@ -35,24 +35,24 @@ resource "opnsense_trafficshaper_rule" "guest_down" {
 ### Required
 
 - `interface` (String) Interface the traffic passes, e.g. `wan`.
-- `target` (String) UUID of the `opnsense_trafficshaper_pipe` or `opnsense_trafficshaper_queue` to send matching traffic to.
+- `target` (String) Target pipe or queue. Set to the UUID (`id`) of an `opnsense_trafficshaper_pipe` or `opnsense_trafficshaper_queue`; the target must have a non-empty description.
 
 ### Optional
 
-- `description` (String) Description. Defaults to `""`.
-- `destination` (Set of String) Destination networks or addresses, or `any`. Defaults to `["any"]`.
-- `destination_not` (Boolean) Invert the destination match. Defaults to `false`.
-- `destination_port` (String) Destination port, port range or service name, or `any`. Defaults to `"any"`.
-- `direction` (String) Direction: `""` (both), `in` or `out`. Defaults to `""`.
-- `dscp` (Set of String) DSCP classes to match, e.g. `ef`, `af11`, `cs1`; empty matches any. Defaults to `[]`.
-- `enabled` (Boolean) Enable the rule. Defaults to `true`.
-- `interface2` (String) Second interface, to match only traffic between `interface` and this one. Defaults to `""`.
-- `max_packet_length` (Number) Only match packets up to this many bytes (e.g. small ACKs); unset matches any length.
-- `protocol` (String) Protocol: `ip`, `ip4`, `ip6`, `udp`, `tcp`, `tcp_ack`, `tcp_ack_not`, `icmp`, `ipv6-icmp`, `igmp`, `esp`, `ah` or `gre`. Defaults to `"ip"`.
-- `sequence` (Number) Order of evaluation; the first matching rule wins. Defaults to `1`.
-- `source` (Set of String) Source networks or addresses, or `any`. Defaults to `["any"]`.
-- `source_not` (Boolean) Invert the source match. Defaults to `false`.
-- `source_port` (String) Source port, port range or service name, or `any`. Defaults to `"any"`.
+- `description` (String) Description to identify this rule. Defaults to `""`.
+- `destination` (Set of String) Destination IP or network, examples `10.0.0.0/24`, `10.0.0.1`. Use `any` to match everything. Defaults to `["any"]`.
+- `destination_not` (Boolean) Invert destination (not). Defaults to `false`.
+- `destination_port` (String) Destination port number or well known name (`imap`, `imaps`, `http`, `https`, ...), for ranges use a dash. Use `any` to match every port. Defaults to `"any"`.
+- `direction` (String) Matches incoming or outgoing packets or both (default). One of `""` (both), `in` or `out`. Defaults to `""`.
+- `dscp` (Set of String) Match against one or multiple DSCP values. Accepted values are `be`, `ef`, `af11`, `af12`, `af13`, `af21`, `af22`, `af23`, `af31`, `af32`, `af33`, `af41`, `af42`, `af43`, `cs1`, `cs2`, `cs3`, `cs4`, `cs5`, `cs6` or `cs7`; empty matches any. Defaults to `[]`.
+- `enabled` (Boolean) Enable this rule. Defaults to `true`.
+- `interface2` (String) Secondary interface, matches packets traveling to/from interface (1) to/from interface (2). Can be combined with direction. Interface (1) is `interface`; empty disables the match. Defaults to `""`.
+- `max_packet_length` (Number) Specifies the maximum size of packets to match in bytes. Accepted range is 2-65535; unset matches any length.
+- `protocol` (String) Select the applicable protocol. One of `ip`, `ip4`, `ip6`, `udp`, `tcp`, `tcp_ack` (ACK packets only), `tcp_ack_not` (non-ACK packets), `icmp`, `ipv6-icmp`, `igmp`, `esp`, `ah` or `gre`. Defaults to `"ip"`.
+- `sequence` (Number) Order in which the rule will be evaluated (lowest first). The first matching rule wins. Accepted range is 1-1000000. Defaults to `1`.
+- `source` (Set of String) Source IP or network, examples `10.0.0.0/24`, `10.0.0.1`. Use `any` to match everything. Defaults to `["any"]`.
+- `source_not` (Boolean) Invert source (not). Defaults to `false`.
+- `source_port` (String) Source port number or well known name (`imap`, `imaps`, `http`, `https`, ...), for ranges use a dash. Use `any` to match every port. Defaults to `"any"`.
 
 ### Read-Only
 

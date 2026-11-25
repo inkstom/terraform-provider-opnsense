@@ -31,9 +31,9 @@ func bootResourceSchema() schema.Schema {
 	return schema.Schema{
 		MarkdownDescription: "Dnsmasq network boot entries (Services > Dnsmasq DNS & DHCP > DHCP boot): the PXE/TFTP boot file and server handed to DHCP clients.",
 		Attributes: map[string]schema.Attribute{
-			"interface": str("Only answer on this interface; empty answers on all."),
+			"interface": str("This adds a single interface as tag so this DHCP boot option can match the interface of a DHCP range. Empty matches any interface."),
 			"tags": schema.SetAttribute{
-				MarkdownDescription: "UUIDs of `opnsense_dnsmasq_tag`s a client must have for this entry to apply; empty applies to all. Defaults to `[]`.",
+				MarkdownDescription: "If the optional tags are given then this option is only sent when all the tags are matched. Can be optionally combined with an interface tag. UUIDs of `opnsense_dnsmasq_tag` resources; empty applies to all clients. Defaults to `[]`.",
 				ElementType:         types.StringType,
 				Optional:            true,
 				Computed:            true,
@@ -42,7 +42,7 @@ func bootResourceSchema() schema.Schema {
 			"filename":       schema.StringAttribute{MarkdownDescription: "Boot file, e.g. `pxelinux.0` or `ipxe.efi`.", Required: true},
 			"server_name":    str("Boot server host name."),
 			"server_address": str("Boot (TFTP) server address; empty uses this firewall."),
-			"description":    str("Description."),
+			"description":    str("You may enter a description here for your reference (not parsed)."),
 			"id": schema.StringAttribute{
 				Computed:            true,
 				MarkdownDescription: "UUID of the entry.",
@@ -60,12 +60,12 @@ func bootDataSourceSchema() dschema.Schema {
 		MarkdownDescription: "Dnsmasq network boot entries (Services > Dnsmasq DNS & DHCP > DHCP boot).",
 		Attributes: map[string]dschema.Attribute{
 			"id":             dschema.StringAttribute{MarkdownDescription: "UUID of the entry.", Required: true},
-			"interface":      s("Interface."),
-			"tags":           dschema.SetAttribute{MarkdownDescription: "Tag UUIDs.", ElementType: types.StringType, Computed: true},
+			"interface":      s("This adds a single interface as tag so this DHCP boot option can match the interface of a DHCP range. Empty matches any interface."),
+			"tags":           dschema.SetAttribute{MarkdownDescription: "If the optional tags are given then this option is only sent when all the tags are matched. Can be optionally combined with an interface tag. UUIDs of `opnsense_dnsmasq_tag` resources.", ElementType: types.StringType, Computed: true},
 			"filename":       s("Boot file."),
 			"server_name":    s("Boot server host name."),
 			"server_address": s("Boot server address."),
-			"description":    s("Description."),
+			"description":    s("You may enter a description here for your reference (not parsed)."),
 		},
 	}
 }

@@ -21,7 +21,7 @@ IPsec virtual address pools (VPN > IPsec > Pools).
 
 ### Read-Only
 
-- `addresses` (String) Address range.
-- `dns` (Set of String) DNS servers.
+- `addresses` (String) Subnet or range defining addresses allocated in pool. Accepts a single CIDR subnet defining the pool to allocate addresses from.
+- `dns` (Set of String) DNS servers to push as configuration payload (RFC4306 3.15 - Value 3 and 10). Accepts multiple IPv4/IPv6 addresses.
 - `enabled` (Boolean) Whether the pool is enabled.
-- `name` (String) Pool name.
+- `name` (String) Pool name. Must be unique and may only contain letters, digits, `,`, `_`, `-` and `:`.

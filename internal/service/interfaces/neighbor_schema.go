@@ -15,13 +15,15 @@ type neighborResourceModel struct {
 	Id types.String `tfsdk:"id"`
 }
 
+const neighborIPHelp = "IP address to assign to the provided MAC address, which will either end up in the ARP (IPv4) or NDP (IPv6) table."
+
 func neighborResourceSchema() schema.Schema {
 	return schema.Schema{
 		MarkdownDescription: "Static ARP/NDP entries (Interfaces > Neighbors).",
 		Attributes: map[string]schema.Attribute{
-			"mac_address": reqStr("Hardware address, e.g. `00:11:22:33:44:55`."),
-			"ip_address":  reqStr("IPv4 or IPv6 address."),
-			"description": optStr("Description.", ""),
+			"mac_address": reqStr("Hardware MAC address of the client (format `xx:xx:xx:xx:xx:xx`)."),
+			"ip_address":  reqStr(neighborIPHelp),
+			"description": optStr(descrHelp, ""),
 			"id":          computedStr("UUID of the entry."),
 		},
 	}
@@ -32,9 +34,9 @@ func neighborDataSourceSchema() dschema.Schema {
 		MarkdownDescription: "Static ARP/NDP entries (Interfaces > Neighbors).",
 		Attributes: map[string]dschema.Attribute{
 			"id":          dsID("UUID of the entry."),
-			"mac_address": dsStr("Hardware address."),
-			"ip_address":  dsStr("IP address."),
-			"description": dsStr("Description."),
+			"mac_address": dsStr("Hardware MAC address of the client."),
+			"ip_address":  dsStr(neighborIPHelp),
+			"description": dsStr(descrHelp),
 		},
 	}
 }

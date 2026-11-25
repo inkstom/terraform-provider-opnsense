@@ -49,17 +49,17 @@ resource "opnsense_auth_user" "backup" {
 ### Optional
 
 - `authorized_keys` (String) SSH public keys, one per line. Used for console/SSH login when the user has a shell. Defaults to `""`.
-- `comment` (String) Free-form comment. Defaults to `""`.
-- `disabled` (Boolean) Prevent the user from logging in. Defaults to `false`.
-- `email` (String) E-mail address. Defaults to `""`.
+- `comment` (String) User comment, for your own information only. Defaults to `""`.
+- `email` (String) User's e-mail address, for your own information only. Defaults to `""`.
+- `enabled` (Boolean) Allow authentication, only applicable for local users. This is the inverse of the OPNsense `Disabled` checkbox. Defaults to `true`.
 - `expires` (String) Expiration date as `MM/DD/YYYY`; empty never expires. Defaults to `""`.
-- `full_name` (String) Full name. Defaults to `""`.
+- `full_name` (String) User's full name, for your own information only. Defaults to `""`.
 - `group_memberships` (Set of String) Group IDs (`gid`) the user belongs to, e.g. `["1999"]` for `admins`. Membership is the same data as `members` on `opnsense_auth_group`: manage it on one side only. Leave unset to leave it unmanaged here.
-- `landing_page` (String) Page shown after login, e.g. `/ui/core/dashboard`. Defaults to `""`.
+- `landing_page` (String) Preferred landing page after login or authentication failure, as a relative path such as `/ui/core/dashboard`. Defaults to `""`.
 - `language` (String) UI language code, e.g. `en_US`; empty uses the system default. Defaults to `""`.
 - `password` (String, Sensitive) Login password. Omit to have OPNsense set a random password.
 - `privileges` (Set of String) Privilege IDs granted to the user, e.g. `page-diagnostics-arptable`. The same data as `opnsense_auth_privilege`: manage each privilege in one place only. Leave unset to leave it unmanaged here.
-- `shell` (String) Login shell: `""` (none), `/bin/csh`, `/bin/sh` or `/bin/tcsh`. Defaults to `""`.
+- `shell` (String) Login shell, any entry of `/etc/shells` such as `/bin/csh`, `/bin/sh` or `/bin/tcsh`. `""` selects the default (none for all but root). Defaults to `""`.
 
 ### Read-Only
 

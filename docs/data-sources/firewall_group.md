@@ -21,8 +21,8 @@ Interface groups (Firewall > Groups).
 
 ### Read-Only
 
-- `description` (String) Description.
-- `members` (Set of String) Member interfaces.
-- `name` (String) Group name.
-- `no_group` (Boolean) Whether the group is hidden from the interface menu.
-- `sequence` (Number) Menu ordering.
+- `description` (String) You may enter a description here for your reference (not parsed).
+- `members` (Set of String) Rules for WAN type interfaces in groups do not contain the reply-to mechanism upon which Multi-WAN typically relies. Member interface identifiers.
+- `name` (String) Only texts containing letters, digits and underscores with a maximum length of 15 characters are allowed and the name may not end with a digit.
+- `no_group` (Boolean) Prevent grouping these members in the interfaces menu section.
+- `sequence` (Number) Priority sequence used in sorting the groups.

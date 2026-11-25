@@ -16,7 +16,7 @@ import (
 type userResourceModel struct {
 	Name             types.String `tfsdk:"name"`
 	Password         types.String `tfsdk:"password"`
-	Disabled         types.Bool   `tfsdk:"disabled"`
+	Enabled          types.Bool   `tfsdk:"enabled"`
 	FullName         types.String `tfsdk:"full_name"`
 	Email            types.String `tfsdk:"email"`
 	Comment          types.String `tfsdk:"comment"`
@@ -57,19 +57,19 @@ func userResourceSchema() schema.Schema {
 				Optional:            true,
 				Sensitive:           true,
 			},
-			"disabled": schema.BoolAttribute{
-				MarkdownDescription: "Prevent the user from logging in. Defaults to `false`.",
+			"enabled": schema.BoolAttribute{
+				MarkdownDescription: "Allow authentication, only applicable for local users. This is the inverse of the OPNsense `Disabled` checkbox. Defaults to `true`.",
 				Optional:            true,
 				Computed:            true,
-				Default:             booldefault.StaticBool(false),
+				Default:             booldefault.StaticBool(true),
 			},
-			"full_name":       optString("Full name."),
-			"email":           optString("E-mail address."),
-			"comment":         optString("Free-form comment."),
+			"full_name":       optString("User's full name, for your own information only."),
+			"email":           optString("User's e-mail address, for your own information only."),
+			"comment":         optString("User comment, for your own information only."),
 			"expires":         optString("Expiration date as `MM/DD/YYYY`; empty never expires."),
 			"authorized_keys": optString("SSH public keys, one per line. Used for console/SSH login when the user has a shell."),
-			"shell":           optString("Login shell: `\"\"` (none), `/bin/csh`, `/bin/sh` or `/bin/tcsh`."),
-			"landing_page":    optString("Page shown after login, e.g. `/ui/core/dashboard`."),
+			"shell":           optString("Login shell, any entry of `/etc/shells` such as `/bin/csh`, `/bin/sh` or `/bin/tcsh`. `\"\"` selects the default (none for all but root)."),
+			"landing_page":    optString("Preferred landing page after login or authentication failure, as a relative path such as `/ui/core/dashboard`."),
 			"language":        optString("UI language code, e.g. `en_US`; empty uses the system default."),
 			"privileges": schema.SetAttribute{
 				MarkdownDescription: "Privilege IDs granted to the user, e.g. `page-diagnostics-arptable`. " +
@@ -112,14 +112,14 @@ func userDataSourceSchema() dschema.Schema {
 			},
 			"name":              str("Login name."),
 			"password":          dschema.StringAttribute{MarkdownDescription: "Always null; OPNsense does not return passwords.", Computed: true, Sensitive: true},
-			"disabled":          dschema.BoolAttribute{MarkdownDescription: "Whether login is disabled.", Computed: true},
-			"full_name":         str("Full name."),
-			"email":             str("E-mail address."),
-			"comment":           str("Comment."),
-			"expires":           str("Expiration date."),
+			"enabled":           dschema.BoolAttribute{MarkdownDescription: "Allow authentication, only applicable for local users. This is the inverse of the OPNsense `Disabled` checkbox.", Computed: true},
+			"full_name":         str("User's full name, for your own information only."),
+			"email":             str("User's e-mail address, for your own information only."),
+			"comment":           str("User comment, for your own information only."),
+			"expires":           str("Expiration date as `MM/DD/YYYY`; empty never expires."),
 			"authorized_keys":   str("SSH public keys."),
 			"shell":             str("Login shell."),
-			"landing_page":      str("Landing page."),
+			"landing_page":      str("Preferred landing page after login or authentication failure."),
 			"language":          str("UI language."),
 			"privileges":        dschema.SetAttribute{MarkdownDescription: "Privilege IDs granted directly.", ElementType: types.StringType, Computed: true},
 			"group_memberships": dschema.SetAttribute{MarkdownDescription: "Group IDs the user belongs to.", ElementType: types.StringType, Computed: true},
@@ -131,7 +131,7 @@ func userDataSourceSchema() dschema.Schema {
 func convertUserSchemaToStruct(d *userResourceModel) (*auth.User, error) {
 	u := &auth.User{
 		Name:              d.Name.ValueString(),
-		Disabled:          tools.BoolToString(d.Disabled.ValueBool()),
+		Disabled:          tools.BoolToString(!d.Enabled.ValueBool()),
 		Fullname:          d.FullName.ValueString(),
 		Email:             d.Email.ValueString(),
 		Comment:           d.Comment.ValueString(),
@@ -156,7 +156,7 @@ func convertUserStructToSchema(d *auth.User) (*userResourceModel, error) {
 	return &userResourceModel{
 		Name:             types.StringValue(d.Name),
 		Password:         types.StringNull(),
-		Disabled:         types.BoolValue(tools.StringToBool(d.Disabled)),
+		Enabled:          types.BoolValue(!tools.StringToBool(d.Disabled)),
 		FullName:         types.StringValue(d.Fullname),
 		Email:            types.StringValue(d.Email),
 		Comment:          types.StringValue(d.Comment),

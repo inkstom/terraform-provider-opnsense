@@ -27,14 +27,14 @@ resource "opnsense_ipsec_manual_spd" "extra" {
 
 ### Required
 
-- `request_id` (Number) Request ID of the child SA to bind to: the `request_id` set on an `opnsense_ipsec_child`.
-- `source` (String) Source network, e.g. `10.0.0.0/24`.
+- `request_id` (Number) Reqid to register this manual item on. Please note that an established tunnel needs to reconnect in order to add the entry as we use an updown event. Use the `request_id` set on an `opnsense_ipsec_child`. Accepts `1` to `65535`.
+- `source` (String) Source network, usually the networks you would like to accept using network address translation. For example `10.0.0.0/24`.
 
 ### Optional
 
-- `connection_child` (String) UUID of an `opnsense_ipsec_child` to bind to. Defaults to `""`.
+- `connection_child` (String) Connection child to register this manual item on. Please note that an established tunnel needs to reconnect in order to add the entry as we use an updown event. UUID of an `opnsense_ipsec_child`. Defaults to `""`.
 - `description` (String) Description. Defaults to `""`.
-- `destination` (String) Destination network. Defaults to `""`.
+- `destination` (String) Destination network, leave empty to use the networks propagated in the child SA. Defaults to `""`.
 - `enabled` (Boolean) Enable the entry. Defaults to `true`.
 - `protocol` (String) `esp` or `ah`. Defaults to `esp`.
 

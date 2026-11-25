@@ -21,6 +21,6 @@ Static ARP/NDP entries (Interfaces > Neighbors).
 
 ### Read-Only
 
-- `description` (String) Description.
-- `ip_address` (String) IP address.
-- `mac_address` (String) Hardware address.
+- `description` (String) You may enter a description here for your reference (not parsed).
+- `ip_address` (String) IP address to assign to the provided MAC address, which will either end up in the ARP (IPv4) or NDP (IPv6) table.
+- `mac_address` (String) Hardware MAC address of the client.

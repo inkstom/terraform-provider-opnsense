@@ -37,7 +37,7 @@ type hasyncDataSourceModel struct {
 }
 
 func (d *hasyncDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_core_hasync"
+	resp.TypeName = req.ProviderTypeName + "_high_availability"
 }
 
 func (d *hasyncDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

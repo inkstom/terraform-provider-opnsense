@@ -16,25 +16,25 @@ func TestAccKeaCtrlAgentResource(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config:             `resource "opnsense_kea_ctrl_agent" "test" {}`,
-				ResourceName:       "opnsense_kea_ctrl_agent.test",
+				Config:             `resource "opnsense_kea_control_agent" "test" {}`,
+				ResourceName:       "opnsense_kea_control_agent.test",
 				ImportState:        true,
-				ImportStateId:      "kea_ctrl_agent",
+				ImportStateId:      "kea_control_agent",
 				ImportStatePersist: true,
 			},
 			{
 				Config: testAccKeaCtrlAgentConfig(8001),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("opnsense_kea_ctrl_agent.test", "http_port", "8001"),
+					resource.TestCheckResourceAttr("opnsense_kea_control_agent.test", "http_port", "8001"),
 					// Unset attributes keep the firewall's value.
-					resource.TestCheckResourceAttr("opnsense_kea_ctrl_agent.test", "http_host", "127.0.0.1"),
-					resource.TestCheckResourceAttr("opnsense_kea_ctrl_agent.test", "enabled", "false"),
-					resource.TestCheckResourceAttr("data.opnsense_kea_ctrl_agent.test", "http_port", "8001"),
+					resource.TestCheckResourceAttr("opnsense_kea_control_agent.test", "http_host", "127.0.0.1"),
+					resource.TestCheckResourceAttr("opnsense_kea_control_agent.test", "enabled", "false"),
+					resource.TestCheckResourceAttr("data.opnsense_kea_control_agent.test", "http_port", "8001"),
 				),
 			},
 			{
 				Config: testAccKeaCtrlAgentConfig(8000),
-				Check:  resource.TestCheckResourceAttr("opnsense_kea_ctrl_agent.test", "http_port", "8000"),
+				Check:  resource.TestCheckResourceAttr("opnsense_kea_control_agent.test", "http_port", "8000"),
 			},
 		},
 	})
@@ -46,7 +46,7 @@ func TestAccKeaCtrlAgentResource_CreateBlocked(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config:      `resource "opnsense_kea_ctrl_agent" "test" {}`,
+				Config:      `resource "opnsense_kea_control_agent" "test" {}`,
 				ExpectError: regexp.MustCompile("Import Required"),
 			},
 		},
@@ -55,12 +55,12 @@ func TestAccKeaCtrlAgentResource_CreateBlocked(t *testing.T) {
 
 func testAccKeaCtrlAgentConfig(port int) string {
 	return fmt.Sprintf(`
-resource "opnsense_kea_ctrl_agent" "test" {
+resource "opnsense_kea_control_agent" "test" {
   http_port = %d
 }
 
-data "opnsense_kea_ctrl_agent" "test" {
-  depends_on = [opnsense_kea_ctrl_agent.test]
+data "opnsense_kea_control_agent" "test" {
+  depends_on = [opnsense_kea_control_agent.test]
 }
 `, port)
 }

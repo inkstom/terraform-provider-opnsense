@@ -30,11 +30,11 @@ func groupResourceSchema() schema.Schema {
 
 		Attributes: map[string]schema.Attribute{
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Group name.",
+				MarkdownDescription: "Group name, at most 32 characters from letters, digits, `.`, `-` and `_`.",
 				Required:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Group description. Defaults to `\"\"`.",
+				MarkdownDescription: "You may enter a description here for your reference (not parsed). Defaults to `\"\"`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString(""),
@@ -46,17 +46,18 @@ func groupResourceSchema() schema.Schema {
 				Optional:    true,
 			},
 			"members": schema.SetAttribute{
-				MarkdownDescription: "User IDs (`uid`) of the members, e.g. `[\"0\"]` for root. Leave unset to leave membership " +
+				MarkdownDescription: "List of users that are a member of this group, given as user IDs (`uid`), e.g. `[\"0\"]` for root. Leave unset to leave membership " +
 					"unmanaged here, for example when users join through `opnsense_auth_user.group_memberships`.",
 				ElementType: types.StringType,
 				Optional:    true,
 			},
 			"source_networks": schema.SetAttribute{
-				MarkdownDescription: "Networks (CIDR) members may log in from. Empty allows any. Defaults to `[]`.",
-				ElementType:         types.StringType,
-				Optional:            true,
-				Computed:            true,
-				Default:             setdefault.StaticValue(tools.EmptySetValue(types.StringType)),
+				MarkdownDescription: "List of networks which constrain the membership of this group to their location (e.g. prevent a non admin user from logging in via internet). " +
+					"Networks are given in CIDR notation; empty allows any. Defaults to `[]`.",
+				ElementType: types.StringType,
+				Optional:    true,
+				Computed:    true,
+				Default:     setdefault.StaticValue(tools.EmptySetValue(types.StringType)),
 			},
 			"gid": schema.StringAttribute{
 				MarkdownDescription: "Numeric group ID assigned by OPNsense.",
@@ -82,10 +83,10 @@ func groupDataSourceSchema() dschema.Schema {
 				Required:            true,
 			},
 			"name":            dschema.StringAttribute{MarkdownDescription: "Group name.", Computed: true},
-			"description":     dschema.StringAttribute{MarkdownDescription: "Group description.", Computed: true},
+			"description":     dschema.StringAttribute{MarkdownDescription: "You may enter a description here for your reference (not parsed).", Computed: true},
 			"privileges":      dschema.SetAttribute{MarkdownDescription: "Privilege IDs granted to the group.", ElementType: types.StringType, Computed: true},
-			"members":         dschema.SetAttribute{MarkdownDescription: "User IDs of the members.", ElementType: types.StringType, Computed: true},
-			"source_networks": dschema.SetAttribute{MarkdownDescription: "Networks members may log in from.", ElementType: types.StringType, Computed: true},
+			"members":         dschema.SetAttribute{MarkdownDescription: "List of users that are a member of this group, given as user IDs (`uid`).", ElementType: types.StringType, Computed: true},
+			"source_networks": dschema.SetAttribute{MarkdownDescription: "List of networks which constrain the membership of this group to their location.", ElementType: types.StringType, Computed: true},
 			"gid":             dschema.StringAttribute{MarkdownDescription: "Numeric group ID.", Computed: true},
 		},
 	}

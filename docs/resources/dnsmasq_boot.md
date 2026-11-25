@@ -35,11 +35,11 @@ resource "opnsense_dnsmasq_boot" "ipxe" {
 
 ### Optional
 
-- `description` (String) Description. Defaults to `""`.
-- `interface` (String) Only answer on this interface; empty answers on all. Defaults to `""`.
+- `description` (String) You may enter a description here for your reference (not parsed). Defaults to `""`.
+- `interface` (String) This adds a single interface as tag so this DHCP boot option can match the interface of a DHCP range. Empty matches any interface. Defaults to `""`.
 - `server_address` (String) Boot (TFTP) server address; empty uses this firewall. Defaults to `""`.
 - `server_name` (String) Boot server host name. Defaults to `""`.
-- `tags` (Set of String) UUIDs of `opnsense_dnsmasq_tag`s a client must have for this entry to apply; empty applies to all. Defaults to `[]`.
+- `tags` (Set of String) If the optional tags are given then this option is only sent when all the tags are matched. Can be optionally combined with an interface tag. UUIDs of `opnsense_dnsmasq_tag` resources; empty applies to all clients. Defaults to `[]`.
 
 ### Read-Only
 

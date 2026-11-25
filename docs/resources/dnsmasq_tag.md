@@ -23,7 +23,7 @@ resource "opnsense_dnsmasq_tag" "pxe" {
 
 ### Required
 
-- `tag` (String) Tag name.
+- `tag` (String) An alphanumeric label which marks a network so that DHCP options may be specified on a per-network basis. Must be unique.
 
 ### Read-Only
 

@@ -33,30 +33,30 @@ func groupResourceSchema() schema.Schema {
 
 		Attributes: map[string]schema.Attribute{
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Group name, up to 15 characters; it may not start or end with a digit. Firewall rules and aliases refer to the group by this name, so renaming it can break those references.",
+				MarkdownDescription: "Only texts containing letters, digits and underscores with a maximum length of 15 characters are allowed and the name may not end with a digit. OPNsense also rejects names that start with a digit. Firewall rules and aliases refer to the group by this name, so renaming it can break those references.",
 				Required:            true,
 				Validators:          []validator.String{stringvalidator.LengthBetween(1, 15)},
 			},
 			"members": schema.SetAttribute{
-				MarkdownDescription: "Member interfaces, by identifier (e.g. `wan`, `lan`, `opt1`). At least one is required.",
+				MarkdownDescription: "Rules for WAN type interfaces in groups do not contain the reply-to mechanism upon which Multi-WAN typically relies. Member interfaces, by identifier (e.g. `wan`, `lan`, `opt1`). At least one is required.",
 				ElementType:         types.StringType,
 				Required:            true,
 				Validators:          []validator.Set{setvalidator.SizeAtLeast(1)},
 			},
 			"no_group": schema.BoolAttribute{
-				MarkdownDescription: "Hide the group from the interface menu, so it doesn't get its own rules tab. Defaults to `false`.",
+				MarkdownDescription: "Prevent grouping these members in the interfaces menu section. Defaults to `false`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
 			"sequence": schema.Int64Attribute{
-				MarkdownDescription: "Ordering of the group in the menu. Defaults to `0`.",
+				MarkdownDescription: "Priority sequence used in sorting the groups. Between `0` and `9999`. Defaults to `0`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             int64default.StaticInt64(0),
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description. Defaults to `\"\"`.",
+				MarkdownDescription: "You may enter a description here for your reference (not parsed). Defaults to `\"\"`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString(""),
@@ -76,11 +76,11 @@ func groupDataSourceSchema() dschema.Schema {
 
 		Attributes: map[string]dschema.Attribute{
 			"id":          dschema.StringAttribute{MarkdownDescription: "UUID of the group.", Required: true},
-			"name":        dschema.StringAttribute{MarkdownDescription: "Group name.", Computed: true},
-			"members":     dschema.SetAttribute{MarkdownDescription: "Member interfaces.", ElementType: types.StringType, Computed: true},
-			"no_group":    dschema.BoolAttribute{MarkdownDescription: "Whether the group is hidden from the interface menu.", Computed: true},
-			"sequence":    dschema.Int64Attribute{MarkdownDescription: "Menu ordering.", Computed: true},
-			"description": dschema.StringAttribute{MarkdownDescription: "Description.", Computed: true},
+			"name":        dschema.StringAttribute{MarkdownDescription: "Only texts containing letters, digits and underscores with a maximum length of 15 characters are allowed and the name may not end with a digit.", Computed: true},
+			"members":     dschema.SetAttribute{MarkdownDescription: "Rules for WAN type interfaces in groups do not contain the reply-to mechanism upon which Multi-WAN typically relies. Member interface identifiers.", ElementType: types.StringType, Computed: true},
+			"no_group":    dschema.BoolAttribute{MarkdownDescription: "Prevent grouping these members in the interfaces menu section.", Computed: true},
+			"sequence":    dschema.Int64Attribute{MarkdownDescription: "Priority sequence used in sorting the groups.", Computed: true},
+			"description": dschema.StringAttribute{MarkdownDescription: "You may enter a description here for your reference (not parsed).", Computed: true},
 		},
 	}
 }

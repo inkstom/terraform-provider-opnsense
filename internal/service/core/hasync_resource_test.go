@@ -16,34 +16,34 @@ func TestAccCoreHasyncResource(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config:             `resource "opnsense_core_hasync" "test" {}`,
-				ResourceName:       "opnsense_core_hasync.test",
+				Config:             `resource "opnsense_high_availability" "test" {}`,
+				ResourceName:       "opnsense_high_availability.test",
 				ImportState:        true,
-				ImportStateId:      "core_hasync",
+				ImportStateId:      "high_availability",
 				ImportStatePersist: true,
 			},
 			{
 				Config: testAccCoreHasyncConfig("192.0.2.10", "root", "tf-acc-secret", `["aliases", "cron"]`, true),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("opnsense_core_hasync.test", "synchronize_to_ip", "192.0.2.10"),
-					resource.TestCheckResourceAttr("opnsense_core_hasync.test", "username", "root"),
-					resource.TestCheckResourceAttr("opnsense_core_hasync.test", "password", "tf-acc-secret"),
-					resource.TestCheckResourceAttr("opnsense_core_hasync.test", "sync_items.#", "2"),
-					resource.TestCheckTypeSetElemAttr("opnsense_core_hasync.test", "sync_items.*", "cron"),
-					resource.TestCheckResourceAttr("opnsense_core_hasync.test", "disable_preempt", "true"),
+					resource.TestCheckResourceAttr("opnsense_high_availability.test", "synchronize_to_ip", "192.0.2.10"),
+					resource.TestCheckResourceAttr("opnsense_high_availability.test", "username", "root"),
+					resource.TestCheckResourceAttr("opnsense_high_availability.test", "password", "tf-acc-secret"),
+					resource.TestCheckResourceAttr("opnsense_high_availability.test", "sync_items.#", "2"),
+					resource.TestCheckTypeSetElemAttr("opnsense_high_availability.test", "sync_items.*", "cron"),
+					resource.TestCheckResourceAttr("opnsense_high_availability.test", "disable_preempt", "true"),
 					// Unset attributes keep the firewall's value.
-					resource.TestCheckResourceAttr("opnsense_core_hasync.test", "pfsync_version", "1400"),
-					resource.TestCheckResourceAttr("data.opnsense_core_hasync.test", "synchronize_to_ip", "192.0.2.10"),
-					resource.TestCheckNoResourceAttr("data.opnsense_core_hasync.test", "password"),
+					resource.TestCheckResourceAttr("opnsense_high_availability.test", "pfsync_version", "1400"),
+					resource.TestCheckResourceAttr("data.opnsense_high_availability.test", "synchronize_to_ip", "192.0.2.10"),
+					resource.TestCheckNoResourceAttr("data.opnsense_high_availability.test", "password"),
 				),
 			},
 			{
 				Config: testAccCoreHasyncConfig("", "", "", `[]`, false),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("opnsense_core_hasync.test", "synchronize_to_ip", ""),
-					resource.TestCheckResourceAttr("opnsense_core_hasync.test", "password", ""),
-					resource.TestCheckResourceAttr("opnsense_core_hasync.test", "sync_items.#", "0"),
-					resource.TestCheckResourceAttr("opnsense_core_hasync.test", "disable_preempt", "false"),
+					resource.TestCheckResourceAttr("opnsense_high_availability.test", "synchronize_to_ip", ""),
+					resource.TestCheckResourceAttr("opnsense_high_availability.test", "password", ""),
+					resource.TestCheckResourceAttr("opnsense_high_availability.test", "sync_items.#", "0"),
+					resource.TestCheckResourceAttr("opnsense_high_availability.test", "disable_preempt", "false"),
 				),
 			},
 		},
@@ -56,7 +56,7 @@ func TestAccCoreHasyncResource_CreateBlocked(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config:      `resource "opnsense_core_hasync" "test" {}`,
+				Config:      `resource "opnsense_high_availability" "test" {}`,
 				ExpectError: regexp.MustCompile("Import Required"),
 			},
 		},
@@ -65,7 +65,7 @@ func TestAccCoreHasyncResource_CreateBlocked(t *testing.T) {
 
 func testAccCoreHasyncConfig(syncIP, user, password, items string, noPreempt bool) string {
 	return fmt.Sprintf(`
-resource "opnsense_core_hasync" "test" {
+resource "opnsense_high_availability" "test" {
   synchronize_to_ip = %[1]q
   username          = %[2]q
   password          = %[3]q
@@ -73,8 +73,8 @@ resource "opnsense_core_hasync" "test" {
   disable_preempt   = %[5]t
 }
 
-data "opnsense_core_hasync" "test" {
-  depends_on = [opnsense_core_hasync.test]
+data "opnsense_high_availability" "test" {
+  depends_on = [opnsense_high_availability.test]
 }
 `, syncIP, user, password, items, noPreempt)
 }

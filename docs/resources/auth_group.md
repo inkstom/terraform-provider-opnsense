@@ -31,14 +31,14 @@ resource "opnsense_auth_group" "helpdesk" {
 
 ### Required
 
-- `name` (String) Group name.
+- `name` (String) Group name, at most 32 characters from letters, digits, `.`, `-` and `_`.
 
 ### Optional
 
-- `description` (String) Group description. Defaults to `""`.
-- `members` (Set of String) User IDs (`uid`) of the members, e.g. `["0"]` for root. Leave unset to leave membership unmanaged here, for example when users join through `opnsense_auth_user.group_memberships`.
+- `description` (String) You may enter a description here for your reference (not parsed). Defaults to `""`.
+- `members` (Set of String) List of users that are a member of this group, given as user IDs (`uid`), e.g. `["0"]` for root. Leave unset to leave membership unmanaged here, for example when users join through `opnsense_auth_user.group_memberships`.
 - `privileges` (Set of String) Privilege IDs granted to the group, e.g. `page-diagnostics-arptable`. The same data as `opnsense_auth_privilege`: manage each privilege in one place only. Leave unset to leave it unmanaged here.
-- `source_networks` (Set of String) Networks (CIDR) members may log in from. Empty allows any. Defaults to `[]`.
+- `source_networks` (Set of String) List of networks which constrain the membership of this group to their location (e.g. prevent a non admin user from logging in via internet). Networks are given in CIDR notation; empty allows any. Defaults to `[]`.
 
 ### Read-Only
 

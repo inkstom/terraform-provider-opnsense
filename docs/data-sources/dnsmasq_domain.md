@@ -21,10 +21,10 @@ Dnsmasq domain overrides (Services > Dnsmasq DNS & DHCP > Domains).
 
 ### Read-Only
 
-- `description` (String) Description.
-- `domain` (String) Domain.
-- `firewall_alias` (String) Firewall alias.
-- `port` (String) DNS server port.
-- `sequence` (Number) Order.
-- `server` (String) DNS server.
-- `source_ip` (String) Source address.
+- `description` (String) You may enter a description here for your reference (not parsed).
+- `domain` (String) Domain to override (NOTE: this does not have to be a valid TLD!).
+- `firewall_alias` (String) UUID of the external type firewall alias that resolved IP addresses for the domain are added to.
+- `port` (String) Specify a non standard port number here, leave blank for default.
+- `sequence` (Number) Sort with a sequence number, e.g., for strict processing order when using the "Query DNS servers sequentially" option in general settings.
+- `server` (String) IP address of the authoritative DNS server for this domain, leave empty to prevent lookups for this domain.
+- `source_ip` (String) Source IP address for queries to the DNS server for the override domain.

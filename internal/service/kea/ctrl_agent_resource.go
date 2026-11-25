@@ -24,7 +24,7 @@ type ctrlAgentResource struct {
 }
 
 func (r *ctrlAgentResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_kea_ctrl_agent"
+	resp.TypeName = req.ProviderTypeName + "_kea_control_agent"
 }
 
 func (r *ctrlAgentResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -54,9 +54,9 @@ func (r *ctrlAgentResource) read(ctx context.Context) (*ctrlAgentResourceModel, 
 
 func (r *ctrlAgentResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	resp.Diagnostics.AddError("Import Required",
-		"opnsense_kea_ctrl_agent is a singleton that always exists on the firewall. "+
+		"opnsense_kea_control_agent is a singleton that always exists on the firewall. "+
 			"Import it before managing it:\n\n"+
-			"  import {\n    to = opnsense_kea_ctrl_agent.<name>\n    id = \""+ctrlAgentID+"\"\n  }")
+			"  import {\n    to = opnsense_kea_control_agent.<name>\n    id = \""+ctrlAgentID+"\"\n  }")
 }
 
 func (r *ctrlAgentResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
@@ -100,13 +100,13 @@ func (r *ctrlAgentResource) Update(ctx context.Context, req resource.UpdateReque
 // Delete only forgets the settings; it never changes the firewall.
 func (r *ctrlAgentResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	resp.Diagnostics.AddWarning("Removed From State Only",
-		"opnsense_kea_ctrl_agent was removed from Terraform state. The firewall's Kea control agent settings were not changed.")
+		"opnsense_kea_control_agent was removed from Terraform state. The firewall's Kea control agent settings were not changed.")
 }
 
 func (r *ctrlAgentResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	if req.ID != ctrlAgentID {
 		resp.Diagnostics.AddError("Invalid Import ID",
-			fmt.Sprintf("opnsense_kea_ctrl_agent must be imported with ID %q, got %q.", ctrlAgentID, req.ID))
+			fmt.Sprintf("opnsense_kea_control_agent must be imported with ID %q, got %q.", ctrlAgentID, req.ID))
 		return
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(ctrlAgentID))...)

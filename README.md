@@ -91,7 +91,7 @@ resource "opnsense_firewall_filter" "allow_https" {
 CI tests against OPNsense 26.1 and 26.7. Most resources also work on 24.7 and 25.x, but only those two are tested. A few resources need a newer firewall than that:
 
 - `opnsense_interfaces_assignment` needs 26.7.7, and so does anything that assigns an interface for you (bridges, captive portal zones on new VLANs).
-- `opnsense_routing_gateway_group` needs 26.7.
+- `opnsense_gateway_group` needs 26.7.
 - `opnsense_dnsmasq_tag`, `_domain` and `_boot` need 25.7.
 
 Each resource's documentation states its minimum version when it has one, and [FORK.md](./FORK.md) has the full list. Some attributes only exist on newer releases (for example `suppress` on syslog destinations, or `roaming` on captive portal zones). On older firewalls, leave those unset and the provider won't send them.
@@ -233,6 +233,7 @@ Coverage of the OPNsense API, by controller. The core table follows the API refe
 | `Unbound/Settings/Host Alias`    | ✅        | ✅           |
 | `Unbound/Settings/Host Override` | ✅        | ✅           |
 | `Unbound/Settings/ACL`           | ✅        | ✅           |
+| `Unbound/Settings/Dnsbl`         | ✅        | ✅           |
 | `Wireguard/Settings`             | ✅        | ✅           |
 | `Wireguard/Client`               | ✅       | ✅          |
 | `Wireguard/Server`               | ✅       | ✅          |
@@ -250,6 +251,7 @@ The following is a non-exhaustive list of the plugin APIs OPNsense supports. The
 | `Acmeclient/Validation`        | ❌        | ❌           |
 | `Acmeclient/Certificates`      | ❌        | ❌           |
 | `Acmeclient/Action`            | ❌        | ❌           |
+| `Dyndns/Accounts`              | ✅        | ✅           |
 | `Haproxy/Maintenance`          | ❌        | ❌           |
 | `Haproxy/Settings`             | ❌        | ❌           |
 | `Haproxy/Settings/Acl`         | ❌        | ❌           |

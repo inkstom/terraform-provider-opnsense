@@ -35,25 +35,25 @@ resource "opnsense_monit_service" "unbound" {
 
 ### Required
 
-- `name` (String) Service name (letters, digits, `_` and `-`).
-- `type` (String) `process`, `file`, `fifo`, `filesystem`, `directory`, `host`, `system`, `custom` or `network`.
+- `name` (String) The name of the service. 1 to 255 letters, digits, `_`, `-`, `.` or `$`, unique across services.
+- `type` (String) The service check type. One of `process`, `file`, `fifo`, `filesystem`, `directory`, `host` (Remote Host), `system`, `custom` or `network`.
 
 ### Optional
 
-- `address` (String) Address for `host`. Defaults to `""`.
-- `depends` (Set of String) UUIDs of other `opnsense_monit_service`s this one depends on. Defaults to `[]`.
-- `description` (String) Description. Defaults to `""`.
-- `enabled` (Boolean) Enable monitoring of this service. Defaults to `true`.
-- `interface` (String) Interface for `network`. Defaults to `""`.
-- `match` (String) Process name pattern, for `process` without a PID file. Defaults to `""`.
-- `path` (String) Path for `file`, `fifo`, `filesystem`, `directory` and `custom` (the script to run). Defaults to `""`.
-- `pidfile` (String) PID file, for `process`. Defaults to `""`.
-- `poll_time` (String) Polling schedule, e.g. `every 2 cycles` or a cron expression; empty polls every cycle. Defaults to `""`.
-- `start` (String) Start command. Defaults to `""`.
-- `start_timeout` (String) Start timeout in seconds. Defaults to `"30"`.
-- `stop` (String) Stop command. Defaults to `""`.
-- `tests` (Set of String) UUIDs of `opnsense_monit_test`s to run. Defaults to `[]`.
-- `timeout` (String) Program timeout in seconds, for `custom`. Defaults to `"300"`.
+- `address` (String) The target IP address for 'Remote Host' (`host`) and 'Network' (`network`) checks. Defaults to `""`.
+- `depends` (Set of String) Optionally define a (list of) service(s) which are required before monitoring this one, if any of the dependencies are either stopped or unmonitored this service will stop/unmonitor too. UUIDs of other `opnsense_monit_service` resources. Defaults to `[]`.
+- `description` (String) Description of the service. Defaults to `""`.
+- `enabled` (Boolean) Enable or disable service checks. Defaults to `true`.
+- `interface` (String) The Interface for 'Network' (`network`) checks. Defaults to `""`.
+- `match` (String) Find the process by regular expression. Test your pattern with `monit procmatch PATTERN`. Used by `process` services without a PID file. Defaults to `""`.
+- `path` (String) According to the service type path can be a file or a directory. An absolute path, used by `file`, `fifo`, `filesystem`, `directory` and `custom` (the script to run). Defaults to `""`.
+- `pidfile` (String) The PID file of the process. An absolute path, used by `process` services. Defaults to `""`.
+- `poll_time` (String) Set the service poll time. Either as a number of cycles `NUMBER CYCLES` or Cron-style `* 8-19 * * 1-5`. Leave out the `every` keyword, OPNsense adds it; empty polls every cycle. Defaults to `""`.
+- `start` (String) The start script of the service. An absolute path to the executable with its arguments. Defaults to `""`.
+- `start_timeout` (String) The timeout for custom program to start a service. Seconds, from `0` to `86400`. Defaults to `"30"`.
+- `stop` (String) The stop script of the service. An absolute path to the executable with its arguments. Defaults to `""`.
+- `tests` (Set of String) This is a list with service tests. UUIDs of `opnsense_monit_test` resources. Defaults to `[]`.
+- `timeout` (String) The timeout for custom program checks. Seconds, from `1` to `86400`. Defaults to `"300"`.
 
 ### Read-Only
 

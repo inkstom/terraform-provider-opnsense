@@ -50,9 +50,9 @@ func settingsResourceSchema() schema.Schema {
 
 		Attributes: map[string]schema.Attribute{
 			"enabled":       keepBool("Run the local syslog service. Disabling it stops all logging, including remote destinations."),
-			"log_local":     keepBool("Write logs to local disk."),
-			"max_preserve":  keepInt("Days of logs to keep.", int64validator.AtLeast(1)),
-			"max_file_size": keepInt("Maximum size of a log file in bytes before it is rotated; 0 means no limit.", int64validator.AtLeast(0)),
+			"log_local":     keepBool("Enable writing log files to the local disk."),
+			"max_preserve":  keepInt("Number of logs to preserve. When no maximum file size is offered or the logs are smaller than the size requested, this equals the number of days. OPNsense defaults to `31`.", int64validator.AtLeast(1)),
+			"max_file_size": keepInt("Maximum file size per log file. When set and a log file exceeds the amount specified, it will be rotated. In megabytes (MB); `0` means no limit.", int64validator.AtLeast(0)),
 			"id": schema.StringAttribute{
 				MarkdownDescription: "Always `" + settingsID + "`.",
 				Computed:            true,
@@ -68,9 +68,9 @@ func settingsDataSourceSchema() dschema.Schema {
 
 		Attributes: map[string]dschema.Attribute{
 			"enabled":       dschema.BoolAttribute{MarkdownDescription: "Whether the syslog service runs.", Computed: true},
-			"log_local":     dschema.BoolAttribute{MarkdownDescription: "Whether logs are written locally.", Computed: true},
-			"max_preserve":  dschema.Int64Attribute{MarkdownDescription: "Days of logs kept.", Computed: true},
-			"max_file_size": dschema.Int64Attribute{MarkdownDescription: "Maximum log file size in bytes; 0 means no limit.", Computed: true},
+			"log_local":     dschema.BoolAttribute{MarkdownDescription: "Enable writing log files to the local disk.", Computed: true},
+			"max_preserve":  dschema.Int64Attribute{MarkdownDescription: "Number of logs to preserve. When no maximum file size is offered or the logs are smaller than the size requested, this equals the number of days.", Computed: true},
+			"max_file_size": dschema.Int64Attribute{MarkdownDescription: "Maximum file size per log file, in megabytes (MB). `0` means no limit.", Computed: true},
 			"id":            dschema.StringAttribute{MarkdownDescription: "Always `" + settingsID + "`.", Computed: true},
 		},
 	}

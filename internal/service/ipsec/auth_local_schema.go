@@ -56,13 +56,13 @@ func authLocalResourceSchema() schema.Schema {
 				Required:            true,
 			},
 			"auth_id": schema.StringAttribute{
-				MarkdownDescription: "Authentication ID for the AuthLocal Resource. Defaults to `\"\"`.",
+				MarkdownDescription: "IKE identity to use for authentication round. When using certificate authentication the IKE identity must be contained in the certificate; either as the subject DN or as a subjectAltName (the identity will default to the certificate's subject DN if not specified). Refer to https://docs.strongswan.org/docs/5.9/config/identityParsing.html for details on how identities are parsed and may be configured. Defaults to `\"\"`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString(""),
 			},
 			"eap_id": schema.StringAttribute{
-				MarkdownDescription: "EAP ID for the AuthLocal Resource. Defaults to `\"\"`.",
+				MarkdownDescription: "Client EAP-Identity to use in EAP-Identity exchange and the EAP method. If set to `%any` the EAP-Identity method will be used to ask the client for an EAP identity. Defaults to `\"\"`.",
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString(""),
@@ -120,11 +120,11 @@ func authLocalDataSourceSchema() dschema.Schema {
 				Computed:            true,
 			},
 			"auth_id": dschema.StringAttribute{
-				MarkdownDescription: "Authentication ID for the AuthLocal Resource.",
+				MarkdownDescription: "IKE identity to use for authentication round. When using certificate authentication the IKE identity must be contained in the certificate; either as the subject DN or as a subjectAltName (the identity will default to the certificate's subject DN if not specified). Refer to https://docs.strongswan.org/docs/5.9/config/identityParsing.html for details on how identities are parsed and may be configured.",
 				Computed:            true,
 			},
 			"eap_id": dschema.StringAttribute{
-				MarkdownDescription: "EAP ID for the AuthLocal Resource.",
+				MarkdownDescription: "Client EAP-Identity to use in EAP-Identity exchange and the EAP method. If set to `%any` the EAP-Identity method will be used to ask the client for an EAP identity.",
 				Computed:            true,
 			},
 			"certificates": dschema.SetAttribute{

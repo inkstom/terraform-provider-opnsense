@@ -23,7 +23,7 @@ func TestMockGatewayLifecycle(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: `
-resource "opnsense_routing_gateway" "wan2" {
+resource "opnsense_gateway" "wan2" {
   name        = "WAN2_GW"
   interface   = "wan"
   gateway     = "203.0.113.1"
@@ -33,11 +33,11 @@ resource "opnsense_routing_gateway" "wan2" {
   latency_low = 200
 }`,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("opnsense_routing_gateway.wan2", "enabled", "true"),
-					resource.TestCheckResourceAttr("opnsense_routing_gateway.wan2", "ip_protocol", "inet"),
-					resource.TestCheckResourceAttr("opnsense_routing_gateway.wan2", "monitor_disable", "true"),
-					resource.TestCheckResourceAttr("opnsense_routing_gateway.wan2", "latency_high", "-1"),
-					resource.TestCheckResourceAttrSet("opnsense_routing_gateway.wan2", "id"),
+					resource.TestCheckResourceAttr("opnsense_gateway.wan2", "enabled", "true"),
+					resource.TestCheckResourceAttr("opnsense_gateway.wan2", "ip_protocol", "inet"),
+					resource.TestCheckResourceAttr("opnsense_gateway.wan2", "monitor_enabled", "false"),
+					resource.TestCheckResourceAttr("opnsense_gateway.wan2", "latency_high", "-1"),
+					resource.TestCheckResourceAttrSet("opnsense_gateway.wan2", "id"),
 					func(s *terraform.State) error {
 						for _, it := range m.Items("/routing/settings/getGateway") {
 							if it["defaultgw"] != "1" || it["fargw"] != "1" || it["priority"] != "100" ||
@@ -50,13 +50,13 @@ resource "opnsense_routing_gateway" "wan2" {
 				),
 			},
 			{
-				ResourceName:      "opnsense_routing_gateway.wan2",
+				ResourceName:      "opnsense_gateway.wan2",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
 			{
 				Config: `
-resource "opnsense_routing_gateway" "wan2" {
+resource "opnsense_gateway" "wan2" {
   name        = "WAN2_GW"
   description = "backup uplink"
   interface   = "wan"
@@ -65,15 +65,15 @@ resource "opnsense_routing_gateway" "wan2" {
   enabled     = false
 }
 
-data "opnsense_routing_gateway" "wan2" {
-  id = opnsense_routing_gateway.wan2.id
+data "opnsense_gateway" "wan2" {
+  id = opnsense_gateway.wan2.id
 }`,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("opnsense_routing_gateway.wan2", "enabled", "false"),
-					resource.TestCheckResourceAttr("opnsense_routing_gateway.wan2", "upstream", "false"),
-					resource.TestCheckResourceAttr("opnsense_routing_gateway.wan2", "priority", "255"),
-					resource.TestCheckResourceAttr("data.opnsense_routing_gateway.wan2", "description", "backup uplink"),
-					resource.TestCheckResourceAttr("data.opnsense_routing_gateway.wan2", "enabled", "false"),
+					resource.TestCheckResourceAttr("opnsense_gateway.wan2", "enabled", "false"),
+					resource.TestCheckResourceAttr("opnsense_gateway.wan2", "upstream", "false"),
+					resource.TestCheckResourceAttr("opnsense_gateway.wan2", "priority", "255"),
+					resource.TestCheckResourceAttr("data.opnsense_gateway.wan2", "description", "backup uplink"),
+					resource.TestCheckResourceAttr("data.opnsense_gateway.wan2", "enabled", "false"),
 				),
 			},
 		},
@@ -90,13 +90,13 @@ func TestMockGatewayGroupTiers(t *testing.T) {
 	m := mockopnsense.Start(t, mockopnsense.GatewayRoute(), mockopnsense.GatewayGroupRoute())
 
 	gateways := `
-resource "opnsense_routing_gateway" "a" {
+resource "opnsense_gateway" "a" {
   name        = "GW_A"
   interface   = "wan"
   gateway     = "203.0.113.1"
   far_gateway = true
 }
-resource "opnsense_routing_gateway" "b" {
+resource "opnsense_gateway" "b" {
   name        = "GW_B"
   interface   = "wan"
   gateway     = "203.0.113.2"
@@ -108,16 +108,16 @@ resource "opnsense_routing_gateway" "b" {
 		Steps: []resource.TestStep{
 			{
 				Config: gateways + `
-resource "opnsense_routing_gateway_group" "failover" {
+resource "opnsense_gateway_group" "failover" {
   name    = "WAN_FAILOVER"
-  tiers   = [[opnsense_routing_gateway.a.name], [opnsense_routing_gateway.b.name]]
+  tiers   = [[opnsense_gateway.a.name], [opnsense_gateway.b.name]]
   trigger = "downloss"
 }`,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("opnsense_routing_gateway_group.failover", "tiers.#", "2"),
-					resource.TestCheckTypeSetElemAttr("opnsense_routing_gateway_group.failover", "tiers.0.*", "GW_A"),
-					resource.TestCheckTypeSetElemAttr("opnsense_routing_gateway_group.failover", "tiers.1.*", "GW_B"),
-					resource.TestCheckResourceAttr("opnsense_routing_gateway_group.failover", "pool_options", ""),
+					resource.TestCheckResourceAttr("opnsense_gateway_group.failover", "tiers.#", "2"),
+					resource.TestCheckTypeSetElemAttr("opnsense_gateway_group.failover", "tiers.0.*", "GW_A"),
+					resource.TestCheckTypeSetElemAttr("opnsense_gateway_group.failover", "tiers.1.*", "GW_B"),
+					resource.TestCheckResourceAttr("opnsense_gateway_group.failover", "pool_options", ""),
 					func(s *terraform.State) error {
 						for _, it := range m.Items("/routing/group_settings/get") {
 							if it["item"] != "GW_A" || it["item2"] != "GW_B" || it["item3"] != "" || it["trigger"] != "downloss" {
@@ -129,22 +129,22 @@ resource "opnsense_routing_gateway_group" "failover" {
 				),
 			},
 			{
-				ResourceName:      "opnsense_routing_gateway_group.failover",
+				ResourceName:      "opnsense_gateway_group.failover",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
 			{
 				// Collapse to a single load-balanced tier: tier 2 must be cleared upstream.
 				Config: gateways + `
-resource "opnsense_routing_gateway_group" "failover" {
+resource "opnsense_gateway_group" "failover" {
   name         = "WAN_FAILOVER"
-  tiers        = [[opnsense_routing_gateway.a.name, opnsense_routing_gateway.b.name]]
+  tiers        = [[opnsense_gateway.a.name, opnsense_gateway.b.name]]
   pool_options = "round-robin"
 }`,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("opnsense_routing_gateway_group.failover", "tiers.#", "1"),
-					resource.TestCheckResourceAttr("opnsense_routing_gateway_group.failover", "tiers.0.#", "2"),
-					resource.TestCheckResourceAttr("opnsense_routing_gateway_group.failover", "trigger", "down"),
+					resource.TestCheckResourceAttr("opnsense_gateway_group.failover", "tiers.#", "1"),
+					resource.TestCheckResourceAttr("opnsense_gateway_group.failover", "tiers.0.#", "2"),
+					resource.TestCheckResourceAttr("opnsense_gateway_group.failover", "trigger", "down"),
 					func(s *terraform.State) error {
 						for _, it := range m.Items("/routing/group_settings/get") {
 							if it["item"] != "GW_A,GW_B" || it["item2"] != "" || it["poolopts"] != "round-robin" {
@@ -272,7 +272,7 @@ resource "opnsense_interfaces_assignment" "wg" {
   gateway_interface = true
 }
 
-resource "opnsense_routing_gateway" "wg" {
+resource "opnsense_gateway" "wg" {
   name      = "WG_SITE_GW"
   interface = opnsense_interfaces_assignment.wg.id
   gateway   = opnsense_wireguard_server.site.gateway
@@ -290,7 +290,7 @@ resource "opnsense_routing_gateway" "wg" {
 					resource.TestCheckResourceAttr("opnsense_wireguard_server.site", "device", "wg0"),
 					resource.TestCheckResourceAttr("opnsense_wireguard_server.site", "debug", "false"),
 					resource.TestCheckResourceAttr("opnsense_interfaces_assignment.wg", "device", "wg0"),
-					resource.TestCheckResourceAttr("opnsense_routing_gateway.wg", "interface", "opt1"),
+					resource.TestCheckResourceAttr("opnsense_gateway.wg", "interface", "opt1"),
 					resource.TestMatchResourceAttr("opnsense_wireguard_psk.peer", "psk", regexp.MustCompile(`^[A-Za-z0-9+/]{43}=$`)),
 					resource.TestMatchResourceAttr("opnsense_wireguard_psk.peer", "id", regexp.MustCompile(`^psk-[0-9a-f]+$`)),
 					func(s *terraform.State) error {
@@ -333,17 +333,17 @@ func TestMockValidation(t *testing.T) {
 	mockopnsense.Start(t)
 	for name, tc := range map[string]struct{ config, err string }{
 		"empty tier": {`
-resource "opnsense_routing_gateway_group" "g" {
+resource "opnsense_gateway_group" "g" {
   name  = "G"
   tiers = [[], ["GW_A"]]
 }`, `(?s)tiers.*at least 1`},
 		"too many tiers": {`
-resource "opnsense_routing_gateway_group" "g" {
+resource "opnsense_gateway_group" "g" {
   name  = "G"
   tiers = [["a"], ["b"], ["c"], ["d"], ["e"], ["f"]]
 }`, `(?s)tiers.*must contain at least 1 elements and at most 5`},
 		"bad gateway name": {`
-resource "opnsense_routing_gateway" "g" {
+resource "opnsense_gateway" "g" {
   name      = "has space"
   interface = "wan"
 }`, `must match`},

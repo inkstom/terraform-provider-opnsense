@@ -29,33 +29,35 @@ resource "opnsense_captiveportal_zone" "guest" {
 
 ### Required
 
-- `interfaces` (Set of String) Interfaces the portal runs on, by identifier (e.g. `opt2`). WAN cannot be used.
+- `interfaces` (Set of String) Select interface(s) to enable for captive portal. Use interface identifiers (e.g. `opt2`). Interfaces that get their address via DHCP cannot be selected.
 
 ### Optional
 
-- `allowed_addresses` (Set of String) Addresses or networks allowed through without logging in. Defaults to `[]`.
-- `allowed_mac_addresses` (Set of String) MAC addresses allowed through without logging in. Defaults to `[]`.
-- `always_send_accounting` (Boolean) Always send RADIUS accounting requests. Defaults to `false`.
-- `auth_servers` (Set of String) Authentication servers by name, e.g. `Local Database` or an LDAP/RADIUS server; empty allows anyone in after clicking through. Defaults to `[]`.
-- `certificate` (String) Certificate reference for HTTPS on the portal; empty serves HTTP. Defaults to `""`.
-- `concurrent_logins` (Boolean) Allow a user to be logged in from several clients at once. Defaults to `true`.
-- `cors_origins` (Set of String) Origins allowed when `cors_policy` is `listed` (OPNsense 26.7 or later). Unset keeps the firewall's value.
-- `cors_policy` (String) CORS policy for the portal API: `same_origin`, `listed` or `any` (OPNsense 26.7 or later). Unset keeps the firewall's value.
-- `description` (String) Description, shown as the zone name. Defaults to `""`.
-- `disable_rules` (Boolean) Don't generate the portal's firewall rules (OPNsense 26.1 or later). Unset keeps the firewall's value.
-- `enabled` (Boolean) Enable the zone. Defaults to `true`.
-- `enforce_group` (String) Only allow members of this group (by GID) to log in. Defaults to `""`.
-- `extended_pre_auth_data` (Boolean) Send extended data (e.g. MAC address) to the authenticator. Defaults to `false`.
-- `hard_timeout` (Number) Disconnect clients after this many minutes regardless of activity; 0 disables. Defaults to `0`.
-- `idle_timeout` (Number) Disconnect idle clients after this many minutes; 0 disables. Defaults to `0`.
-- `roaming` (Boolean) Keep a session when the client's address changes (OPNsense 26.7 or later). Unset keeps the firewall's value.
-- `server_name` (String) Host name for the portal (should match `certificate`). Defaults to `""`.
-- `template` (String) UUID of a portal template (`opnsense_captiveportal_template.id`); empty uses the default page. Defaults to `""`.
+- `allowed_addresses` (Set of String) Avoid authentication for addresses and subnets in this list. Defaults to `[]`.
+- `allowed_mac_addresses` (Set of String) Avoid authentication for physical addresses in this list. Defaults to `[]`.
+- `always_send_accounting` (Boolean) This will make the captive portal always send accounting requests, rather than just when there is a need for accounting (e.g. when there is a daily session limit). Defaults to `false`.
+- `auth_servers` (Set of String) Select authentication methods to use, leave empty for no authentication needed. Use authentication server names, e.g. `Local Database` or an LDAP/RADIUS server. Defaults to `[]`.
+- `certificate` (String) If provided, all traffic will be transmitted over an HTTPS connection to protect against eavesdroppers. Set the certificate reference (`refid`); empty serves HTTP. Defaults to `""`.
+- `concurrent_logins` (Boolean) If this option is set, users can login on multiple machines at once. If disabled subsequent logins will cause machines previously logged in with the same username to be disconnected. Defaults to `true`.
+- `cors_origins` (Set of String) Origins allowed when Cross-origin access is set to Specific origins (`cors_policy` = `listed`). Specify only the scheme, hostname and optional port, for example `https://login.example.com`. Requires OPNsense 26.7 or later. Unset keeps the firewall's value.
+- `cors_policy` (String) Control which browser origins may read responses from the Captive Portal Access API. Same-origin access and clients that do not send an Origin header are unaffected. One of `same_origin` (Same origin only), `listed` (Specific origins) or `any` (Any origin); OPNsense defaults to `any`. Requires OPNsense 26.7 or later. Unset keeps the firewall's value.
+- `description` (String) Description to identify this zone. Defaults to `""`.
+- `disable_rules` (Boolean) If this option is set, no automatic firewall rules for portal redirection and traffic blocking will be generated. This option allows you to override the default portal behavior for advanced use cases, such as redirections for DNS. See the documentation to see which rules you should implement in this scenario. Requires OPNsense 26.1 or later. Unset keeps the firewall's value.
+- `enabled` (Boolean) Enable this zone. Defaults to `true`.
+- `enforce_group` (String) Restrict access to users in the selected (local) group.
+
+**NOTE:** please be aware that users (or vouchers) which aren't administered locally will be denied when using this option. Set the group by GID. Defaults to `""`.
+- `extended_pre_auth_data` (Boolean) Offer extended data to the login template before authentication (mac addresses for upstream use). Defaults to `false`.
+- `hard_timeout` (Number) Clients will be disconnected after this amount of time, in minutes, regardless of activity. They may log in again immediately, though. Enter `0` to disable hard timeout (not recommended unless an idle timeout is set). Must be between `0` and `10080` (a week). Defaults to `0`.
+- `idle_timeout` (Number) Clients will be disconnected after this amount of inactivity, in minutes. They may log in again immediately, though. Enter `0` to disable idle timeout. Must be between `0` and `10080` (a week). Defaults to `0`.
+- `roaming` (Boolean) Allow connecting IPv6 clients to use multiple IPs bound to the same MAC over the course of its session. This option is needed for maximum IPv6 compatibility. Requires OPNsense 26.7 or later; OPNsense defaults to `true`. Unset keeps the firewall's value.
+- `server_name` (String) Hostname (of this machine) to redirect login page to, leave blank to use this interface IP address, otherwise make sure the client can access DNS to resolve this location. When using a SSL certificate, make sure both this name and the cert name are equal. Defaults to `""`.
+- `template` (String) Use custom template package for user login. Set the template UUID (`opnsense_captiveportal_template.id`); empty uses the default page. Defaults to `""`.
 
 ### Read-Only
 
 - `id` (String) UUID of the zone.
-- `zone_id` (String) Zone number assigned by OPNsense.
+- `zone_id` (String) Internal number used for this zone. Assigned by OPNsense, from `0` to `19`.
 
 ## Import
 

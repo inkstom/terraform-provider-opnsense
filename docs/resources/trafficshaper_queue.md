@@ -37,20 +37,20 @@ resource "opnsense_trafficshaper_queue" "bulk" {
 
 ### Required
 
-- `pipe` (String) UUID of the `opnsense_trafficshaper_pipe` this queue shares.
+- `pipe` (String) Connected pipe for this queue. Set to the UUID (`id`) of an `opnsense_trafficshaper_pipe`.
 
 ### Optional
 
-- `buckets` (Number) Hash table size for dynamic queues; unset uses the system default.
-- `codel_ecn_enable` (Boolean) Mark packets with ECN instead of dropping them. Defaults to `false`.
-- `codel_enable` (Boolean) Enable CoDel active queue management. Defaults to `false`.
-- `codel_interval` (Number) CoDel interval in ms; unset uses 100.
-- `codel_target` (Number) CoDel target delay in ms; unset uses 5.
-- `description` (String) Description. Defaults to `""`.
-- `enabled` (Boolean) Enable the queue. Defaults to `true`.
-- `mask` (String) Dynamic per-host queues: `none`, `src-ip`, `dst-ip`, `src-ip6` or `dst-ip6`. Defaults to `"none"`.
-- `pie_enable` (Boolean) Enable PIE active queue management. Defaults to `false`.
-- `weight` (Number) Share of the pipe relative to its other queues (1-100). Defaults to `100`.
+- `buckets` (Number) Specifies the size of the hash table used for storing the various dynamic queues configured with the mask setting. Accepted range is 1-65535; unset uses the system default.
+- `codel_ecn_enable` (Boolean) Explicit Congestion Notification. Marks packets instead of dropping them. Defaults to `false`.
+- `codel_enable` (Boolean) Enable CoDel active queue management. Cannot be combined with `pie_enable`. Defaults to `false`.
+- `codel_interval` (Number) Interval before dropping packets (in ms), leave empty for default. Accepted range is 1-10000; unset uses 100.
+- `codel_target` (Number) Minimum acceptable persistent queue delay (in ms), leave empty for default. Accepted range is 1-10000; unset uses 5.
+- `description` (String) Description to identify this queue. OPNsense requires a value, and rules can only target queues that have one. Defaults to `""`.
+- `enabled` (Boolean) Enable this queue and its related rules. Defaults to `true`.
+- `mask` (String) Dynamic queue creation by source or destination address. Choose destination to evenly share every IP in destination field of rules the specified bandwidth. A pipe with 1Mbit e.g. would let 4 clients lend 250Kbit each. Normally this is used for download queues. Choose source to evenly share every IP in the source field of rules the specified bandwidth. Normally this is used for upload queues. Leave this value empty if you want to specify multiple queues with different weights. One of `none` (empty), `src-ip` (source), `dst-ip` (destination), `src-ip6` (source, IPv6) or `dst-ip6` (destination, IPv6). Defaults to `"none"`.
+- `pie_enable` (Boolean) Enable PIE active queue management. Cannot be combined with `codel_enable`. Defaults to `false`.
+- `weight` (Number) Weight of this queue (`1`..`100`), used to prioritize within a pipe (1 is low, 100 is high). Defaults to `100`.
 
 ### Read-Only
 

@@ -23,7 +23,7 @@ IPsec raw public key pairs (VPN > IPsec > Key Pairs).
 
 - `key_fingerprint` (String) Key fingerprint.
 - `key_size` (String) Key size in bits.
-- `key_type` (String) Key type.
-- `name` (String) Key pair name.
-- `private_key` (String, Sensitive) PEM private key.
-- `public_key` (String) PEM public key.
+- `key_type` (String) Select the type of the key pair. One of `rsa` or `ecdsa`.
+- `name` (String) Enter a name for this key pair. The name should help you to identify this key pair.
+- `private_key` (String, Sensitive) Paste an optional private key of the selected type in X.509 format which belongs to the public key specified above. When adding the public key of a peer, this field should not be specified as the private key remains solely with the peer. Must be pasted including the `-----BEGIN ...-----` and `-----END [...]-----` headers. Use PKCS#8 (`-----BEGIN PRIVATE KEY-----`).
+- `public_key` (String) Paste a public key of the selected type in X.509 format. Must be pasted including the `-----BEGIN ...-----` and `-----END [...]-----` headers.

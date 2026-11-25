@@ -19,7 +19,7 @@ func tagResourceSchema() schema.Schema {
 	return schema.Schema{
 		MarkdownDescription: "Dnsmasq DHCP tags (Services > Dnsmasq DNS & DHCP > DHCP tags). Hosts and ranges set tags on clients; options and boot entries apply only to clients with a matching tag. Reference a tag by `id`.",
 		Attributes: map[string]schema.Attribute{
-			"tag": schema.StringAttribute{MarkdownDescription: "Tag name.", Required: true},
+			"tag": schema.StringAttribute{MarkdownDescription: "An alphanumeric label which marks a network so that DHCP options may be specified on a per-network basis. Must be unique.", Required: true},
 			"id": schema.StringAttribute{
 				Computed:            true,
 				MarkdownDescription: "UUID of the tag.",
@@ -34,7 +34,7 @@ func tagDataSourceSchema() dschema.Schema {
 		MarkdownDescription: "Dnsmasq DHCP tags (Services > Dnsmasq DNS & DHCP > DHCP tags).",
 		Attributes: map[string]dschema.Attribute{
 			"id":  dschema.StringAttribute{MarkdownDescription: "UUID of the tag.", Required: true},
-			"tag": dschema.StringAttribute{MarkdownDescription: "Tag name.", Computed: true},
+			"tag": dschema.StringAttribute{MarkdownDescription: "An alphanumeric label which marks a network so that DHCP options may be specified on a per-network basis.", Computed: true},
 		},
 	}
 }

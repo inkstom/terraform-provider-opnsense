@@ -36,27 +36,27 @@ resource "opnsense_dnsmasq_range" "mgmt" {
 
 ### Required
 
-- `start_address` (String) First address of the range (IPv4 or IPv6).
+- `start_address` (String) Start of the range, e.g. `192.168.1.100` for DHCPv4, `2000::1` for DHCPv6 or when a constructor is using a suffix like `::1`. To reveal IPv6 related options, enter a IPv6 address. When using router advertisements, it is possible to use a constructor with `::` as the start address and no end address.
 
 ### Optional
 
-- `constructor` (String) IPv6 constructor interface (prefix delegation). Defaults to `""`.
-- `description` (String) Description. Defaults to `""`.
-- `disable_ha_sync` (Boolean) Exclude this range from HA sync. Defaults to `false`.
-- `domain` (String) Domain to offer to clients in this range. Defaults to `""`.
-- `domain_type` (String) Whether `domain` applies to this `range` or the whole `interface`. Defaults to `"range"`.
-- `end_address` (String) Last address of the range. Leave empty for a static-only range. Defaults to `""`.
-- `interface` (String) Interface to serve, e.g. `lan` or `opt1`. Empty matches any interface. Defaults to `""`.
-- `lease_time` (Number) Lease time in seconds. Leave unset for the OPNsense default.
-- `mode` (String) `static` to only hand out reserved addresses, or empty for a dynamic range. Defaults to `""`.
-- `prefix_length` (Number) IPv6 prefix length. Leave unset for the OPNsense default.
-- `ra_interval` (Number) Router advertisement interval in seconds. Leave unset for the OPNsense default.
-- `ra_mode` (Set of String) IPv6 router advertisement modes (`ra-only`, `slaac`, `ra-names`, `ra-stateless`, `ra-advrouter`, `off-link`). Defaults to `[]`.
-- `ra_mtu` (Number) MTU advertised in router advertisements. Leave unset for the OPNsense default.
-- `ra_priority` (String) Router advertisement priority: `high`, `low` or empty. Defaults to `""`.
-- `ra_router_lifetime` (Number) Router lifetime in seconds. Leave unset for the OPNsense default.
-- `subnet_mask` (String) Subnet mask, if it can't be derived from the interface. Defaults to `""`.
-- `tag` (String) UUID of a dnsmasq tag to set on clients that get an address from this range. Defaults to `""`.
+- `constructor` (String) Interface to use to calculate a DHCPv6 or RA range. Start address can then be specified as a suffix (e.g. `::`, `::1` or `::400`). Defaults to `""`.
+- `description` (String) You may enter a description here for your reference (not parsed). Defaults to `""`.
+- `disable_ha_sync` (Boolean) Ignore this range from being transferred or updated by HA sync. Defaults to `false`.
+- `domain` (String) Offer this domain to DHCP clients. Defaults to `""`.
+- `domain_type` (String) Choose if the domain will only match clients in this range, or all clients in any subnets on the selected interface. If you create both IPv4 and IPv6 ranges, setting this to `interface` on both ranges is recommended. One of `range` or `interface`. Defaults to `"range"`.
+- `end_address` (String) End of the range. Leave empty for a static-only range. Defaults to `""`.
+- `interface` (String) Interface to serve this range. Example `lan` or `opt1`; empty matches any interface. Defaults to `""`.
+- `lease_time` (Number) Defines how long the addresses (leases) given out by the server are valid (in seconds). Set `0` for infinite. Leave unset for the OPNsense default.
+- `mode` (String) Mode flags to set for this range, `static` means no addresses will be automatically assigned. One of `static`, or empty for a dynamic range. Defaults to `""`.
+- `prefix_length` (Number) Prefix length offered to the client. Custom values in this field will be ignored if Router Advertisements are enabled, as SLAAC will only work with a prefix length of 64. Must be between `1` and `64`. Leave unset for the OPNsense default.
+- `ra_interval` (Number) Time (seconds) between Router Advertisements. Leave unset for the OPNsense default.
+- `ra_mode` (Set of String) Control how IPv6 clients receive their addresses. Enabling Router Advertisements in general settings will enable it for all configured DHCPv6 ranges with the managed address bits set, and the use SLAAC bit reset. To change this default, select a combination of the possible options here. `slaac`, `ra-stateless` and `ra-names` can be freely combined, all other options shall remain single selections. Accepted values: `ra-only`, `slaac`, `ra-names`, `ra-stateless`, `ra-advrouter`, `off-link`. Defaults to `[]`.
+- `ra_mtu` (Number) Optional MTU to send to clients via Router Advertisements. If unsure leave empty. Leave unset for the OPNsense default.
+- `ra_priority` (String) Priority of the RA announcements. One of `high`, `low`, or empty for normal priority. Defaults to `""`.
+- `ra_router_lifetime` (Number) The lifetime of the route may be changed or set to zero, which allows a router to advertise prefixes but not a route via itself. When using HA, setting a short timespan here is advised for faster IPv6 failover. A good combination could be 10 seconds RA interval and 30 seconds RA router lifetime. Going lower than that can pose issues in busy networks. Value in seconds. Leave unset for the OPNsense default.
+- `subnet_mask` (String) Leave empty to auto-calculate the subnet mask from the interface or the network class of the start address. If a DHCP relay forwards IPv4 DHCP Discovers to Dnsmasq, setting a subnet mask is required in most cases. Defaults to `""`.
+- `tag` (String) Optional tag to set for requests matching this range which can be used to selectively match DHCP options. UUID of an `opnsense_dnsmasq_tag`. Defaults to `""`.
 
 ### Read-Only
 

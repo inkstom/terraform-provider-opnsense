@@ -57,7 +57,7 @@ func (r *templateResource) Schema(ctx context.Context, req resource.SchemaReques
 			"the zip, so changes made on the firewall are not detected; Terraform re-uploads when `content_base64` changes.",
 		Attributes: map[string]schema.Attribute{
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Template name.",
+				MarkdownDescription: "Template name, between 1 and 255 characters.",
 				Required:            true,
 				Validators:          []validator.String{stringvalidator.LengthAtLeast(1)},
 			},

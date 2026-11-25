@@ -21,13 +21,13 @@ GIF (IP-in-IP) tunnels (Interfaces > Devices > GIF).
 
 ### Read-Only
 
-- `description` (String) Description.
+- `description` (String) You may enter a description here for your reference (not parsed).
 - `device` (String) Device name.
-- `link1` (Boolean) `link1` flag.
-- `link2` (Boolean) `link2` flag.
+- `link1` (Boolean) ECN friendly behavior (`link1` flag).
+- `link2` (Boolean) Ingress filtering disabled (`link2` flag).
 - `local_address` (String) Local endpoint.
-- `no_clamp` (Boolean) MSS clamping disabled.
-- `remote_address` (String) Remote endpoint.
-- `tunnel_local_address` (String) Local tunnel address.
-- `tunnel_remote_address` (String) Remote tunnel address.
-- `tunnel_remote_net` (String) Tunnel prefix length.
+- `no_clamp` (Boolean) Do not clamp the effective MTU to 1280 bytes when the outer tunnel protocol is IPv6.
+- `remote_address` (String) Peer address where encapsulated gif packets will be sent.
+- `tunnel_local_address` (String) Local gif tunnel endpoint.
+- `tunnel_remote_address` (String) Remote gif tunnel endpoint.
+- `tunnel_remote_net` (String) Netmask [ipv4] or prefix [ipv6] to use for this tunnel, as a prefix length.

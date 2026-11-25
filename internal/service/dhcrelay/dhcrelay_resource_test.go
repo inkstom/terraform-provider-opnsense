@@ -16,32 +16,32 @@ func TestAccDhcrelayResources(t *testing.T) {
 			{
 				Config: testAccDhcrelayConfig(`["192.0.2.10"]`, false, false),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("opnsense_dhcrelay_destination.test", "name", "tf-acc-dest"),
-					resource.TestCheckResourceAttr("opnsense_dhcrelay_destination.test", "servers.#", "1"),
-					resource.TestCheckResourceAttr("opnsense_dhcrelay_relay.test", "interface", "wan"),
-					resource.TestCheckResourceAttrPair("opnsense_dhcrelay_relay.test", "destination", "opnsense_dhcrelay_destination.test", "id"),
-					resource.TestCheckResourceAttr("opnsense_dhcrelay_relay.test", "enabled", "false"),
-					resource.TestCheckResourceAttr("opnsense_dhcrelay_relay.test", "agent_info", "false"),
-					resource.TestCheckResourceAttr("data.opnsense_dhcrelay_destination.test", "servers.#", "1"),
-					resource.TestCheckResourceAttr("data.opnsense_dhcrelay_relay.test", "interface", "wan"),
+					resource.TestCheckResourceAttr("opnsense_dhcp_relay_destination.test", "name", "tf-acc-dest"),
+					resource.TestCheckResourceAttr("opnsense_dhcp_relay_destination.test", "servers.#", "1"),
+					resource.TestCheckResourceAttr("opnsense_dhcp_relay.test", "interface", "wan"),
+					resource.TestCheckResourceAttrPair("opnsense_dhcp_relay.test", "destination", "opnsense_dhcp_relay_destination.test", "id"),
+					resource.TestCheckResourceAttr("opnsense_dhcp_relay.test", "enabled", "false"),
+					resource.TestCheckResourceAttr("opnsense_dhcp_relay.test", "agent_info", "false"),
+					resource.TestCheckResourceAttr("data.opnsense_dhcp_relay_destination.test", "servers.#", "1"),
+					resource.TestCheckResourceAttr("data.opnsense_dhcp_relay.test", "interface", "wan"),
 				),
 			},
 			{
-				ResourceName:      "opnsense_dhcrelay_destination.test",
+				ResourceName:      "opnsense_dhcp_relay_destination.test",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
 			{
-				ResourceName:      "opnsense_dhcrelay_relay.test",
+				ResourceName:      "opnsense_dhcp_relay.test",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
 			{
 				Config: testAccDhcrelayConfig(`["192.0.2.10", "192.0.2.11"]`, true, true),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("opnsense_dhcrelay_destination.test", "servers.#", "2"),
-					resource.TestCheckResourceAttr("opnsense_dhcrelay_relay.test", "enabled", "true"),
-					resource.TestCheckResourceAttr("opnsense_dhcrelay_relay.test", "agent_info", "true"),
+					resource.TestCheckResourceAttr("opnsense_dhcp_relay_destination.test", "servers.#", "2"),
+					resource.TestCheckResourceAttr("opnsense_dhcp_relay.test", "enabled", "true"),
+					resource.TestCheckResourceAttr("opnsense_dhcp_relay.test", "agent_info", "true"),
 				),
 			},
 		},
@@ -50,24 +50,24 @@ func TestAccDhcrelayResources(t *testing.T) {
 
 func testAccDhcrelayConfig(servers string, enabled, agentInfo bool) string {
 	return fmt.Sprintf(`
-resource "opnsense_dhcrelay_destination" "test" {
+resource "opnsense_dhcp_relay_destination" "test" {
   name    = "tf-acc-dest"
   servers = %[1]s
 }
 
-resource "opnsense_dhcrelay_relay" "test" {
+resource "opnsense_dhcp_relay" "test" {
   enabled     = %[2]t
   interface   = "wan"
-  destination = opnsense_dhcrelay_destination.test.id
+  destination = opnsense_dhcp_relay_destination.test.id
   agent_info  = %[3]t
 }
 
-data "opnsense_dhcrelay_destination" "test" {
-  id = opnsense_dhcrelay_destination.test.id
+data "opnsense_dhcp_relay_destination" "test" {
+  id = opnsense_dhcp_relay_destination.test.id
 }
 
-data "opnsense_dhcrelay_relay" "test" {
-  id = opnsense_dhcrelay_relay.test.id
+data "opnsense_dhcp_relay" "test" {
+  id = opnsense_dhcp_relay.test.id
 }
 `, servers, enabled, agentInfo)
 }

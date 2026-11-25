@@ -21,22 +21,22 @@ Bridge interfaces (Interfaces > Devices > Bridge).
 
 ### Read-Only
 
-- `address_timeout` (Number) Seconds before a learned address expires.
-- `auto_edge_ports` (Set of String) Members whose edge status is detected automatically.
-- `auto_ptp_ports` (Set of String) Members whose point-to-point status is detected automatically.
-- `description` (String) Description.
+- `address_timeout` (Number) Set the timeout of address cache entries to this number of seconds. If seconds is zero, then address cache entries will not be expired. The default is 1200 seconds.
+- `auto_edge_ports` (Set of String) Allow interface to automatically detect edge status. This is the default for all interfaces added to a bridge. (This will disable the autoedge status of interfaces.)
+- `auto_ptp_ports` (Set of String) Automatically detect the point-to-point status on interface by checking the full duplex link status. This is the default for interfaces added to the bridge. (The interfaces selected here will be removed from default autoedge status.)
+- `description` (String) You may enter a description here for your reference (not parsed).
 - `device` (String) Device name.
-- `edge_ports` (Set of String) Members that are edge ports
-- `forward_delay` (Number) STP forward delay in seconds.
-- `hold_count` (Number) STP transmit hold count.
-- `link_local` (Boolean) Whether IPv6 link-local addresses are enabled.
-- `max_addresses` (Number) Size of the address cache.
-- `max_age` (Number) STP max age in seconds.
-- `members` (Set of String) Member interfaces.
-- `private_ports` (Set of String) Private members: they can't send traffic to each other through the bridge.
-- `ptp_ports` (Set of String) Members on a point-to-point link
-- `span_interface` (String) SPAN port.
-- `static_ports` (Set of String) Members whose learned addresses never age out.
-- `stp_enabled` (Boolean) Whether spanning tree is enabled.
-- `stp_interfaces` (Set of String) Members in spanning tree.
-- `stp_protocol` (String) Spanning tree protocol.
+- `edge_ports` (Set of String) Set interface as an edge port. An edge port connects directly to end stations and cannot create bridging loops in the network; this allows it to transition straight to forwarding.
+- `forward_delay` (Number) Set the time that must pass before an interface begins forwarding packets when Spanning Tree is enabled. The default is 15 seconds. The minimum is 4 seconds and the maximum is 30 seconds.
+- `hold_count` (Number) Set the transmit hold count for Spanning Tree. This is the number of packets transmitted before being rate limited. The default is 6. The minimum is 1 and the maximum is 10.
+- `link_local` (Boolean) By default, link-local addresses for bridges are disabled. You can enable them manually using this option. However, when a bridge interface has IPv6 addresses, IPv6 addresses on a member interface will be automatically removed before the interface is added.
+- `max_addresses` (Number) Set the size of the bridge address cache to size. The default is 2000 entries.
+- `max_age` (Number) Set the time that a Spanning Tree Protocol configuration is valid. The default is 20 seconds. The minimum is 6 seconds and the maximum is 40 seconds.
+- `members` (Set of String) Interfaces participating in the bridge.
+- `private_ports` (Set of String) Mark an interface as a "private" interface. A private interface does not forward any traffic to any other port that is also a private interface.
+- `ptp_ports` (Set of String) Set the interface as a point-to-point link. This is required for straight transitions to forwarding and should be enabled on a direct link to another RSTP-capable switch.
+- `span_interface` (String) Add the interface named by interface as a span port on the bridge. Span ports transmit a copy of every frame received by the bridge. This is most useful for snooping a bridged network passively on another host connected to one of the span ports of the bridge.
+- `static_ports` (Set of String) Mark an interface as a "sticky" interface. Dynamically learned address entries are treated as static once entered into the cache. Sticky entries are never aged out of the cache or replaced, even if the address is seen on a different interface.
+- `stp_enabled` (Boolean) Enable spanning tree options for this bridge.
+- `stp_interfaces` (Set of String) Enable Spanning Tree Protocol on interface. The if_bridge(4) driver has support for the IEEE 802.1D Spanning Tree Protocol (STP). STP is used to detect and remove loops in a network topology.
+- `stp_protocol` (String) Protocol used for spanning tree.

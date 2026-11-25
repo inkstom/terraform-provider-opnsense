@@ -42,12 +42,12 @@ func settingsResourceSchema() schema.Schema {
 
 		Attributes: map[string]schema.Attribute{
 			"enabled":              keepBool("Enable IPsec (start strongSwan)."),
-			"prefer_old_sa":        keepBool("Prefer older security associations over newer ones during rekeying."),
-			"disable_vpn_rules":    keepBool("Don't add the automatic firewall rules for IPsec; you write them yourself."),
-			"passthrough_networks": keepSet("Networks that bypass IPsec, e.g. local subnets also covered by a tunnel's policy."),
-			"user_sources":         keepSet("Authentication servers for mobile users, by name (e.g. `Local Database`)."),
+			"prefer_old_sa":        keepBool("By default, if several SAs match, the newest one is preferred if it's at least 30 seconds old. Select this option to always prefer old SAs over new ones."),
+			"disable_vpn_rules":    keepBool("This option only applies to legacy tunnel configurations, connections do require manual firewall rules being setup."),
+			"passthrough_networks": keepSet("This exempts traffic for one or more subnets from getting processed by the IPsec stack in the kernel. When sending all traffic to the remote location, you probably want to add your LAN network(s) here."),
+			"user_sources":         keepSet("Select authentication methods to use, leave empty if no challenge response authentication is needed. Values are authentication server names, e.g. `Local Database`. Deprecated in OPNsense (Xauth)."),
 			"local_group": schema.StringAttribute{
-				MarkdownDescription: "Only members of this group (by GID) may connect as mobile users; empty allows all. Unset keeps the current value.",
+				MarkdownDescription: "Restrict access to users in the selected local group. Please be aware that other authentication backends will refuse to authenticate when using this option. Value is the group GID; empty allows all. Deprecated in OPNsense (Xauth). Unset keeps the current value.",
 				Optional:            true,
 				Computed:            true,
 				PlanModifiers:       []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
@@ -67,11 +67,11 @@ func settingsDataSourceSchema() dschema.Schema {
 
 		Attributes: map[string]dschema.Attribute{
 			"enabled":              dschema.BoolAttribute{MarkdownDescription: "Whether IPsec is enabled.", Computed: true},
-			"prefer_old_sa":        dschema.BoolAttribute{MarkdownDescription: "Whether older SAs are preferred.", Computed: true},
-			"disable_vpn_rules":    dschema.BoolAttribute{MarkdownDescription: "Whether automatic rules are disabled.", Computed: true},
-			"passthrough_networks": dschema.SetAttribute{MarkdownDescription: "Passthrough networks.", ElementType: types.StringType, Computed: true},
-			"user_sources":         dschema.SetAttribute{MarkdownDescription: "Mobile user authentication servers.", ElementType: types.StringType, Computed: true},
-			"local_group":          dschema.StringAttribute{MarkdownDescription: "Mobile user group.", Computed: true},
+			"prefer_old_sa":        dschema.BoolAttribute{MarkdownDescription: "By default, if several SAs match, the newest one is preferred if it's at least 30 seconds old. Select this option to always prefer old SAs over new ones.", Computed: true},
+			"disable_vpn_rules":    dschema.BoolAttribute{MarkdownDescription: "This option only applies to legacy tunnel configurations, connections do require manual firewall rules being setup.", Computed: true},
+			"passthrough_networks": dschema.SetAttribute{MarkdownDescription: "This exempts traffic for one or more subnets from getting processed by the IPsec stack in the kernel. When sending all traffic to the remote location, you probably want to add your LAN network(s) here.", ElementType: types.StringType, Computed: true},
+			"user_sources":         dschema.SetAttribute{MarkdownDescription: "Select authentication methods to use, leave empty if no challenge response authentication is needed. Values are authentication server names, e.g. `Local Database`. Deprecated in OPNsense (Xauth).", ElementType: types.StringType, Computed: true},
+			"local_group":          dschema.StringAttribute{MarkdownDescription: "Restrict access to users in the selected local group. Please be aware that other authentication backends will refuse to authenticate when using this option. Value is the group GID; empty allows all. Deprecated in OPNsense (Xauth).", Computed: true},
 			"id":                   dschema.StringAttribute{MarkdownDescription: "Always `" + settingsID + "`.", Computed: true},
 		},
 	}

@@ -14,28 +14,28 @@ Reads an interface assignment by identifier (e.g. `wan`, `lan`, `opt3`). Require
 
 ### Required
 
-- `id` (String) Interface identifier, e.g. `wan`, `lan`, `opt3`.
+- `id` (String) Technical identifier of the interface, used by hasync for example. E.g. `wan`, `lan`, `opt3`.
 
 ### Read-Only
 
-- `block_bogons` (Boolean) Whether bogon networks are blocked.
-- `block_private` (Boolean) Whether private networks are blocked.
-- `description` (String) Interface name.
-- `device` (String) Assigned device.
-- `dhcp_hostname` (String) DHCP client hostname.
-- `enabled` (Boolean) Whether the interface is enabled.
-- `gateway_interface` (Boolean) Whether the dynamic gateway policy is on.
-- `ipv4_address` (String) IPv4 address (CIDR).
-- `ipv4_gateway` (String) IPv4 upstream gateway.
-- `ipv4_type` (String) IPv4 configuration type.
-- `ipv6_address` (String) IPv6 address (CIDR).
-- `ipv6_gateway` (String) IPv6 upstream gateway.
-- `ipv6_type` (String) IPv6 configuration type.
-- `lock` (Boolean) Whether the interface is locked against removal.
-- `mss` (Number) MSS (`-1` when default).
-- `mtu` (Number) MTU (`-1` when default).
-- `promiscuous` (Boolean) Whether promiscuous mode is on.
-- `spoof_mac` (String) Spoofed MAC address.
-- `track6_interface` (String) Track/IA parent interface.
-- `track6_prefix_id` (String) Track/IA prefix ID.
+- `block_bogons` (Boolean) When set, this option blocks traffic from IP addresses that are reserved (but not RFC 1918) or not yet assigned by IANA. Bogons are prefixes that should never appear in the Internet routing table, and obviously should not appear as the source address in any packets you receive.
+- `block_private` (Boolean) When set, this option blocks traffic from IP addresses that are reserved for private networks as per RFC 1918 as well as loopback, link-local and Carrier-grade NAT addresses. This option should only be set for WAN interfaces that use the public IP address space.
+- `description` (String) You may enter a description here for your reference (not parsed). This is the interface name.
+- `device` (String) Device name to connect this interface to.
+- `dhcp_hostname` (String) The value in this field is sent as the DHCP client identifier and hostname when requesting a DHCP lease. Some ISPs may require this (for client identification).
+- `enabled` (Boolean) Enable this interface.
+- `gateway_interface` (Boolean) If the destination is directly reachable via an interface requiring no intermediary system to act as a gateway, you can select this option which allows dynamic gateways to be created without direct target addresses. Some tunnel types support this.
+- `ipv4_address` (String) IPv4 address in CIDR notation.
+- `ipv4_gateway` (String) Select a gateway from the list to reply the incoming packets to the proper next hop on their way back and apply source NAT when configured. This is typically disabled for LAN type interfaces.
+- `ipv4_type` (String) The primary type for this interface for IPv4 communication.
+- `ipv6_address` (String) IPv6 address in CIDR notation.
+- `ipv6_gateway` (String) Select a gateway from the list to reply the incoming packets to the proper next hop on their way back. This is typically disabled for LAN type interfaces.
+- `ipv6_type` (String) The primary type for this interface for IPv6 communication.
+- `lock` (Boolean) Prevent interface removal.
+- `mss` (Number) If you enter a value in this field, then MSS clamping for TCP connections to the value entered above minus 40 (IPv4) or 60 (IPv6) will be in effect (TCP/IP header size). `-1` when unset.
+- `mtu` (Number) If you leave this field blank, the adapter's default MTU will be used. This is typically 1500 bytes but can vary in some circumstances. `-1` when the default is used.
+- `promiscuous` (Boolean) Put interface into permanently promiscuous mode. Only to be used for specific usecases requiring the interface to receive all packets being received. When unsure, leave this disabled.
+- `spoof_mac` (String) This field can be used to spoof the MAC address of the interface.
+- `track6_interface` (String) This selects the dynamic IPv6 WAN interface to track for configuration.
+- `track6_prefix_id` (String) The value in this field is the delegated hexadecimal IPv6 prefix ID. This determines the configurable /64 network ID based on the dynamic IPv6 connection.
 

@@ -10,6 +10,7 @@ import (
 func Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		newAclResource,
+		newDnsblResource,
 		newDomainOverrideResource,
 		newForwardResource,
 		newHostAliasResource,
@@ -21,6 +22,7 @@ func Resources(ctx context.Context) []func() resource.Resource {
 func DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		newAclDataSource,
+		newDnsblDataSource,
 		newDomainOverrideDataSource,
 		newForwardDataSource,
 		newHostAliasDataSource,

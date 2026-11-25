@@ -29,12 +29,12 @@ resource "opnsense_ipsec_settings" "this" {
 
 ### Optional
 
-- `disable_vpn_rules` (Boolean) Don't add the automatic firewall rules for IPsec; you write them yourself. Unset keeps the current value.
+- `disable_vpn_rules` (Boolean) This option only applies to legacy tunnel configurations, connections do require manual firewall rules being setup. Unset keeps the current value.
 - `enabled` (Boolean) Enable IPsec (start strongSwan). Unset keeps the current value.
-- `local_group` (String) Only members of this group (by GID) may connect as mobile users; empty allows all. Unset keeps the current value.
-- `passthrough_networks` (Set of String) Networks that bypass IPsec, e.g. local subnets also covered by a tunnel's policy. Unset keeps the current value.
-- `prefer_old_sa` (Boolean) Prefer older security associations over newer ones during rekeying. Unset keeps the current value.
-- `user_sources` (Set of String) Authentication servers for mobile users, by name (e.g. `Local Database`). Unset keeps the current value.
+- `local_group` (String) Restrict access to users in the selected local group. Please be aware that other authentication backends will refuse to authenticate when using this option. Value is the group GID; empty allows all. Deprecated in OPNsense (Xauth). Unset keeps the current value.
+- `passthrough_networks` (Set of String) This exempts traffic for one or more subnets from getting processed by the IPsec stack in the kernel. When sending all traffic to the remote location, you probably want to add your LAN network(s) here. Unset keeps the current value.
+- `prefer_old_sa` (Boolean) By default, if several SAs match, the newest one is preferred if it's at least 30 seconds old. Select this option to always prefer old SAs over new ones. Unset keeps the current value.
+- `user_sources` (Set of String) Select authentication methods to use, leave empty if no challenge response authentication is needed. Values are authentication server names, e.g. `Local Database`. Deprecated in OPNsense (Xauth). Unset keeps the current value.
 
 ### Read-Only
 

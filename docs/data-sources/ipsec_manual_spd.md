@@ -21,10 +21,10 @@ Manual IPsec security policy (SPD) entries (VPN > IPsec > Manual SPD).
 
 ### Read-Only
 
-- `connection_child` (String) UUID of the child SA.
+- `connection_child` (String) Connection child to register this manual item on. Please note that an established tunnel needs to reconnect in order to add the entry as we use an updown event. UUID of an `opnsense_ipsec_child`.
 - `description` (String) Description.
-- `destination` (String) Destination network.
+- `destination` (String) Destination network, leave empty to use the networks propagated in the child SA.
 - `enabled` (Boolean) Whether the entry is enabled.
 - `protocol` (String) Protocol.
-- `request_id` (Number) Request ID.
-- `source` (String) Source network.
+- `request_id` (Number) Reqid to register this manual item on. Please note that an established tunnel needs to reconnect in order to add the entry as we use an updown event.
+- `source` (String) Source network, usually the networks you would like to accept using network address translation.

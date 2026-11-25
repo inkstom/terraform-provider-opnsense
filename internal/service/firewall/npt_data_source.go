@@ -21,7 +21,7 @@ type nptDataSource struct {
 }
 
 func (d *nptDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_firewall_npt"
+	resp.TypeName = req.ProviderTypeName + "_firewall_nat_npt"
 }
 
 func (d *nptDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

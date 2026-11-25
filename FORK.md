@@ -15,18 +15,19 @@ Minimum OPNsense versions come from the controller and model history in opnsense
 | `opnsense_auth_privilege` (authoritative per privilege) | `auth/priv/get_item,set_item` | 25.x |
 | `opnsense_captiveportal_zone` (`roaming`, `cors_*` need 26.7) | `captiveportal/settings/*Zone` | 24.7 |
 | `opnsense_captiveportal_template` | `captiveportal/template/*` (26.7), `captiveportal/service/*Template` (earlier) | 24.7 |
-| `opnsense_core_hasync` (singleton) | `core/hasync/*` | 24.7 |
-| `opnsense_core_tunable` | `core/tunables/*` | 25.x |
-| `opnsense_dhcrelay_destination` | `dhcrelay/settings/*_dest` | 25.x |
-| `opnsense_dhcrelay_relay` | `dhcrelay/settings/*_relay` | 25.x |
+| `opnsense_high_availability` (singleton) | `core/hasync/*` | 24.7 |
+| `opnsense_system_tunable` | `core/tunables/*` | 25.x |
+| `opnsense_dhcp_relay_destination` | `dhcrelay/settings/*_dest` | 25.x |
+| `opnsense_dhcp_relay` | `dhcrelay/settings/*_relay` | 25.x |
 | `opnsense_dnsmasq_range` | `dnsmasq/settings/*_range` | 25.x |
 | `opnsense_dnsmasq_option` | `dnsmasq/settings/*_option` | 25.x |
 | `opnsense_dnsmasq_settings` (singleton) | `dnsmasq/settings/get,set` | 25.x |
 | `opnsense_dnsmasq_tag` | `dnsmasq/settings/*_tag` | 25.7 |
 | `opnsense_dnsmasq_domain` | `dnsmasq/settings/*_domain` | 25.7 |
 | `opnsense_dnsmasq_boot` | `dnsmasq/settings/*_boot` | 25.7 |
+| `opnsense_dyndns_account` (needs the `os-ddclient` plugin) | `dyndns/accounts/*_item` | any, with the plugin |
 | `opnsense_firewall_group` | `firewall/group/*` | 24.7 |
-| `opnsense_firewall_npt` | `firewall/npt/*` | 24.7 |
+| `opnsense_firewall_nat_npt` | `firewall/npt/*` | 24.7 |
 | `opnsense_interfaces_assignment` | `interfaces/assignment/*` | 26.7.7 |
 | `opnsense_interfaces_bridge` | `interfaces/bridge_settings/*` | 24.7 |
 | `opnsense_interfaces_loopback` | `interfaces/loopback_settings/*` | 25.x |
@@ -38,18 +39,19 @@ Minimum OPNsense versions come from the controller and model history in opnsense
 | `opnsense_ipsec_key_pair` | `ipsec/key_pairs/*` | 24.7 |
 | `opnsense_ipsec_manual_spd` | `ipsec/manual_spd/*` | 24.7 |
 | `opnsense_ipsec_settings` (singleton, general section) | `ipsec/settings/get,set` | 24.7 |
-| `opnsense_kea_ctrl_agent` (singleton) | `kea/ctrl_agent/get,set` | 24.7 |
+| `opnsense_kea_control_agent` (singleton) | `kea/ctrl_agent/get,set` | 24.7 |
 | `opnsense_monit_service` | `monit/settings/*Service` | 25.x |
 | `opnsense_monit_test` | `monit/settings/*Test` | 25.x |
 | `opnsense_monit_alert` | `monit/settings/*Alert` | 25.x |
 | `opnsense_monit_settings` (singleton) | `monit/settings/get,set` | 24.7 |
-| `opnsense_routing_gateway` | `routing/settings/*Gateway` | 24.x |
-| `opnsense_routing_gateway_group` | `routing/group_settings/*` | 26.7 |
+| `opnsense_gateway` | `routing/settings/*Gateway` | 24.x |
+| `opnsense_gateway_group` | `routing/group_settings/*` | 26.7 |
 | `opnsense_syslog_destination` | `syslog/settings/*Destination` | 25.x |
 | `opnsense_syslog_settings` (singleton) | `syslog/settings/get,set` | 24.7 |
 | `opnsense_trafficshaper_pipe` | `trafficshaper/settings/*Pipe` | 24.7 |
 | `opnsense_trafficshaper_queue` | `trafficshaper/settings/*Queue` | 24.7 |
 | `opnsense_trafficshaper_rule` | `trafficshaper/settings/*Rule` | 24.7 |
+| `opnsense_unbound_dnsbl` | `unbound/settings/*_dnsbl` | 26.1 |
 | `opnsense_wireguard_key_pair` (resource only) | `wireguard/server/keyPair` | any |
 | `opnsense_wireguard_psk` (resource only) | `wireguard/client/psk` | any |
 
@@ -57,7 +59,7 @@ New data sources for resources upstream already had: `opnsense_ipsec_connection`
 
 New attributes on existing resources: `carp_depend_on`, `debug` and `device` on `opnsense_wireguard_server`.
 
-Singletons always exist on the firewall, so Terraform can't create them. Import them first; the import ID is the resource name without `opnsense_` (for example `core_hasync` or `dnsmasq_settings`). Destroying one only removes it from state. Attributes left unset keep whatever the firewall has.
+Singletons always exist on the firewall, so Terraform can't create them. Import them first; the import ID is the resource name without `opnsense_` (for example `high_availability` or `dnsmasq_settings`). Destroying one only removes it from state. Attributes left unset keep whatever the firewall has.
 
 [`examples/complete/wireguard-site`](examples/complete/wireguard-site/main.tf) uses several of these together.
 
@@ -67,7 +69,7 @@ In the provider:
 
 - `opnsense_ipsec_auth_local` and `_auth_remote` showed an update on every plan when `auth_id` or `eap_id` was unset, which is normal for PSK authentication. Both now default to `""`.
 - `opnsense_ipsec_psk.pre_shared_key` wasn't marked sensitive, so the key appeared in plan output.
-- `opnsense_routing_gateway_group` failed when created in the same apply as its gateways, because OPNsense caches the gateway list for 20 seconds. It now retries for up to a minute.
+- `opnsense_gateway_group` failed when created in the same apply as its gateways, because OPNsense caches the gateway list for 20 seconds. It now retries for up to a minute.
 - Descriptions on firewall NAT rules were limited to letters, digits, spaces and dots, which rejected rules OPNsense itself accepts. WireGuard servers no longer require a gateway when `disable_routes` is set.
 
 In the client (inkstom/opnsense-go):
@@ -88,6 +90,8 @@ In CI:
 
 - **Traffic shaper:** a deleted pipe or queue stays active in dummynet until the shaper is reset (Firewall > Shaper > Reset, or `trafficshaper/service/flushreload`). The reset briefly clears every ipfw rule, captive portal included, so the provider doesn't do it for you.
 - **HA sync:** `disable_preempt` is saved immediately but only takes effect at the next boot.
+- **Dynamic DNS passwords:** OPNsense never returns an account's password, so an imported account shows a password change on the first plan when the configuration sets one. An empty password leaves the stored one unchanged.
+- **DNSBL:** each change runs `unbound/service/dnsbl`, which reloads the Unbound templates and downloads every enabled policy's lists.
 - **Kea control agent:** OPNsense only runs it while Kea DHCPv4 or DHCPv6 is enabled.
 - **Captive portal templates:** OPNsense strips files identical to its default template before storing the zip, so the stored copy never matches the upload. The provider tracks the zip you configured and re-uploads it when that changes. Edits made on the firewall aren't detected.
 - **Interface assignments:** assign a VLAN by its explicit device name. If you let OPNsense generate the name, the VLAN resource stores an empty `device`.
