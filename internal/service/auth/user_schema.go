@@ -16,7 +16,7 @@ import (
 type userResourceModel struct {
 	Name             types.String `tfsdk:"name"`
 	Password         types.String `tfsdk:"password"`
-	Disabled         types.Bool   `tfsdk:"disabled"`
+	Enabled          types.Bool   `tfsdk:"enabled"`
 	FullName         types.String `tfsdk:"full_name"`
 	Email            types.String `tfsdk:"email"`
 	Comment          types.String `tfsdk:"comment"`
@@ -57,11 +57,11 @@ func userResourceSchema() schema.Schema {
 				Optional:            true,
 				Sensitive:           true,
 			},
-			"disabled": schema.BoolAttribute{
-				MarkdownDescription: "Prevent the user from logging in. Defaults to `false`.",
+			"enabled": schema.BoolAttribute{
+				MarkdownDescription: "Allow the user to log in. Defaults to `true`.",
 				Optional:            true,
 				Computed:            true,
-				Default:             booldefault.StaticBool(false),
+				Default:             booldefault.StaticBool(true),
 			},
 			"full_name":       optString("Full name."),
 			"email":           optString("E-mail address."),
@@ -112,7 +112,7 @@ func userDataSourceSchema() dschema.Schema {
 			},
 			"name":              str("Login name."),
 			"password":          dschema.StringAttribute{MarkdownDescription: "Always null; OPNsense does not return passwords.", Computed: true, Sensitive: true},
-			"disabled":          dschema.BoolAttribute{MarkdownDescription: "Whether login is disabled.", Computed: true},
+			"enabled":           dschema.BoolAttribute{MarkdownDescription: "Whether the user can log in.", Computed: true},
 			"full_name":         str("Full name."),
 			"email":             str("E-mail address."),
 			"comment":           str("Comment."),
@@ -131,7 +131,7 @@ func userDataSourceSchema() dschema.Schema {
 func convertUserSchemaToStruct(d *userResourceModel) (*auth.User, error) {
 	u := &auth.User{
 		Name:              d.Name.ValueString(),
-		Disabled:          tools.BoolToString(d.Disabled.ValueBool()),
+		Disabled:          tools.BoolToString(!d.Enabled.ValueBool()),
 		Fullname:          d.FullName.ValueString(),
 		Email:             d.Email.ValueString(),
 		Comment:           d.Comment.ValueString(),
@@ -156,7 +156,7 @@ func convertUserStructToSchema(d *auth.User) (*userResourceModel, error) {
 	return &userResourceModel{
 		Name:             types.StringValue(d.Name),
 		Password:         types.StringNull(),
-		Disabled:         types.BoolValue(tools.StringToBool(d.Disabled)),
+		Enabled:          types.BoolValue(!tools.StringToBool(d.Disabled)),
 		FullName:         types.StringValue(d.Fullname),
 		Email:            types.StringValue(d.Email),
 		Comment:          types.StringValue(d.Comment),

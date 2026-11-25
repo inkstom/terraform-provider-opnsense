@@ -15,7 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-const hasyncID = "core_hasync"
+const hasyncID = "high_availability"
 
 type hasyncResourceModel struct {
 	DisablePreempt   types.Bool   `tfsdk:"disable_preempt"`

@@ -70,7 +70,7 @@ resource "opnsense_firewall_filter" "iot_dns" {
 - `enabled` (Boolean) Enable the interface. Defaults to `true`.
 - `gateway_interface` (Boolean) Dynamic gateway policy: allow sending traffic to this interface without an intermediate gateway (useful for VPN interfaces such as WireGuard). Defaults to `false`.
 - `ipv4_address` (String) IPv4 address in CIDR notation, e.g. `10.10.0.1/24`. Required when `ipv4_type` is `staticv4`.
-- `ipv4_gateway` (String) Name of an IPv4 upstream gateway for this interface (WAN-type interfaces only), e.g. `opnsense_routing_gateway.wan2.name`. Note: a gateway references its interface, so setting both creates a cycle — prefer `opnsense_routing_gateway.upstream`.
+- `ipv4_gateway` (String) Name of an IPv4 upstream gateway for this interface (WAN-type interfaces only), e.g. `opnsense_gateway.wan2.name`. Note: a gateway references its interface, so setting both creates a cycle — prefer `opnsense_gateway.upstream`.
 - `ipv4_type` (String) IPv4 configuration type: `staticv4` or `dhcp`. Leave unset for none.
 - `ipv6_address` (String) IPv6 address in CIDR notation. Required when `ipv6_type` is `staticv6`.
 - `ipv6_gateway` (String) Name of an IPv6 upstream gateway for this interface.

@@ -31,7 +31,7 @@ type gatewayGroupResource struct {
 }
 
 func (r *gatewayGroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_routing_gateway_group"
+	resp.TypeName = req.ProviderTypeName + "_gateway_group"
 }
 
 func (r *gatewayGroupResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {

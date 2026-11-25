@@ -23,7 +23,7 @@ type gatewayDataSource struct {
 }
 
 func (d *gatewayDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_routing_gateway"
+	resp.TypeName = req.ProviderTypeName + "_gateway"
 }
 
 func (d *gatewayDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

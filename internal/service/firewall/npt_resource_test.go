@@ -16,26 +16,26 @@ func TestAccFirewallNptResource(t *testing.T) {
 			{
 				Config: testAccFirewallNptConfig("2001:db8:1::/64", true, "[opnsense_firewall_category.test.id]"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("opnsense_firewall_npt.test", "interface", "wan"),
-					resource.TestCheckResourceAttr("opnsense_firewall_npt.test", "internal_prefix", "fd00:1::/64"),
-					resource.TestCheckResourceAttr("opnsense_firewall_npt.test", "external_prefix", "2001:db8:1::/64"),
-					resource.TestCheckResourceAttr("opnsense_firewall_npt.test", "log", "true"),
-					resource.TestCheckResourceAttr("opnsense_firewall_npt.test", "categories.#", "1"),
-					resource.TestCheckTypeSetElemAttrPair("opnsense_firewall_npt.test", "categories.*", "opnsense_firewall_category.test", "id"),
-					resource.TestCheckResourceAttr("data.opnsense_firewall_npt.test", "external_prefix", "2001:db8:1::/64"),
+					resource.TestCheckResourceAttr("opnsense_firewall_nat_npt.test", "interface", "wan"),
+					resource.TestCheckResourceAttr("opnsense_firewall_nat_npt.test", "internal_prefix", "fd00:1::/64"),
+					resource.TestCheckResourceAttr("opnsense_firewall_nat_npt.test", "external_prefix", "2001:db8:1::/64"),
+					resource.TestCheckResourceAttr("opnsense_firewall_nat_npt.test", "log", "true"),
+					resource.TestCheckResourceAttr("opnsense_firewall_nat_npt.test", "categories.#", "1"),
+					resource.TestCheckTypeSetElemAttrPair("opnsense_firewall_nat_npt.test", "categories.*", "opnsense_firewall_category.test", "id"),
+					resource.TestCheckResourceAttr("data.opnsense_firewall_nat_npt.test", "external_prefix", "2001:db8:1::/64"),
 				),
 			},
 			{
-				ResourceName:      "opnsense_firewall_npt.test",
+				ResourceName:      "opnsense_firewall_nat_npt.test",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
 			{
 				Config: testAccFirewallNptConfig("2001:db8:2::/64", false, "[]"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("opnsense_firewall_npt.test", "external_prefix", "2001:db8:2::/64"),
-					resource.TestCheckResourceAttr("opnsense_firewall_npt.test", "log", "false"),
-					resource.TestCheckResourceAttr("opnsense_firewall_npt.test", "categories.#", "0"),
+					resource.TestCheckResourceAttr("opnsense_firewall_nat_npt.test", "external_prefix", "2001:db8:2::/64"),
+					resource.TestCheckResourceAttr("opnsense_firewall_nat_npt.test", "log", "false"),
+					resource.TestCheckResourceAttr("opnsense_firewall_nat_npt.test", "categories.#", "0"),
 				),
 			},
 		},
@@ -48,7 +48,7 @@ resource "opnsense_firewall_category" "test" {
   name = "tf-acc-npt"
 }
 
-resource "opnsense_firewall_npt" "test" {
+resource "opnsense_firewall_nat_npt" "test" {
   enabled         = false
   log             = %[2]t
   sequence        = 10
@@ -59,8 +59,8 @@ resource "opnsense_firewall_npt" "test" {
   description     = "tf acc"
 }
 
-data "opnsense_firewall_npt" "test" {
-  id = opnsense_firewall_npt.test.id
+data "opnsense_firewall_nat_npt" "test" {
+  id = opnsense_firewall_nat_npt.test.id
 }
 `, external, log, categories)
 }

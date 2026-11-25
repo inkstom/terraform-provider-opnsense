@@ -102,8 +102,8 @@ func assignmentResourceSchema() schema.Schema {
 			"ipv4_type": optString("IPv4 configuration type: `staticv4` or `dhcp`. Leave unset for none.",
 				stringvalidator.OneOf("staticv4", "dhcp")),
 			"ipv4_address": optString("IPv4 address in CIDR notation, e.g. `10.10.0.1/24`. Required when `ipv4_type` is `staticv4`."),
-			"ipv4_gateway": optString("Name of an IPv4 upstream gateway for this interface (WAN-type interfaces only), e.g. `opnsense_routing_gateway.wan2.name`. " +
-				"Note: a gateway references its interface, so setting both creates a cycle — prefer `opnsense_routing_gateway.upstream`."),
+			"ipv4_gateway": optString("Name of an IPv4 upstream gateway for this interface (WAN-type interfaces only), e.g. `opnsense_gateway.wan2.name`. " +
+				"Note: a gateway references its interface, so setting both creates a cycle — prefer `opnsense_gateway.upstream`."),
 			"ipv6_type": optString("IPv6 configuration type: `staticv6`, `dhcp6`, `slaac`, `linklocal`, `idassoc6` or `track6`. Leave unset for none.",
 				stringvalidator.OneOf("staticv6", "dhcp6", "slaac", "linklocal", "idassoc6", "track6")),
 			"ipv6_address":     optString("IPv6 address in CIDR notation. Required when `ipv6_type` is `staticv6`."),

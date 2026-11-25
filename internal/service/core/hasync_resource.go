@@ -24,7 +24,7 @@ type hasyncResource struct {
 }
 
 func (r *hasyncResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_core_hasync"
+	resp.TypeName = req.ProviderTypeName + "_high_availability"
 }
 
 func (r *hasyncResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -54,9 +54,9 @@ func (r *hasyncResource) read(ctx context.Context) (*hasyncResourceModel, error)
 
 func (r *hasyncResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	resp.Diagnostics.AddError("Import Required",
-		"opnsense_core_hasync is a singleton that always exists on the firewall. "+
+		"opnsense_high_availability is a singleton that always exists on the firewall. "+
 			"Import it before managing it:\n\n"+
-			"  import {\n    to = opnsense_core_hasync.<name>\n    id = \""+hasyncID+"\"\n  }")
+			"  import {\n    to = opnsense_high_availability.<name>\n    id = \""+hasyncID+"\"\n  }")
 }
 
 func (r *hasyncResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
@@ -100,13 +100,13 @@ func (r *hasyncResource) Update(ctx context.Context, req resource.UpdateRequest,
 // Delete only forgets the settings; it never changes the firewall.
 func (r *hasyncResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	resp.Diagnostics.AddWarning("Removed From State Only",
-		"opnsense_core_hasync was removed from Terraform state. The firewall's HA settings were not changed.")
+		"opnsense_high_availability was removed from Terraform state. The firewall's HA settings were not changed.")
 }
 
 func (r *hasyncResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	if req.ID != hasyncID {
 		resp.Diagnostics.AddError("Invalid Import ID",
-			fmt.Sprintf("opnsense_core_hasync must be imported with ID %q, got %q.", hasyncID, req.ID))
+			fmt.Sprintf("opnsense_high_availability must be imported with ID %q, got %q.", hasyncID, req.ID))
 		return
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), types.StringValue(hasyncID))...)

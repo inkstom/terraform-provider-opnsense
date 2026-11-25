@@ -21,7 +21,7 @@ type ctrlAgentDataSource struct {
 }
 
 func (d *ctrlAgentDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_kea_ctrl_agent"
+	resp.TypeName = req.ProviderTypeName + "_kea_control_agent"
 }
 
 func (d *ctrlAgentDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

@@ -55,17 +55,17 @@ resource "opnsense_interfaces_assignment" "wg" {
   gateway_interface = true
 }
 
-resource "opnsense_routing_gateway" "wg" {
+resource "opnsense_gateway" "wg" {
   name            = "WG_SITE_GW"
   interface       = opnsense_interfaces_assignment.wg.id
   gateway         = opnsense_wireguard_server.site.gateway
-  monitor_disable = false
+  monitor_enabled = true
   monitor         = "10.99.0.2"
 }
 
 resource "opnsense_route" "remote_lan" {
   network = "172.16.0.0/16"
-  gateway = opnsense_routing_gateway.wg.name
+  gateway = opnsense_gateway.wg.name
 }
 
 output "public_key_for_remote" {

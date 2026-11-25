@@ -27,7 +27,7 @@ type tunableResource struct {
 }
 
 func (r *tunableResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_core_tunable"
+	resp.TypeName = req.ProviderTypeName + "_system_tunable"
 }
 
 func (r *tunableResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {

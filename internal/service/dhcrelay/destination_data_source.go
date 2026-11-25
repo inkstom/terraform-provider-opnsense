@@ -21,7 +21,7 @@ type destinationDataSource struct {
 }
 
 func (d *destinationDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_dhcrelay_destination"
+	resp.TypeName = req.ProviderTypeName + "_dhcp_relay_destination"
 }
 
 func (d *destinationDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

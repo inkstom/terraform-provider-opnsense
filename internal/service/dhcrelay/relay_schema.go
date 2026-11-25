@@ -42,7 +42,7 @@ func relayResourceSchema() schema.Schema {
 				Required:            true,
 			},
 			"destination": schema.StringAttribute{
-				MarkdownDescription: "UUID of the `opnsense_dhcrelay_destination` to forward to.",
+				MarkdownDescription: "UUID of the `opnsense_dhcp_relay_destination` to forward to.",
 				Required:            true,
 			},
 			"agent_info": schema.BoolAttribute{

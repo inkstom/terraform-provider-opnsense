@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-const ctrlAgentID = "kea_ctrl_agent"
+const ctrlAgentID = "kea_control_agent"
 
 type ctrlAgentResourceModel struct {
 	Enabled  types.Bool   `tfsdk:"enabled"`

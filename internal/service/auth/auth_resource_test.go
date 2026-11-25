@@ -115,13 +115,13 @@ func TestAccAuthUserResource(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAuthUserConfig("tf-acc-user", "First-pass-1!", "Terraform Test", false, true),
+				Config: testAccAuthUserConfig("tf-acc-user", "First-pass-1!", "Terraform Test", true, true),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("opnsense_auth_user.test", "name", "tf-acc-user"),
 					resource.TestCheckResourceAttr("opnsense_auth_user.test", "full_name", "Terraform Test"),
 					resource.TestCheckResourceAttr("opnsense_auth_user.test", "email", "tf-acc@example.com"),
 					resource.TestCheckResourceAttr("opnsense_auth_user.test", "shell", "/bin/sh"),
-					resource.TestCheckResourceAttr("opnsense_auth_user.test", "disabled", "false"),
+					resource.TestCheckResourceAttr("opnsense_auth_user.test", "enabled", "true"),
 					resource.TestCheckResourceAttr("opnsense_auth_user.test", "privileges.#", "1"),
 					resource.TestCheckResourceAttr("opnsense_auth_user.test", "group_memberships.#", "1"),
 					resource.TestCheckResourceAttrPair("opnsense_auth_user.test", "group_memberships.0", "opnsense_auth_group.users", "gid"),
@@ -141,10 +141,10 @@ func TestAccAuthUserResource(t *testing.T) {
 			},
 			{
 				// New password, disabled, no group, no direct privilege.
-				Config: testAccAuthUserConfig("tf-acc-user", "Second-pass-2!", "Renamed", true, false),
+				Config: testAccAuthUserConfig("tf-acc-user", "Second-pass-2!", "Renamed", false, false),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("opnsense_auth_user.test", "full_name", "Renamed"),
-					resource.TestCheckResourceAttr("opnsense_auth_user.test", "disabled", "true"),
+					resource.TestCheckResourceAttr("opnsense_auth_user.test", "enabled", "false"),
 					resource.TestCheckResourceAttr("opnsense_auth_user.test", "group_memberships.#", "0"),
 					resource.TestCheckResourceAttr("opnsense_auth_user.test", "privileges.#", "0"),
 				),
@@ -152,7 +152,7 @@ func TestAccAuthUserResource(t *testing.T) {
 			{
 				// Re-enable with the same password: an unchanged password must
 				// keep working, and the old one must not.
-				Config: testAccAuthUserConfig("tf-acc-user", "Second-pass-2!", "Renamed", false, true),
+				Config: testAccAuthUserConfig("tf-acc-user", "Second-pass-2!", "Renamed", true, true),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckWebLogin("tf-acc-user", "Second-pass-2!", true),
 					testAccCheckWebLogin("tf-acc-user", "First-pass-1!", false),
@@ -162,7 +162,7 @@ func TestAccAuthUserResource(t *testing.T) {
 	})
 }
 
-func testAccAuthUserConfig(name, password, fullName string, disabled, inGroup bool) string {
+func testAccAuthUserConfig(name, password, fullName string, enabled, inGroup bool) string {
 	groups, privs := "[]", "[]"
 	if inGroup {
 		groups = "[opnsense_auth_group.users.gid]"
@@ -179,7 +179,7 @@ resource "opnsense_auth_user" "test" {
   full_name         = %[3]q
   email             = "tf-acc@example.com"
   shell             = "/bin/sh"
-  disabled          = %[4]t
+  enabled           = %[4]t
   privileges        = %[6]s
   group_memberships = %[5]s
 }
@@ -192,7 +192,7 @@ data "opnsense_auth_group" "users" {
   id         = opnsense_auth_group.users.id
   depends_on = [opnsense_auth_user.test]
 }
-`, name, password, fullName, disabled, groups, privs)
+`, name, password, fullName, enabled, groups, privs)
 }
 
 // A user without a password gets a random one from OPNsense; updates must

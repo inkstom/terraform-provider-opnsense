@@ -22,7 +22,7 @@ func TestAccRoutingGatewayDataSource(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{{
 			Config: `
-resource "opnsense_routing_gateway" "test" {
+resource "opnsense_gateway" "test" {
   name        = "TFACC_DSGW"
   interface   = "wan"
   gateway     = "203.0.113.21"
@@ -31,10 +31,10 @@ resource "opnsense_routing_gateway" "test" {
   description = "tfacc ds"
 }
 
-data "opnsense_routing_gateway" "test" {
-  id = opnsense_routing_gateway.test.id
+data "opnsense_gateway" "test" {
+  id = opnsense_gateway.test.id
 }`,
-			Check: resource.ComposeAggregateTestCheckFunc(pairs("opnsense_routing_gateway",
+			Check: resource.ComposeAggregateTestCheckFunc(pairs("opnsense_gateway",
 				"name", "interface", "gateway", "far_gateway", "priority", "ip_protocol", "description", "enabled")...),
 		}},
 	})
@@ -46,30 +46,30 @@ func TestAccRoutingGatewayGroupDataSource(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{{
 			Config: `
-resource "opnsense_routing_gateway" "a" {
+resource "opnsense_gateway" "a" {
   name        = "TFACC_DSGGW1"
   interface   = "wan"
   gateway     = "203.0.113.22"
   far_gateway = true
 }
 
-resource "opnsense_routing_gateway" "b" {
+resource "opnsense_gateway" "b" {
   name        = "TFACC_DSGGW2"
   interface   = "wan"
   gateway     = "203.0.113.23"
   far_gateway = true
 }
 
-resource "opnsense_routing_gateway_group" "test" {
+resource "opnsense_gateway_group" "test" {
   name        = "TFACC_DSGROUP"
-  tiers       = [[opnsense_routing_gateway.a.name], [opnsense_routing_gateway.b.name]]
+  tiers       = [[opnsense_gateway.a.name], [opnsense_gateway.b.name]]
   description = "tfacc ds"
 }
 
-data "opnsense_routing_gateway_group" "test" {
-  id = opnsense_routing_gateway_group.test.id
+data "opnsense_gateway_group" "test" {
+  id = opnsense_gateway_group.test.id
 }`,
-			Check: resource.ComposeAggregateTestCheckFunc(pairs("opnsense_routing_gateway_group",
+			Check: resource.ComposeAggregateTestCheckFunc(pairs("opnsense_gateway_group",
 				"name", "tiers.#", "tiers.0.0", "tiers.1.0", "trigger", "pool_options", "description")...),
 		}},
 	})

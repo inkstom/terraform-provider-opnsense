@@ -50,8 +50,8 @@ resource "opnsense_auth_user" "backup" {
 
 - `authorized_keys` (String) SSH public keys, one per line. Used for console/SSH login when the user has a shell. Defaults to `""`.
 - `comment` (String) Free-form comment. Defaults to `""`.
-- `disabled` (Boolean) Prevent the user from logging in. Defaults to `false`.
 - `email` (String) E-mail address. Defaults to `""`.
+- `enabled` (Boolean) Allow the user to log in. Defaults to `true`.
 - `expires` (String) Expiration date as `MM/DD/YYYY`; empty never expires. Defaults to `""`.
 - `full_name` (String) Full name. Defaults to `""`.
 - `group_memberships` (Set of String) Group IDs (`gid`) the user belongs to, e.g. `["1999"]` for `admins`. Membership is the same data as `members` on `opnsense_auth_group`: manage it on one side only. Leave unset to leave it unmanaged here.

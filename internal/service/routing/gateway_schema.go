@@ -27,7 +27,7 @@ type gatewayResourceModel struct {
 	Gateway                   types.String `tfsdk:"gateway"`
 	Upstream                  types.Bool   `tfsdk:"upstream"`
 	FarGateway                types.Bool   `tfsdk:"far_gateway"`
-	MonitorDisable            types.Bool   `tfsdk:"monitor_disable"`
+	MonitorEnabled            types.Bool   `tfsdk:"monitor_enabled"`
 	MonitorNoRoute            types.Bool   `tfsdk:"monitor_no_route"`
 	MonitorKillStates         types.Bool   `tfsdk:"monitor_kill_states"`
 	MonitorKillStatesPriority types.Bool   `tfsdk:"monitor_kill_states_priority"`
@@ -109,7 +109,7 @@ func gatewayResourceSchema() schema.Schema {
 			},
 			"upstream":                     optionalBool("Upstream gateway: consider this gateway as a default gateway candidate. Defaults to `false`.", false),
 			"far_gateway":                  optionalBool("Allow the gateway to exist outside of the interface subnet. Defaults to `false`.", false),
-			"monitor_disable":              optionalBool("Disable gateway monitoring (consider it always online). Defaults to `true`, matching OPNsense.", true),
+			"monitor_enabled":              optionalBool("Monitor the gateway with dpinger. When disabled, the gateway is always considered up. Defaults to `false`, matching OPNsense.", false),
 			"monitor_no_route":             optionalBool("Do not create a dedicated host route for the monitor IP. Defaults to `false`.", false),
 			"monitor_kill_states":          optionalBool("Kill states for this gateway when it goes down. Defaults to `false`.", false),
 			"monitor_kill_states_priority": optionalBool("Kill states for the higher-priority gateway when it comes back up. Defaults to `false`.", false),
@@ -178,7 +178,7 @@ func gatewayDataSourceSchema() dschema.Schema {
 			"gateway":                      computed("Gateway IP address; empty for dynamic gateways."),
 			"upstream":                     computedBool("Whether this is an upstream (default candidate) gateway."),
 			"far_gateway":                  computedBool("Whether the gateway may be outside the interface subnet."),
-			"monitor_disable":              computedBool("Whether monitoring is disabled."),
+			"monitor_enabled":              computedBool("Whether gateway monitoring is enabled."),
 			"monitor_no_route":             computedBool("Whether the monitor host route is suppressed."),
 			"monitor_kill_states":          computedBool("Whether states are killed when the gateway goes down."),
 			"monitor_kill_states_priority": computedBool("Whether higher-priority states are killed on recovery."),
@@ -209,7 +209,7 @@ func convertGatewaySchemaToStruct(d *gatewayResourceModel) (*routing.Gateway, er
 		Gateway:                   d.Gateway.ValueString(),
 		DefaultGateway:            tools.BoolToString(d.Upstream.ValueBool()),
 		FarGateway:                tools.BoolToString(d.FarGateway.ValueBool()),
-		MonitorDisable:            tools.BoolToString(d.MonitorDisable.ValueBool()),
+		MonitorDisable:            tools.BoolToString(!d.MonitorEnabled.ValueBool()),
 		MonitorNoRoute:            tools.BoolToString(d.MonitorNoRoute.ValueBool()),
 		MonitorKillStates:         tools.BoolToString(d.MonitorKillStates.ValueBool()),
 		MonitorKillStatesPriority: tools.BoolToString(d.MonitorKillStatesPriority.ValueBool()),
@@ -239,7 +239,7 @@ func convertGatewayStructToSchema(d *routing.Gateway) (*gatewayResourceModel, er
 		Gateway:                   tools.StringOrNull(d.Gateway),
 		Upstream:                  types.BoolValue(tools.StringToBool(d.DefaultGateway)),
 		FarGateway:                types.BoolValue(tools.StringToBool(d.FarGateway)),
-		MonitorDisable:            types.BoolValue(tools.StringToBool(d.MonitorDisable)),
+		MonitorEnabled:            types.BoolValue(!tools.StringToBool(d.MonitorDisable)),
 		MonitorNoRoute:            types.BoolValue(tools.StringToBool(d.MonitorNoRoute)),
 		MonitorKillStates:         types.BoolValue(tools.StringToBool(d.MonitorKillStates)),
 		MonitorKillStatesPriority: types.BoolValue(tools.StringToBool(d.MonitorKillStatesPriority)),

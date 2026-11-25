@@ -21,7 +21,7 @@ type tunableDataSource struct {
 }
 
 func (d *tunableDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_core_tunable"
+	resp.TypeName = req.ProviderTypeName + "_system_tunable"
 }
 
 func (d *tunableDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

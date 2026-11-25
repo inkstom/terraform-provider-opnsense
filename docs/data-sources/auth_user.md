@@ -23,8 +23,8 @@ Local users (System > Access > Users).
 
 - `authorized_keys` (String) SSH public keys.
 - `comment` (String) Comment.
-- `disabled` (Boolean) Whether login is disabled.
 - `email` (String) E-mail address.
+- `enabled` (Boolean) Whether the user can log in.
 - `expires` (String) Expiration date.
 - `full_name` (String) Full name.
 - `group_memberships` (Set of String) Group IDs the user belongs to.
